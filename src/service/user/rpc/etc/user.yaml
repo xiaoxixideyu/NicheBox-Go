@@ -2,15 +2,17 @@ Name: user.rpc
 ListenOn: 0.0.0.0:8080
 Etcd:
   Hosts:
-  - 127.0.0.1:2379
+  - etcd:2379
   Key: user.rpc
 
 Mysql:
-  Database:
-  Username:
-  Password:
-  Host:
-  Port:
-  MaxIdleConns:
-  maxOpenConns:
-  connMaxLifeTime:
+  Database: nichebox
+  Username: admin
+  Password: "123456"
+  Host: mysql
+  Port: "3306"
+  MaxIdleConns: 10
+  maxOpenConns: 100
+  connMaxLifeTime: 3600
+
+Salt: HWVOFkGgPTryzICwd7qnJaZR9KQ2i8xe

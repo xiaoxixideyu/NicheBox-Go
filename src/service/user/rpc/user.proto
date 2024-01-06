@@ -24,27 +24,18 @@ message CheckEmailResponse {
 }
 // CheckEmail
 
-// GetUserInfoByEmail
-message GetUserInfoByEmailRequest {
+// GetUidByEmailAndPwd
+message GetUidByEmailAndPwdRequest {
     string Email = 1;
+    string Password = 2;
 }
-message GetUserInfoByEmailResponse {
+message GetUidByEmailAndPwdResponse {
     int64 Uid = 1;
-	string Email = 2;
-	string Password = 3;
-	string Username = 4;
-	string Avatar = 5;
-	string Telephone = 6;
-	bool ShowCollection = 7;
-	bool ShowFollower = 8;
-	bool ShowFollwing = 9;
-	bool ShowBox = 10;
-	bool ShowContent = 11;
 }
-// GetUserInfoByEmail
+// GetUidByEmailAndPwd
 
 service User {
     rpc Register(RegisterRequest) returns(RegisterResponse);
     rpc CheckEmail(CheckEmailRequest) returns(CheckEmailResponse);
-    rpc GetUserInfoByEmail(GetUserInfoByEmailRequest) returns(GetUserInfoByEmailResponse);
+    rpc GetUidByEmailAndPwd(GetUidByEmailAndPwdRequest) returns(GetUidByEmailAndPwdResponse);
 }

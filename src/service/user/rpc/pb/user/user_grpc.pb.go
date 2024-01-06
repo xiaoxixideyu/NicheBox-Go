@@ -19,9 +19,9 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	User_Register_FullMethodName           = "/userclient.User/Register"
-	User_CheckEmail_FullMethodName         = "/userclient.User/CheckEmail"
-	User_GetUserInfoByEmail_FullMethodName = "/userclient.User/GetUserInfoByEmail"
+	User_Register_FullMethodName            = "/userclient.User/Register"
+	User_CheckEmail_FullMethodName          = "/userclient.User/CheckEmail"
+	User_GetUidByEmailAndPwd_FullMethodName = "/userclient.User/GetUidByEmailAndPwd"
 )
 
 // UserClient is the client API for User service.
@@ -30,7 +30,7 @@ const (
 type UserClient interface {
 	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
 	CheckEmail(ctx context.Context, in *CheckEmailRequest, opts ...grpc.CallOption) (*CheckEmailResponse, error)
-	GetUserInfoByEmail(ctx context.Context, in *GetUserInfoByEmailRequest, opts ...grpc.CallOption) (*GetUserInfoByEmailResponse, error)
+	GetUidByEmailAndPwd(ctx context.Context, in *GetUidByEmailAndPwdRequest, opts ...grpc.CallOption) (*GetUidByEmailAndPwdResponse, error)
 }
 
 type userClient struct {
@@ -59,9 +59,9 @@ func (c *userClient) CheckEmail(ctx context.Context, in *CheckEmailRequest, opts
 	return out, nil
 }
 
-func (c *userClient) GetUserInfoByEmail(ctx context.Context, in *GetUserInfoByEmailRequest, opts ...grpc.CallOption) (*GetUserInfoByEmailResponse, error) {
-	out := new(GetUserInfoByEmailResponse)
-	err := c.cc.Invoke(ctx, User_GetUserInfoByEmail_FullMethodName, in, out, opts...)
+func (c *userClient) GetUidByEmailAndPwd(ctx context.Context, in *GetUidByEmailAndPwdRequest, opts ...grpc.CallOption) (*GetUidByEmailAndPwdResponse, error) {
+	out := new(GetUidByEmailAndPwdResponse)
+	err := c.cc.Invoke(ctx, User_GetUidByEmailAndPwd_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -74,7 +74,7 @@ func (c *userClient) GetUserInfoByEmail(ctx context.Context, in *GetUserInfoByEm
 type UserServer interface {
 	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
 	CheckEmail(context.Context, *CheckEmailRequest) (*CheckEmailResponse, error)
-	GetUserInfoByEmail(context.Context, *GetUserInfoByEmailRequest) (*GetUserInfoByEmailResponse, error)
+	GetUidByEmailAndPwd(context.Context, *GetUidByEmailAndPwdRequest) (*GetUidByEmailAndPwdResponse, error)
 	mustEmbedUnimplementedUserServer()
 }
 
@@ -88,8 +88,8 @@ func (UnimplementedUserServer) Register(context.Context, *RegisterRequest) (*Reg
 func (UnimplementedUserServer) CheckEmail(context.Context, *CheckEmailRequest) (*CheckEmailResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CheckEmail not implemented")
 }
-func (UnimplementedUserServer) GetUserInfoByEmail(context.Context, *GetUserInfoByEmailRequest) (*GetUserInfoByEmailResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetUserInfoByEmail not implemented")
+func (UnimplementedUserServer) GetUidByEmailAndPwd(context.Context, *GetUidByEmailAndPwdRequest) (*GetUidByEmailAndPwdResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUidByEmailAndPwd not implemented")
 }
 func (UnimplementedUserServer) mustEmbedUnimplementedUserServer() {}
 
@@ -140,20 +140,20 @@ func _User_CheckEmail_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
-func _User_GetUserInfoByEmail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetUserInfoByEmailRequest)
+func _User_GetUidByEmailAndPwd_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUidByEmailAndPwdRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServer).GetUserInfoByEmail(ctx, in)
+		return srv.(UserServer).GetUidByEmailAndPwd(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: User_GetUserInfoByEmail_FullMethodName,
+		FullMethod: User_GetUidByEmailAndPwd_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServer).GetUserInfoByEmail(ctx, req.(*GetUserInfoByEmailRequest))
+		return srv.(UserServer).GetUidByEmailAndPwd(ctx, req.(*GetUidByEmailAndPwdRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -174,8 +174,8 @@ var User_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _User_CheckEmail_Handler,
 		},
 		{
-			MethodName: "GetUserInfoByEmail",
-			Handler:    _User_GetUserInfoByEmail_Handler,
+			MethodName: "GetUidByEmailAndPwd",
+			Handler:    _User_GetUidByEmailAndPwd_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

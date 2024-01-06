@@ -32,7 +32,7 @@ func (s *UserServer) CheckEmail(ctx context.Context, in *user.CheckEmailRequest)
 	return l.CheckEmail(in)
 }
 
-func (s *UserServer) GetUserInfoByEmail(ctx context.Context, in *user.GetUserInfoByEmailRequest) (*user.GetUserInfoByEmailResponse, error) {
-	l := logic.NewGetUserInfoByEmailLogic(ctx, s.svcCtx)
-	return l.GetUserInfoByEmail(in)
+func (s *UserServer) GetUidByEmailAndPwd(ctx context.Context, in *user.GetUidByEmailAndPwdRequest) (*user.GetUidByEmailAndPwdResponse, error) {
+	l := logic.NewGetUidByEmailAndPwdLogic(ctx, s.svcCtx)
+	return l.GetUidByEmailAndPwd(in)
 }

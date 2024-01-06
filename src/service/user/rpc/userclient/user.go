@@ -13,17 +13,17 @@ import (
 )
 
 type (
-	CheckEmailRequest          = user.CheckEmailRequest
-	CheckEmailResponse         = user.CheckEmailResponse
-	GetUserInfoByEmailRequest  = user.GetUserInfoByEmailRequest
-	GetUserInfoByEmailResponse = user.GetUserInfoByEmailResponse
-	RegisterRequest            = user.RegisterRequest
-	RegisterResponse           = user.RegisterResponse
+	CheckEmailRequest           = user.CheckEmailRequest
+	CheckEmailResponse          = user.CheckEmailResponse
+	GetUidByEmailAndPwdRequest  = user.GetUidByEmailAndPwdRequest
+	GetUidByEmailAndPwdResponse = user.GetUidByEmailAndPwdResponse
+	RegisterRequest             = user.RegisterRequest
+	RegisterResponse            = user.RegisterResponse
 
 	User interface {
 		Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
 		CheckEmail(ctx context.Context, in *CheckEmailRequest, opts ...grpc.CallOption) (*CheckEmailResponse, error)
-		GetUserInfoByEmail(ctx context.Context, in *GetUserInfoByEmailRequest, opts ...grpc.CallOption) (*GetUserInfoByEmailResponse, error)
+		GetUidByEmailAndPwd(ctx context.Context, in *GetUidByEmailAndPwdRequest, opts ...grpc.CallOption) (*GetUidByEmailAndPwdResponse, error)
 	}
 
 	defaultUser struct {
@@ -47,7 +47,7 @@ func (m *defaultUser) CheckEmail(ctx context.Context, in *CheckEmailRequest, opt
 	return client.CheckEmail(ctx, in, opts...)
 }
 
-func (m *defaultUser) GetUserInfoByEmail(ctx context.Context, in *GetUserInfoByEmailRequest, opts ...grpc.CallOption) (*GetUserInfoByEmailResponse, error) {
+func (m *defaultUser) GetUidByEmailAndPwd(ctx context.Context, in *GetUidByEmailAndPwdRequest, opts ...grpc.CallOption) (*GetUidByEmailAndPwdResponse, error) {
 	client := user.NewUserClient(m.cli.Conn())
-	return client.GetUserInfoByEmail(ctx, in, opts...)
+	return client.GetUidByEmailAndPwd(ctx, in, opts...)
 }

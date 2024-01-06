@@ -14,4 +14,5 @@ type Config struct {
 		MaxOpenConns    int
 		ConnMaxLifeTime int
 	}
+	Salt string
 }
