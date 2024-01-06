@@ -1,7 +1,6 @@
 package mysql
 
 import (
-	"errors"
 	"fmt"
 	"nichebox/service/user/model"
 	"time"
@@ -46,4 +45,13 @@ func NewMysqlInterface(database, username, password, host, port string, maxIdleC
 
 func (m *MysqlModel) autoMigrate() {
 	m.db.AutoMigrate(&model.User{})
+}
+
+func (m *MysqlModel) GetUserByEmail(email string) (*model.User, error) {
+	var user model.User
+	result := m.db.Where("email = ?", email).First(&user)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return &user, nil
 }
