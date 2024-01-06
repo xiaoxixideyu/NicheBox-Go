@@ -1,0 +1,174 @@
+version: '3.5'
+# 网络配置
+networks:
+  niche-backend:
+    driver: ${NETWORKS_DRIVER}
+
+# 服务器配置
+services:
+  nginx:
+    build:
+      context: ./docker/nginx # 指定构建使用的 Dockfile 文件
+    environment:
+      - TZ=${TZ}
+    privileged: true
+    volumes:  # 设置挂载目录
+      - ${DATA_PATH_HOST}/nginx/conf/nginx.conf:/etc/nginx/nginx.conf
+      - ${DATA_PATH_HOST}/nginx/html:/etc/nginx/html
+      - ${DATA_PATH_HOST}/nginx/log:/var/log/nginx
+    ports:
+      - ${NGINX_PROT}:80
+    networks:
+      - niche-backend
+
+  golang:
+    build: 
+      context: ./docker/golang # 指定构建使用的 Dockerfile 文件
+    environment:  # 设置环境变量
+      - TZ=${TZ}
+    privileged: true
+    volumes:  # 设置挂载目录
+      - ${CODE_PATH_HOST}:/usr/src/code # 引用 .env 配置中 CODE_PATH_HOST 变量，将宿主机上代码存放的目录挂载到容器中 /usr/src/code 目录
+    stdin_open: true  # 打开标准输入，可以接受外部输入
+    tty: true
+    depends_on:
+      - nginx
+    networks:
+      - niche-backend
+
+  etcd:
+    build:
+      context: ./docker/etcd
+    environment:
+      - TZ=${TZ}
+      - ALLOW_NONE_AUTHENTICATION=yes
+      - ETCD_ADVERTISE_CLIENT_URLS=http://etcd:2379
+    ports:
+      - "${ETCD_PORT}:2379"
+    networks:
+      - niche-backend
+
+  mysql:
+    build:
+      context: ./docker/mysql
+    environment:
+      - TZ=${TZ}
+      - MYSQL_USER=${MYSQL_USERNAME}                  # 设置 Mysql 用户名称
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}              # 设置 Mysql 用户密码
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}    # 设置 Mysql root 用户密码
+    privileged: true
+    volumes:
+      - ${DATA_PATH_HOST}/mysql:/var/lib/mysql        # 引用 .env 配置中 DATA_PATH_HOST 变量，将宿主机上存放 Mysql 数据的目录挂载到容器中 /var/lib/mysql 目录
+    ports:
+      - "${MYSQL_PORT}:3306"                          # 设置容器3306端口映射指定宿主机端口
+    networks:
+      - niche-backend
+
+  redis:
+    build:
+      context: ./docker/redis
+    environment:
+      - TZ=${TZ}
+    privileged: true
+    volumes:
+      - ${DATA_PATH_HOST}/redis:/data
+    ports:
+      - "${REDIS_PORT}:6379"
+    networks:
+      - niche-backend
+
+  mysql-manage:
+    build:
+      context: ./docker/mysql-manage
+    environment:
+      - TZ=${TZ}
+      - PMA_ARBITRARY=1
+      - MYSQL_USER=${MYSQL_MANAGE_USERNAME}               # 设置连接的 Mysql 服务用户名称
+      - MYSQL_PASSWORD=${MYSQL_MANAGE_PASSWORD}           # 设置连接的 Mysql 服务用户密码
+      - MYSQL_ROOT_PASSWORD=${MYSQL_MANAGE_ROOT_PASSWORD} # 设置连接的 Mysql 服务 root 用户密码
+      - PMA_HOST=${MYSQL_MANAGE_CONNECT_HOST}             # 设置连接的 Mysql 服务 host，可以是 Mysql 服务容器的名称，也可以是 Mysql 服务容器的 ip 地址
+      - PMA_PORT=${MYSQL_MANAGE_CONNECT_PORT}             # 设置连接的 Mysql 服务端口号
+    ports:
+      - "${MYSQL_MANAGE_PORT}:80"
+    depends_on:
+      - mysql
+    networks:
+      - niche-backend
+
+  redis-manage:
+    build:
+      context: ./docker/redis-manage
+    environment:
+      - TZ=${TZ}
+      - ADMIN_USER=${REDIS_MANAGE_USERNAME}           # 设置 Redis 可视化管理的用户名称
+      - ADMIN_PASS=${REDIS_MANAGE_PASSWORD}           # 设置 Redis 可视化管理的用户密码
+      - REDIS_1_HOST=${REDIS_MANAGE_CONNECT_HOST}     # 设置连接的 Redis 服务 host，可以是 Redis 服务容器的名称，也可以是 Redis 服务容器的 ip 地址
+      - REDIS_1_PORT=${REDIS_MANAGE_CONNECT_PORT}     # 设置连接的 Redis 服务端口号
+    ports:
+      - "${REDIS_MANAGE_PORT}:80"                     # 设置容器80端口映射指定宿主机端口，用于宿主机访问可视化web
+    depends_on:                                       # 依赖容器
+      - redis                                     # 在 Redis 服务容器启动后启动
+    networks:
+      - niche-backend
+
+  etcd-manage:
+    build:
+      context: ./docker/etcd-manage
+    environment:
+      - TZ=${TZ}
+    ports:
+      - "${ETCD_MANAGE_PORT}:8080"                    # 设置容器8080端口映射指定宿主机端口，用于宿主机访问可视化web
+    depends_on:                                       # 依赖容器
+      - etcd                                      # 在 etcd 服务容器启动后启动
+    networks:
+      - niche-backend
+
+  prometheus:
+    build:
+      context: ./docker/prometheus
+    environment:
+      - TZ=${TZ}
+    privileged: true
+    volumes:
+      - ./docker/prometheus/prometheus.yml:/opt/bitnami/prometheus/conf/prometheus.yml  # 将 prometheus 配置文件挂载到容器里
+    ports:
+      - "${PROMETHEUS_PORT}:9090"                     # 设置容器9090端口映射指定宿主机端口，用于宿主机访问可视化web
+    networks:
+      - niche-backend
+
+  grafana:
+    build:
+      context: ./docker/grafana
+    environment:
+      - TZ=${TZ}
+    ports:
+      - "${GRAFANA_PORT}:3000"                        # 设置容器3000端口映射指定宿主机端口，用于宿主机访问可视化web
+    networks:
+      - niche-backend
+
+  jaeger:
+    build:
+      context: ./docker/jaeger
+    environment:
+      - TZ=${TZ}
+    ports:
+      - "${JAEGER_PORT}:16686"                        # 设置容器16686端口映射指定宿主机端口，用于宿主机访问可视化web
+    networks:
+      - niche-backend
+
+  dtm:
+    build:
+      context: ./docker/dtm
+    environment:
+      - TZ=${TZ}
+    entrypoint:
+      - "/app/dtm/dtm"
+      - "-c=/app/dtm/configs/config.yaml"
+    privileged: true
+    volumes:
+      - ./docker/dtm/config.yml:/app/dtm/configs/config.yaml # 将 dtm 配置文件挂载到容器里
+    ports:
+      - "${DTM_HTTP_PORT}:36789"
+      - "${DTM_GRPC_PORT}:36790"
+    networks:
+      - niche-backend

@@ -1,0 +1,4 @@
+data/*
+!data/nginx
+data/nginx/*
+!data/nginx/conf
