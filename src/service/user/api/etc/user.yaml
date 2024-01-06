@@ -1,3 +1,14 @@
 Name: User
 Host: 0.0.0.0
 Port: 8888
+
+Auth:
+  AccessSecret: uOvKLmVfztaXGpNYd4Z0I1SiT7MweJhl
+  AccessExpire: 86400
+  RefreshExpire: 604800
+
+UserRpc:
+  Etcd:
+    Hosts:
+    - etcd:2379
+    Key: user.rpc
