@@ -4,18 +4,24 @@ type RegisterRequest {
 	Password string `json:"password"`
 	Code     string `json:"code"`
 }
+
 type RegisterResponse {
+	LoginSuccess bool   `json:"login_success"`
 	Token        string `json:"token"`
 	RefreshToken string `json:"refresh_token"`
 }
+
 // Register
 
 // CheckEmailExists
 type CheckEmailExistsReqeust {
 	Email string `json:"email"`
 }
+
 type CheckEmailExistsResponse {
+	Exist bool `json:"exist"`
 }
+
 // CheckEmailExists
 
 // Login
@@ -23,19 +29,22 @@ type LoginReqeust {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
+
 type LoginResponse {
 	Token        string `json:"token"`
 	RefreshToken string `json:"refresh_token"`
 }
+
 // Login
 
 // RefreshToken
-type RefreshTokenReqeust {
-}
+type RefreshTokenReqeust {}
+
 type RefreshTokenResponse {
 	Token        string `json:"token"`
 	RefreshToken string `json:"refresh_token"`
 }
+
 // RefreshToken
 
 service User {
@@ -46,7 +55,7 @@ service User {
 	post /api/user/checkemailexists(CheckEmailExistsReqeust) returns (CheckEmailExistsResponse)
 
 	@handler Login
-	post /api/user/login(LoginReqeust) returns (LoginResponse)
+	post /api/user/login (LoginReqeust) returns (LoginResponse)
 }
 
 @server(
