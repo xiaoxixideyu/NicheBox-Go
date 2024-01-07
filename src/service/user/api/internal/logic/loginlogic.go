@@ -3,9 +3,8 @@ package logic
 import (
 	"context"
 	"net/http"
-	"time"
 
-	"nichebox/common/jwtx"
+	"nichebox/service/user/api/internal/common"
 	"nichebox/service/user/api/internal/svc"
 	"nichebox/service/user/api/internal/types"
 	"nichebox/service/user/rpc/pb/user"
@@ -43,20 +42,15 @@ func (l *LoginLogic) Login(req *types.LoginReqeust) (resp *types.LoginResponse, 
 				return nil, errors.New(http.StatusBadRequest, "邮箱或密码错误")
 			}
 		}
-		return nil, errors.New(http.StatusInternalServerError, "发生未知错误: 1")
+		return nil, errors.New(http.StatusInternalServerError, "login 服务出错: 1")
 	}
 
-	now := time.Now().Unix()
 	accessExpire := l.svcCtx.Config.Auth.AccessExpire
 	refreshExpire := l.svcCtx.Config.Auth.RefreshExpire
-
-	accessToken, err := jwtx.GetToken(l.svcCtx.Config.Auth.AccessSecret, now, accessExpire, res.Uid)
+	accessSecret := l.svcCtx.Config.Auth.AccessSecret
+	accessToken, refreshToken, err := common.CreateTokenAndRefreshToken(res.Uid, accessExpire, refreshExpire, accessSecret)
 	if err != nil {
-		return nil, errors.New(http.StatusInternalServerError, "发生未知错误: 2")
-	}
-	refreshToken, err := jwtx.GetToken(l.svcCtx.Config.Auth.AccessSecret, now, refreshExpire, res.Uid)
-	if err != nil {
-		return nil, errors.New(http.StatusInternalServerError, "发生未知错误: 3")
+		return nil, err
 	}
 
 	return &types.LoginResponse{

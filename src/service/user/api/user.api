@@ -47,7 +47,12 @@ service User {
 
 	@handler Login
 	post /api/user/login(LoginReqeust) returns (LoginResponse)
+}
 
+@server(
+	jwt: Auth
+)
+service User {
 	@handler RefreshToken
 	post /api/user/refreshtoken(RefreshTokenReqeust) returns (RefreshTokenResponse)
 }

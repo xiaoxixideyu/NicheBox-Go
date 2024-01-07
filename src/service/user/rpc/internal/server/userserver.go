@@ -36,3 +36,8 @@ func (s *UserServer) GetUidByEmailAndPwd(ctx context.Context, in *user.GetUidByE
 	l := logic.NewGetUidByEmailAndPwdLogic(ctx, s.svcCtx)
 	return l.GetUidByEmailAndPwd(in)
 }
+
+func (s *UserServer) CheckUid(ctx context.Context, in *user.CheckUidRequest) (*user.CheckUidResponse, error) {
+	l := logic.NewCheckUidLogic(ctx, s.svcCtx)
+	return l.CheckUid(in)
+}

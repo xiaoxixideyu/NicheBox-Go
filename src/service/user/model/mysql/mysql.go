@@ -9,7 +9,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type MysqlModel struct {
+type MysqlInterface struct {
 	db *gorm.DB
 }
 
@@ -36,20 +36,29 @@ func NewMysqlInterface(database, username, password, host, port string, maxIdleC
 	sqlDB.SetMaxOpenConns(maxOpenConns)
 	sqlDB.SetConnMaxLifetime(time.Second * time.Duration(connMaxLifeTime))
 
-	m := &MysqlModel{
+	m := &MysqlInterface{
 		db: db,
 	}
 	m.autoMigrate()
 	return m, nil
 }
 
-func (m *MysqlModel) autoMigrate() {
+func (m *MysqlInterface) autoMigrate() {
 	m.db.AutoMigrate(&model.User{})
 }
 
-func (m *MysqlModel) GetUserByEmail(email string) (*model.User, error) {
+func (m *MysqlInterface) GetUserByEmail(email string) (*model.User, error) {
 	var user model.User
 	result := m.db.Where("email = ?", email).First(&user)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return &user, nil
+}
+
+func (m *MysqlInterface) GerUserByUid(uid int64) (*model.User, error) {
+	var user model.User
+	result := m.db.Where("uid = ?", uid).First(&user)
 	if result.Error != nil {
 		return nil, result.Error
 	}

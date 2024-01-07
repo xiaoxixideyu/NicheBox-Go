@@ -34,8 +34,18 @@ message GetUidByEmailAndPwdResponse {
 }
 // GetUidByEmailAndPwd
 
+// CheckUid
+message CheckUidRequest {
+    int64 Uid = 1;
+}
+message CheckUidResponse {
+    bool Exists = 1;
+}
+// CheckUid
+
 service User {
     rpc Register(RegisterRequest) returns(RegisterResponse);
     rpc CheckEmail(CheckEmailRequest) returns(CheckEmailResponse);
     rpc GetUidByEmailAndPwd(GetUidByEmailAndPwdRequest) returns(GetUidByEmailAndPwdResponse);
+    rpc CheckUid(CheckUidRequest) returns(CheckUidResponse);
 }
