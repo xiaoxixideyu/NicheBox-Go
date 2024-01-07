@@ -34,7 +34,7 @@ func (l *RegisterLogic) Register(req *types.RegisterRequest) (resp *types.Regist
 		Password: req.Password,
 		Code:     req.Code,
 	}
-	out, err := l.svcCtx.UserRpc.Register(l.ctx, &in)
+	_, err = l.svcCtx.UserRpc.Register(l.ctx, &in)
 	if err != nil {
 		rpcStatus, ok := status.FromError(err)
 		if ok {
@@ -52,11 +52,15 @@ func (l *RegisterLogic) Register(req *types.RegisterRequest) (resp *types.Regist
 	}
 	loginResp, err := loginLogic.Login(&loginReq)
 	if err != nil {
-		// todo: 注册成功但是登录失败， 注册的resp增加一个标识注册是否成功的字段，此时不帮忙自动登录了，单单响应注册成功
+		// Login failed but dont response error
+		return &types.RegisterResponse{
+			LoginSuccess: false,
+		}, nil
 	}
 
 	return &types.RegisterResponse{
-		Token:        "",
-		RefreshToken: "",
-	}
+		LoginSuccess: true,
+		Token:        loginResp.Token,
+		RefreshToken: loginResp.RefreshToken,
+	}, nil
 }
