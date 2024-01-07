@@ -5,6 +5,7 @@ type RegisterRequest {
 	Code     string `json:"code"`
 }
 type RegisterResponse {
+    RegisterSuccess      bool `json:"register_success"`
 	Token        string `json:"token"`
 	RefreshToken string `json:"refresh_token"`
 }

@@ -3,6 +3,7 @@ module nichebox
 go 1.20
 
 require (
+	github.com/bwmarrin/snowflake v0.3.0
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/zeromicro/go-zero v1.6.1
 	github.com/zeromicro/x v0.0.0-20230424055333-01c7fb9548d4

@@ -55,3 +55,8 @@ func (m *MysqlModel) GetUserByEmail(email string) (*model.User, error) {
 	}
 	return &user, nil
 }
+
+func (m *MysqlModel) CreateUser(user *model.User) error {
+	result := m.db.Create(user)
+	return result.Error
+}
