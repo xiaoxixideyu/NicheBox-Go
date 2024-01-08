@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-	"nichebox/common/snowflake"
 	"nichebox/service/user/rpc/internal/config"
 	"nichebox/service/user/rpc/internal/server"
 	"nichebox/service/user/rpc/internal/svc"
@@ -24,11 +23,6 @@ func main() {
 	var c config.Config
 	conf.MustLoad(*configFile, &c)
 	ctx := svc.NewServiceContext(c)
-
-	err := snowflake.Init("2023-01-01", 1)
-	if err != nil {
-		panic(err)
-	}
 
 	s := zrpc.MustNewServer(c.RpcServerConf, func(grpcServer *grpc.Server) {
 		user.RegisterUserServer(grpcServer, server.NewUserServer(ctx))

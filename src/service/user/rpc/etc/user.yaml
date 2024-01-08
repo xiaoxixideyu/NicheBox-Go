@@ -17,4 +17,5 @@ Mysql:
 
 Salt: HWVOFkGgPTryzICwd7qnJaZR9KQ2i8xe
 
-MachineID: 1
+SnowFlake:
+  MachineID: 1  # 取值范围 [1, 1024]
