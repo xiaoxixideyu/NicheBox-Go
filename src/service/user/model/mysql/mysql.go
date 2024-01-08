@@ -64,3 +64,8 @@ func (m *MysqlInterface) GerUserByUid(uid int64) (*model.User, error) {
 	}
 	return &user, nil
 }
+
+func (m *MysqlInterface) CreateUser(user *model.User) error {
+	result := m.db.Create(user)
+	return result.Error
+}

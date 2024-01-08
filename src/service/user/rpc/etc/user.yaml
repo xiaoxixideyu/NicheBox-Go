@@ -7,7 +7,7 @@ Etcd:
 
 Mysql:
   Database: nichebox
-  Username: admin
+  Username: root
   Password: "123456"
   Host: mysql
   Port: "3306"
@@ -16,3 +16,6 @@ Mysql:
   connMaxLifeTime: 3600
 
 Salt: HWVOFkGgPTryzICwd7qnJaZR9KQ2i8xe
+
+SnowFlake:
+  MachineID: 1  # 取值范围 [1, 1024]

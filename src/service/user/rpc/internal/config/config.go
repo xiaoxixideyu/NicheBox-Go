@@ -14,5 +14,8 @@ type Config struct {
 		MaxOpenConns    int
 		ConnMaxLifeTime int
 	}
+	Snowflake struct {
+		MachineID int64
+	}
 	Salt string
 }

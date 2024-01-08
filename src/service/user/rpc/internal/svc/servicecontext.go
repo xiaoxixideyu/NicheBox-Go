@@ -2,6 +2,7 @@ package svc
 
 import (
 	"log"
+	"nichebox/common/snowflake"
 	"nichebox/service/user/model"
 	"nichebox/service/user/model/mysql"
 	"nichebox/service/user/rpc/internal/config"
@@ -18,6 +19,12 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		log.Printf("failed to create user interface, err: %v\n", err)
 		return nil
 	}
+	err = snowflake.Init(c.Snowflake.MachineID)
+	if err != nil {
+		log.Printf("failed to initialize snowflake, err:%v\n", err)
+		return nil
+	}
+
 	return &ServiceContext{
 		Config:        c,
 		UserInterface: userInterface,

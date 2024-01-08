@@ -2,7 +2,10 @@ package logic
 
 import (
 	"context"
-
+	"errors"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+	"gorm.io/gorm"
 	"nichebox/service/user/rpc/internal/svc"
 	"nichebox/service/user/rpc/pb/user"
 
@@ -24,7 +27,13 @@ func NewCheckEmailLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CheckE
 }
 
 func (l *CheckEmailLogic) CheckEmail(in *user.CheckEmailRequest) (*user.CheckEmailResponse, error) {
-	// todo: add your logic here and delete this line
+	_, err := l.svcCtx.UserInterface.GetUserByEmail(in.Email)
+	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
+		return &user.CheckEmailResponse{Exists: false}, nil
+	}
+	if err != nil {
+		return nil, status.Error(codes.Unknown, err.Error())
+	}
 
-	return &user.CheckEmailResponse{}, nil
+	return &user.CheckEmailResponse{Exists: true}, nil
 }

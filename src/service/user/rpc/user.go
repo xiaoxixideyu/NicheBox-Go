@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-
 	"nichebox/service/user/rpc/internal/config"
 	"nichebox/service/user/rpc/internal/server"
 	"nichebox/service/user/rpc/internal/svc"

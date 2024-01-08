@@ -3,13 +3,11 @@ package main
 import (
 	"flag"
 	"fmt"
-
+	"github.com/zeromicro/go-zero/core/conf"
+	"github.com/zeromicro/go-zero/rest"
 	"nichebox/service/user/api/internal/config"
 	"nichebox/service/user/api/internal/handler"
 	"nichebox/service/user/api/internal/svc"
-
-	"github.com/zeromicro/go-zero/core/conf"
-	"github.com/zeromicro/go-zero/rest"
 )
 
 var configFile = flag.String("f", "etc/user.yaml", "the config file")
