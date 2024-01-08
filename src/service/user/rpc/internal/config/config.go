@@ -14,5 +14,13 @@ type Config struct {
 		MaxOpenConns    int
 		ConnMaxLifeTime int
 	}
+	CacheRedis struct {
+		Host        []string
+		Type        string
+		Pass        string
+		Tls         bool
+		NonBlock    bool
+		PingTimeout int
+	}
 	Salt string
 }

@@ -1,20 +1,14 @@
-type SendEmail {
-    Destination   string `json:"destination"`
-    Content string `json:"content"`
+type SendVerificationCodeRequest {
+	Destination string `json:"destination"`
 }
 
-service Email {
-  @handler Login
-  post /api/email/send(LoginRequest) returns (LoginResponse)
+type SendVerificationCodeResponse {}
 
-  @handler Register
-  post /api/user/register(RegisterRequest) returns (RegisterResponse)
-}
-
-@server(
-  jwt: Auth
+@server (
+	timeout: 5s
 )
-service User {
-  @handler UserInfo
-  post /api/user/userinfo() returns (UserInfoResponse)
+service Email {
+	@handler SendEmail
+	post /api/email/sendverificationcode (SendVerificationCodeRequest) returns (SendVerificationCodeRequest)
 }
+

@@ -5,13 +5,13 @@ package emailclient;
 option go_package = "./email";
 
 // 发送邮件
-message SendEmailRequest {
+message SendVerificationCodeRequest {
   string Destination = 1;
-  string Content = 2;
+  string Code = 2;
 }
-message SendEmailResponse {
+message SendVerificationCodeResponse {
 }
 
 service Email {
-  rpc SendEmail(SendEmailRequest) returns(SendEmailResponse);
+  rpc SendVerificationCode(SendVerificationCodeRequest) returns(SendVerificationCodeResponse);
 }

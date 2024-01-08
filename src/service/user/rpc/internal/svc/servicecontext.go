@@ -4,12 +4,14 @@ import (
 	"log"
 	"nichebox/service/user/model"
 	"nichebox/service/user/model/mysql"
+	"nichebox/service/user/model/redis"
 	"nichebox/service/user/rpc/internal/config"
 )
 
 type ServiceContext struct {
-	Config        config.Config
-	UserInterface model.UserInterface
+	Config             config.Config
+	UserInterface      model.UserInterface
+	UserRedisInterface model.UserRedisInterface
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -18,8 +20,14 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		log.Printf("failed to create user interface, err: %v\n", err)
 		return nil
 	}
+	userRedisInterface, err := redis.NewRedisInterface(c.CacheRedis.Host, c.CacheRedis.Type, c.CacheRedis.Pass, c.CacheRedis.Tls, c.CacheRedis.NonBlock, c.CacheRedis.PingTimeout)
+	if err != nil {
+		log.Printf("failed to create email redis interface, err:%v\n", err)
+		return nil
+	}
 	return &ServiceContext{
-		Config:        c,
-		UserInterface: userInterface,
+		Config:             c,
+		UserInterface:      userInterface,
+		UserRedisInterface: userRedisInterface,
 	}
 }

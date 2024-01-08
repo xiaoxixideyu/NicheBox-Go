@@ -13,11 +13,11 @@ import (
 )
 
 type (
-	SendEmailRequest  = email.SendEmailRequest
-	SendEmailResponse = email.SendEmailResponse
+	SendVerificationCodeRequest  = email.SendVerificationCodeRequest
+	SendVerificationCodeResponse = email.SendVerificationCodeResponse
 
 	Email interface {
-		SendEmail(ctx context.Context, in *SendEmailRequest, opts ...grpc.CallOption) (*SendEmailResponse, error)
+		SendVerificationCode(ctx context.Context, in *SendVerificationCodeRequest, opts ...grpc.CallOption) (*SendVerificationCodeResponse, error)
 	}
 
 	defaultEmail struct {
@@ -31,7 +31,7 @@ func NewEmail(cli zrpc.Client) Email {
 	}
 }
 
-func (m *defaultEmail) SendEmail(ctx context.Context, in *SendEmailRequest, opts ...grpc.CallOption) (*SendEmailResponse, error) {
+func (m *defaultEmail) SendVerificationCode(ctx context.Context, in *SendVerificationCodeRequest, opts ...grpc.CallOption) (*SendVerificationCodeResponse, error) {
 	client := email.NewEmailClient(m.cli.Conn())
-	return client.SendEmail(ctx, in, opts...)
+	return client.SendVerificationCode(ctx, in, opts...)
 }

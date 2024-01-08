@@ -22,7 +22,7 @@ func NewEmailServer(svcCtx *svc.ServiceContext) *EmailServer {
 	}
 }
 
-func (s *EmailServer) SendEmail(ctx context.Context, in *email.SendEmailRequest) (*email.SendEmailResponse, error) {
-	l := logic.NewSendEmailLogic(ctx, s.svcCtx)
-	return l.SendEmail(in)
+func (s *EmailServer) SendVerificationCode(ctx context.Context, in *email.SendVerificationCodeRequest) (*email.SendVerificationCodeResponse, error) {
+	l := logic.NewSendVerificationCodeLogic(ctx, s.svcCtx)
+	return l.SendVerificationCode(in)
 }
