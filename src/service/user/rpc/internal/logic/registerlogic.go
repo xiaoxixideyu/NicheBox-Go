@@ -3,9 +3,9 @@ package logic
 import (
 	"context"
 	"errors"
+	"github.com/go-sql-driver/mysql"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"gorm.io/gorm"
 	"nichebox/common/cryptx"
 	"nichebox/common/snowflake"
 	"nichebox/service/user/model"
@@ -38,12 +38,13 @@ func (l *RegisterLogic) Register(in *user.RegisterRequest) (*user.RegisterRespon
 	userModel := model.User{
 		Uid:      uid,
 		Email:    in.Email,
-		Password: cryptx.PasswordEncrypt(in.Password, l.svcCtx.Config.Salt),
+		Password: cryptx.PasswordEncrypt(l.svcCtx.Config.Salt, in.Password),
 		Username: "default user",
 	}
 
 	err := l.svcCtx.UserInterface.CreateUser(&userModel)
-	if err != nil && errors.Is(err, gorm.ErrDuplicatedKey) {
+	var mysqlErr *mysql.MySQLError
+	if errors.As(err, &mysqlErr) && mysqlErr.Number == 1062 {
 		return nil, status.Error(codes.AlreadyExists, "邮箱已存在")
 	}
 

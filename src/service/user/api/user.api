@@ -12,7 +12,6 @@ type RegisterResponse {
 }
 
 // Register
-
 // CheckEmailExists
 type CheckEmailExistsReqeust {
 	Email string `json:"email"`
@@ -23,7 +22,6 @@ type CheckEmailExistsResponse {
 }
 
 // CheckEmailExists
-
 // Login
 type LoginReqeust {
 	Email    string `json:"email"`
@@ -36,7 +34,6 @@ type LoginResponse {
 }
 
 // Login
-
 // RefreshToken
 type RefreshTokenReqeust {}
 
@@ -46,22 +43,22 @@ type RefreshTokenResponse {
 }
 
 // RefreshToken
-
 service User {
 	@handler Register
-	post /api/user/register(RegisterRequest) returns (RegisterResponse)
+	post /api/user/register (RegisterRequest) returns (RegisterResponse)
 
 	@handler CheckEmailExists
-	post /api/user/checkemailexists(CheckEmailExistsReqeust) returns (CheckEmailExistsResponse)
+	post /api/user/checkemailexists (CheckEmailExistsReqeust) returns (CheckEmailExistsResponse)
 
 	@handler Login
 	post /api/user/login (LoginReqeust) returns (LoginResponse)
 }
 
-@server(
+@server (
 	jwt: Auth
 )
 service User {
 	@handler RefreshToken
-	post /api/user/refreshtoken(RefreshTokenReqeust) returns (RefreshTokenResponse)
+	post /api/user/refreshtoken (RefreshTokenReqeust) returns (RefreshTokenResponse)
 }
+
