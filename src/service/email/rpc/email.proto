@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package emailclient;
+
+option go_package = "./email";
+
+// 发送邮件
+message SendEmailRequest {
+  string Destination = 1;
+  string Content = 2;
+}
+message SendEmailResponse {
+}
+
+service Email {
+  rpc SendEmail(SendEmailRequest) returns(SendEmailResponse);
+}
