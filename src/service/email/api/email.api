@@ -1,14 +1,23 @@
-type SendVerificationCodeRequest {
+type SendVerificationCodeRegisterRequest {
 	Destination string `json:"destination"`
 }
 
-type SendVerificationCodeResponse {}
+type SendVerificationCodeRegisterResponse {}
+
+type SendVerificationCodePWDRequest {
+	Destination string `json:"destination"`
+}
+
+type SendVerificationCodePWDResponse {}
 
 @server (
 	timeout: 5s
 )
 service Email {
-	@handler SendEmail
-	post /api/email/sendverificationcode (SendVerificationCodeRequest) returns (SendVerificationCodeRequest)
+	@handler SendVerificationCodeRegister
+	post /api/email/sendverificationcoderegister (SendVerificationCodeRegisterRequest) returns (SendVerificationCodeRegisterResponse)
+
+	@handler SendVerificationCodePWD
+	post /api/email/sendverificationcodepwd (SendVerificationCodePWDRequest) returns (SendVerificationCodePWDResponse)
 }
 

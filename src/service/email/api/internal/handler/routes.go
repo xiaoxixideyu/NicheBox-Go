@@ -15,8 +15,13 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodPost,
-				Path:    "/api/email/sendverificationcode",
-				Handler: SendVerificationCode(serverCtx),
+				Path:    "/api/email/sendverificationcodepwd",
+				Handler: SendVerificationCodePWDHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/api/email/sendverificationcoderegister",
+				Handler: SendVerificationCodeRegisterHandler(serverCtx),
 			},
 		},
 		rest.WithTimeout(5000*time.Millisecond),

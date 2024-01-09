@@ -27,6 +27,12 @@ func NewRedisInterface(hosts []string, deployType, pass string, tls, nonBlock bo
 	return r, nil
 }
 
-func (r *RedisInterface) SetVerificationCode(ctx context.Context, destination, code string, expiration int) error {
-	return r.rds.SetexCtx(ctx, destination, code, expiration)
+func (r *RedisInterface) SetVerificationCodeRegister(ctx context.Context, destination, code string, expiration int) error {
+	key := KeyPrefixUser + KeyRegisterCode + destination
+	return r.rds.SetexCtx(ctx, key, code, expiration)
+}
+
+func (r *RedisInterface) SetVerificationCodePWD(ctx context.Context, destination, code string, expiration int) error {
+	key := KeyPrefixUser + KeyPWDCode + destination
+	return r.rds.SetexCtx(ctx, key, code, expiration)
 }
