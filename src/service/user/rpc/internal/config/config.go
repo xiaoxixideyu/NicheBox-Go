@@ -17,5 +17,13 @@ type Config struct {
 	Snowflake struct {
 		MachineID int64
 	}
+	CacheRedis struct {
+		Host        []string
+		Type        string
+		Pass        string
+		Tls         bool
+		NonBlock    bool
+		PingTimeout int
+	}
 	Salt string
 }

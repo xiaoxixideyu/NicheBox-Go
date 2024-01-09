@@ -6,10 +6,10 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"net/http"
-	"nichebox/service/user/rpc/pb/user"
-
 	"nichebox/service/user/api/internal/svc"
 	"nichebox/service/user/api/internal/types"
+	"nichebox/service/user/rpc/pb/user"
+	"strings"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -32,8 +32,9 @@ func (l *RegisterLogic) Register(req *types.RegisterRequest) (resp *types.Regist
 	in := user.RegisterRequest{
 		Email:    req.Email,
 		Password: req.Password,
-		Code:     req.Code,
+		Code:     strings.ToUpper(req.Code),
 	}
+
 	_, err = l.svcCtx.UserRpc.Register(l.ctx, &in)
 	if err != nil {
 		rpcStatus, ok := status.FromError(err)

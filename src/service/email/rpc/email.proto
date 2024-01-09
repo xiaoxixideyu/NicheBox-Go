@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package emailclient;
+
+option go_package = "./email";
+
+// 发送邮件
+message SendVerificationCodeRequest {
+  string Destination = 1;
+  string Code = 2;
+  string type = 3;
+}
+message SendVerificationCodeResponse {
+}
+
+service Email {
+  rpc SendVerificationCode(SendVerificationCodeRequest) returns(SendVerificationCodeResponse);
+}

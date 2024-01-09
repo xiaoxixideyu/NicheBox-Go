@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"github.com/go-sql-driver/mysql"
+	"github.com/zeromicro/go-zero/core/stores/redis"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"nichebox/common/cryptx"
@@ -30,7 +31,18 @@ func NewRegisterLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Register
 }
 
 func (l *RegisterLogic) Register(in *user.RegisterRequest) (*user.RegisterResponse, error) {
-	// todo: check if code is valid
+	val, err := l.svcCtx.UserRedisInterface.GetVerificationCode(l.ctx, in.Email)
+	if err != nil && errors.As(err, &redis.ErrEmptyKey) {
+		return nil, status.Error(codes.NotFound, "验证码错误")
+	}
+
+	if err != nil {
+		return nil, status.Error(codes.Unknown, err.Error())
+	}
+
+	if val != in.Code {
+		return nil, status.Error(codes.NotFound, "验证码错误")
+	}
 
 	uid := snowflake.GenID()
 
@@ -42,7 +54,7 @@ func (l *RegisterLogic) Register(in *user.RegisterRequest) (*user.RegisterRespon
 		Username: "default user",
 	}
 
-	err := l.svcCtx.UserInterface.CreateUser(&userModel)
+	err = l.svcCtx.UserInterface.CreateUser(&userModel)
 	var mysqlErr *mysql.MySQLError
 	if errors.As(err, &mysqlErr) && mysqlErr.Number == 1062 {
 		return nil, status.Error(codes.AlreadyExists, "邮箱已存在")
