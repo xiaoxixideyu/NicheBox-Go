@@ -19,6 +19,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 			{
 				Method:  http.MethodPost,
+				Path:    "/api/user/forgetpassword",
+				Handler: ForgetPasswordHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
 				Path:    "/api/user/login",
 				Handler: LoginHandler(serverCtx),
 			},
@@ -44,8 +49,23 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodPost,
+				Path:    "/api/user/checkverificationcodecriticaluserinfo",
+				Handler: CheckVerificationCodeCriticalUserInfoHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
 				Path:    "/api/user/refreshtoken",
 				Handler: RefreshTokenHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/api/user/sendverificationcodecriticaluserinfo",
+				Handler: SendVerificationCodeCriticalUserInfoHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/api/user/setcriticaluserinfo",
+				Handler: SetCriticalUserInfoHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),

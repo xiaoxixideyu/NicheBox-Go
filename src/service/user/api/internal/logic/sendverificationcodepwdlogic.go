@@ -8,6 +8,7 @@ import (
 	"nichebox/service/user/api/internal/common"
 	"nichebox/service/user/model/redis"
 	"nichebox/service/user/rpc/pb/user"
+	"strings"
 
 	"nichebox/service/user/api/internal/svc"
 	"nichebox/service/user/api/internal/types"
@@ -46,7 +47,7 @@ func (l *SendVerificationCodePWDLogic) SendVerificationCodePWD(req *types.SendVe
 
 	inUser := user.SetVerificationCodeRequest{
 		Key:        redis.KeyPrefixUser + redis.KeyPWDCode + req.Destination,
-		Val:        code,
+		Val:        strings.ToUpper(code),
 		Expiration: common.VERIFICATIONCODEEXPIRATION,
 	}
 

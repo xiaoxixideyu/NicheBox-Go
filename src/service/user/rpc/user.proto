@@ -62,7 +62,28 @@ message GetVerificationCodeRequest {
 message GetVerificationCodeResponse {
     string val = 1;
 }
-// SetVerificationCode
+// GetVerificationCode
+
+// ForgetPassword
+message ForgetPasswordRequest {
+    string email = 1;
+    string newPassword = 2;
+    string code = 3;
+}
+
+message ForgetPasswordResponse {
+}
+// ForgetPassword
+
+// SetCriticalUserInfo
+message SetCriticalUserInfoRequest {
+    string password = 1;
+}
+
+message SetCriticalUserInfoResponse {
+}
+
+// SetCriticalUserInfo
 
 service User {
     rpc Register(RegisterRequest) returns(RegisterResponse);
@@ -71,4 +92,6 @@ service User {
     rpc CheckUid(CheckUidRequest) returns(CheckUidResponse);
     rpc SetVerificationCode(SetVerificationCodeRequest) returns (SetVerificationCodeResponse);
     rpc GetVerificationCode(GetVerificationCodeRequest) returns (GetVerificationCodeResponse);
+    rpc ForgetPassword(ForgetPasswordRequest) returns (ForgetPasswordResponse);
+    rpc SetCriticalUserInfo(SetCriticalUserInfoRequest) returns (SetCriticalUserInfoResponse);
 }

@@ -51,3 +51,13 @@ func (s *UserServer) GetVerificationCode(ctx context.Context, in *user.GetVerifi
 	l := logic.NewGetVerificationCodeLogic(ctx, s.svcCtx)
 	return l.GetVerificationCode(in)
 }
+
+func (s *UserServer) ForgetPassword(ctx context.Context, in *user.ForgetPasswordRequest) (*user.ForgetPasswordResponse, error) {
+	l := logic.NewForgetPasswordLogic(ctx, s.svcCtx)
+	return l.ForgetPassword(in)
+}
+
+func (s *UserServer) SetCriticalUserInfo(ctx context.Context, in *user.SetCriticalUserInfoRequest) (*user.SetCriticalUserInfoResponse, error) {
+	l := logic.NewSetCriticalUserInfoLogic(ctx, s.svcCtx)
+	return l.SetCriticalUserInfo(in)
+}

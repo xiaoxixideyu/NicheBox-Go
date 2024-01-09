@@ -9,6 +9,23 @@ type CheckEmailExistsResponse struct {
 	Exist bool `json:"exist"`
 }
 
+type CheckVerificationCodeCriticalUserInfoRequest struct {
+	Email string `json:"email"`
+	Code  string `json:"code""`
+}
+
+type CheckVerificationCodeCriticalUserInfoResponse struct {
+}
+
+type ForgetPasswordRequest struct {
+	Email       string `json:"email"`
+	NewPassword string `json:"new_password""`
+	Code        string `json:"code""`
+}
+
+type ForgetPasswordResponse struct {
+}
+
 type LoginReqeust struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
@@ -39,6 +56,13 @@ type RegisterResponse struct {
 	RefreshToken string `json:"refresh_token"`
 }
 
+type SendVerificationCodeCriticalUserInfoRequest struct {
+	Uid int64 `json:"uid"`
+}
+
+type SendVerificationCodeCriticalUserInfoResponse struct {
+}
+
 type SendVerificationCodePWDRequest struct {
 	Destination string `json:"destination"`
 }
@@ -51,4 +75,11 @@ type SendVerificationCodeRegisterRequest struct {
 }
 
 type SendVerificationCodeRegisterResponse struct {
+}
+
+type SetCriticalUserInfoRequest struct {
+	Password string `json:"password""`
+}
+
+type SetCriticalUserInfoResponse struct {
 }

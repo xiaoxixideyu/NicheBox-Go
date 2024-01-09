@@ -17,12 +17,16 @@ type (
 	CheckEmailResponse          = user.CheckEmailResponse
 	CheckUidRequest             = user.CheckUidRequest
 	CheckUidResponse            = user.CheckUidResponse
+	ForgetPasswordRequest       = user.ForgetPasswordRequest
+	ForgetPasswordResponse      = user.ForgetPasswordResponse
 	GetUidByEmailAndPwdRequest  = user.GetUidByEmailAndPwdRequest
 	GetUidByEmailAndPwdResponse = user.GetUidByEmailAndPwdResponse
 	GetVerificationCodeRequest  = user.GetVerificationCodeRequest
 	GetVerificationCodeResponse = user.GetVerificationCodeResponse
 	RegisterRequest             = user.RegisterRequest
 	RegisterResponse            = user.RegisterResponse
+	SetCriticalUserInfoRequest  = user.SetCriticalUserInfoRequest
+	SetCriticalUserInfoResponse = user.SetCriticalUserInfoResponse
 	SetVerificationCodeRequest  = user.SetVerificationCodeRequest
 	SetVerificationCodeResponse = user.SetVerificationCodeResponse
 
@@ -33,6 +37,8 @@ type (
 		CheckUid(ctx context.Context, in *CheckUidRequest, opts ...grpc.CallOption) (*CheckUidResponse, error)
 		SetVerificationCode(ctx context.Context, in *SetVerificationCodeRequest, opts ...grpc.CallOption) (*SetVerificationCodeResponse, error)
 		GetVerificationCode(ctx context.Context, in *GetVerificationCodeRequest, opts ...grpc.CallOption) (*GetVerificationCodeResponse, error)
+		ForgetPassword(ctx context.Context, in *ForgetPasswordRequest, opts ...grpc.CallOption) (*ForgetPasswordResponse, error)
+		SetCriticalUserInfo(ctx context.Context, in *SetCriticalUserInfoRequest, opts ...grpc.CallOption) (*SetCriticalUserInfoResponse, error)
 	}
 
 	defaultUser struct {
@@ -74,4 +80,14 @@ func (m *defaultUser) SetVerificationCode(ctx context.Context, in *SetVerificati
 func (m *defaultUser) GetVerificationCode(ctx context.Context, in *GetVerificationCodeRequest, opts ...grpc.CallOption) (*GetVerificationCodeResponse, error) {
 	client := user.NewUserClient(m.cli.Conn())
 	return client.GetVerificationCode(ctx, in, opts...)
+}
+
+func (m *defaultUser) ForgetPassword(ctx context.Context, in *ForgetPasswordRequest, opts ...grpc.CallOption) (*ForgetPasswordResponse, error) {
+	client := user.NewUserClient(m.cli.Conn())
+	return client.ForgetPassword(ctx, in, opts...)
+}
+
+func (m *defaultUser) SetCriticalUserInfo(ctx context.Context, in *SetCriticalUserInfoRequest, opts ...grpc.CallOption) (*SetCriticalUserInfoResponse, error) {
+	client := user.NewUserClient(m.cli.Conn())
+	return client.SetCriticalUserInfo(ctx, in, opts...)
 }

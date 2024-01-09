@@ -56,7 +56,40 @@ type SendVerificationCodePWDRequest {
 
 type SendVerificationCodePWDResponse {}
 
+type SendVerificationCodeCriticalUserInfoRequest {
+	Uid int64 `json:"uid"`
+}
+
+type SendVerificationCodeCriticalUserInfoResponse {}
+
 //SendVerificationCode
+// ForgetPassword
+type ForgetPasswordRequest {
+	Email       string `json:"email"`
+	NewPassword string `json:"new_password""`
+	Code        string `json:"code""`
+}
+
+type ForgetPasswordResponse {}
+
+// ForgetPassword
+// SetCriticalUserInfo
+type SetCriticalUserInfoRequest {
+	Password string `json:"password""`
+}
+
+type SetCriticalUserInfoResponse {}
+
+// SetCriticalUserInfo
+// CheckVerificationCodeCriticalUserInfo
+type CheckVerificationCodeCriticalUserInfoRequest {
+	Email string `json:"email"`
+	Code  string `json:"code""`
+}
+
+type CheckVerificationCodeCriticalUserInfoResponse {}
+
+// CheckVerificationCodeCriticalUserInfo
 service User {
 	@handler Register
 	post /api/user/register (RegisterRequest) returns (RegisterResponse)
@@ -72,6 +105,9 @@ service User {
 
 	@handler SendVerificationCodePWD
 	post /api/user/sendverificationcodepwd (SendVerificationCodePWDRequest) returns (SendVerificationCodePWDResponse)
+
+	@handler ForgetPassword
+	post /api/user/forgetpassword (ForgetPasswordRequest) returns (ForgetPasswordResponse)
 }
 
 @server (
@@ -80,5 +116,14 @@ service User {
 service User {
 	@handler RefreshToken
 	post /api/user/refreshtoken (RefreshTokenReqeust) returns (RefreshTokenResponse)
+
+	@handler SetCriticalUserInfo
+	post /api/user/setcriticaluserinfo (SetCriticalUserInfoRequest) returns (SetCriticalUserInfoResponse)
+
+	@handler SendVerificationCodeCriticalUserInfo
+	post /api/user/sendverificationcodecriticaluserinfo (SendVerificationCodeCriticalUserInfoRequest) returns (SendVerificationCodeCriticalUserInfoResponse)
+
+	@handler CheckVerificationCodeCriticalUserInfo
+	post /api/user/checkverificationcodecriticaluserinfo (CheckVerificationCodeCriticalUserInfoRequest) returns (CheckVerificationCodeCriticalUserInfoResponse)
 }
 
