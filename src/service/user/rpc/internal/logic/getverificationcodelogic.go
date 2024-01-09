@@ -2,6 +2,10 @@ package logic
 
 import (
 	"context"
+	"errors"
+	"github.com/zeromicro/go-zero/core/stores/redis"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 
 	"nichebox/service/user/rpc/internal/svc"
 	"nichebox/service/user/rpc/pb/user"
@@ -27,6 +31,13 @@ func (l *GetVerificationCodeLogic) GetVerificationCode(in *user.GetVerificationC
 	code, err := l.svcCtx.UserRedisInterface.GetVerificationCode(l.ctx, in.Key)
 	if err != nil {
 		return nil, err
+	}
+	if err != nil && errors.As(err, &redis.ErrEmptyKey) {
+		return nil, status.Error(codes.NotFound, "验证码不存在")
+	}
+
+	if err != nil {
+		return nil, status.Error(codes.Unknown, err.Error())
 	}
 
 	return &user.GetVerificationCodeResponse{Val: code}, nil

@@ -2,6 +2,13 @@ package logic
 
 import (
 	"context"
+	"github.com/zeromicro/x/errors"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+	"net/http"
+	redisBiz "nichebox/service/user/model/redis"
+	"nichebox/service/user/rpc/pb/user"
+	"strings"
 
 	"nichebox/service/user/api/internal/svc"
 	"nichebox/service/user/api/internal/types"
@@ -24,7 +31,25 @@ func NewCheckVerificationCodeCriticalUserInfoLogic(ctx context.Context, svcCtx *
 }
 
 func (l *CheckVerificationCodeCriticalUserInfoLogic) CheckVerificationCodeCriticalUserInfo(req *types.CheckVerificationCodeCriticalUserInfoRequest) (resp *types.CheckVerificationCodeCriticalUserInfoResponse, err error) {
-	// todo: add your logic here and delete this line
+	key := redisBiz.KeyPrefixUser + redisBiz.KeyCriticalCode + req.Email
+	in := user.GetVerificationCodeRequest{
+		Key: key,
+	}
+	out, err := l.svcCtx.UserRpc.GetVerificationCode(l.ctx, &in)
+	
+	if err != nil {
+		rpcStatus, ok := status.FromError(err)
+		if ok {
+			if rpcStatus.Code() == codes.NotFound {
+				return nil, errors.New(http.StatusBadRequest, "验证码过期")
+			}
+		}
+		return nil, errors.New(http.StatusInternalServerError, "发生未知错误: 1")
+	}
 
-	return
+	if strings.ToUpper(req.Code) != out.Val {
+		return nil, errors.New(http.StatusBadRequest, "验证码错误")
+	}
+
+	return &types.CheckVerificationCodeCriticalUserInfoResponse{}, nil
 }

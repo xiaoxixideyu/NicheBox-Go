@@ -57,7 +57,7 @@ type RegisterResponse struct {
 }
 
 type SendVerificationCodeCriticalUserInfoRequest struct {
-	Uid int64 `json:"uid"`
+	Destination string `json:"destination"`
 }
 
 type SendVerificationCodeCriticalUserInfoResponse struct {

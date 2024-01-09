@@ -17,6 +17,7 @@ const (
 
 	TYPEREGISTER = "register"
 	TYPEPWD      = "pwd"
+	TYPECRITICAL = "critical"
 )
 
 type SendVerificationCodeLogic struct {
@@ -59,16 +60,22 @@ func (l *SendVerificationCodeLogic) SendVerificationCode(in *email.SendVerificat
 func generateBody(verificationCode string, bodyType string) string {
 	var body string
 	if bodyType == TYPEREGISTER {
-		welcome := "欢迎加入小众盒，您的验证码如下"
+		header := "欢迎加入小众盒，您的验证码如下"
 		code := "<h2>" + verificationCode + "</h2>"
 		expirationNotification := "请在5分钟内进行验证哦"
-		body = fmt.Sprintf("%s<br>%s<br>%s", welcome, code, expirationNotification)
+		body = fmt.Sprintf("%s<br>%s<br>%s", header, code, expirationNotification)
 
 	} else if bodyType == TYPEPWD {
-		welcome := "您正在尝试修改密码，验证码如下"
+		header := "您正在尝试重设密码，验证码如下"
 		code := "<h2>" + verificationCode + "</h2>"
 		expirationNotification := "请在5分钟内进行验证"
-		body = fmt.Sprintf("%s<br>%s<br>%s", welcome, code, expirationNotification)
+		body = fmt.Sprintf("%s<br>%s<br>%s", header, code, expirationNotification)
+
+	} else if bodyType == TYPECRITICAL {
+		header := "您正在尝试修改重要信息，验证码如下"
+		code := "<h2>" + verificationCode + "</h2>"
+		expirationNotification := "请在5分钟内进行验证"
+		body = fmt.Sprintf("%s<br>%s<br>%s", header, code, expirationNotification)
 
 	}
 	return body

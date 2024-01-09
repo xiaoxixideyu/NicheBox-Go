@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"fmt"
 
 	"nichebox/service/user/rpc/internal/svc"
 	"nichebox/service/user/rpc/pb/user"
@@ -25,6 +26,7 @@ func NewSetCriticalUserInfoLogic(ctx context.Context, svcCtx *svc.ServiceContext
 
 func (l *SetCriticalUserInfoLogic) SetCriticalUserInfo(in *user.SetCriticalUserInfoRequest) (*user.SetCriticalUserInfoResponse, error) {
 	// todo: add your logic here and delete this line
+	fmt.Println("password:" + in.Password)
 
 	return &user.SetCriticalUserInfoResponse{}, nil
 }

@@ -9,8 +9,10 @@ const (
 	VERIFICATIONCODELENGTH = 6
 
 	VERIFICATIONCODEEXPIRATION = 60 * 5
-	TYPEREGISTER               = "register"
-	TYPEPWD                    = "pwd"
+
+	TYPEREGISTER = "register"
+	TYPEPWD      = "pwd"
+	TYPECRITICAL = "critical"
 )
 
 func GenerateVerificationCode() string {

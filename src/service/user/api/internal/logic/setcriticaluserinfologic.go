@@ -2,6 +2,9 @@ package logic
 
 import (
 	"context"
+	"github.com/zeromicro/x/errors"
+	"net/http"
+	"nichebox/service/user/rpc/pb/user"
 
 	"nichebox/service/user/api/internal/svc"
 	"nichebox/service/user/api/internal/types"
@@ -24,7 +27,13 @@ func NewSetCriticalUserInfoLogic(ctx context.Context, svcCtx *svc.ServiceContext
 }
 
 func (l *SetCriticalUserInfoLogic) SetCriticalUserInfo(req *types.SetCriticalUserInfoRequest) (resp *types.SetCriticalUserInfoResponse, err error) {
-	// todo: add your logic here and delete this line
+	in := user.SetCriticalUserInfoRequest{
+		Password: req.Password,
+	}
+	_, err = l.svcCtx.UserRpc.SetCriticalUserInfo(l.ctx, &in)
+	if err != nil {
+		return nil, errors.New(http.StatusInternalServerError, err.Error())
+	}
 
-	return
+	return &types.SetCriticalUserInfoResponse{}, nil
 }

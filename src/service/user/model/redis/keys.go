@@ -5,4 +5,5 @@ const (
 
 	KeyRegisterCode = "register:code:"
 	KeyPWDCode      = "pwd:code:"
+	KeyCriticalCode = "critical:code:"
 )

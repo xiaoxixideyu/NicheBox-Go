@@ -57,7 +57,7 @@ type SendVerificationCodePWDRequest {
 type SendVerificationCodePWDResponse {}
 
 type SendVerificationCodeCriticalUserInfoRequest {
-	Uid int64 `json:"uid"`
+	Destination string `json:"destination"`
 }
 
 type SendVerificationCodeCriticalUserInfoResponse {}
@@ -66,8 +66,8 @@ type SendVerificationCodeCriticalUserInfoResponse {}
 // ForgetPassword
 type ForgetPasswordRequest {
 	Email       string `json:"email"`
-	NewPassword string `json:"new_password""`
-	Code        string `json:"code""`
+	NewPassword string `json:"new_password"`
+	Code        string `json:"code"`
 }
 
 type ForgetPasswordResponse {}
@@ -84,7 +84,7 @@ type SetCriticalUserInfoResponse {}
 // CheckVerificationCodeCriticalUserInfo
 type CheckVerificationCodeCriticalUserInfoRequest {
 	Email string `json:"email"`
-	Code  string `json:"code""`
+	Code  string `json:"code"`
 }
 
 type CheckVerificationCodeCriticalUserInfoResponse {}
