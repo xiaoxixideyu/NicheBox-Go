@@ -2,7 +2,11 @@ package logic
 
 import (
 	"context"
-	"fmt"
+	"errors"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+	"gorm.io/gorm"
+	"nichebox/common/cryptx"
 
 	"nichebox/service/user/rpc/internal/svc"
 	"nichebox/service/user/rpc/pb/user"
@@ -25,8 +29,19 @@ func NewSetCriticalUserInfoLogic(ctx context.Context, svcCtx *svc.ServiceContext
 }
 
 func (l *SetCriticalUserInfoLogic) SetCriticalUserInfo(in *user.SetCriticalUserInfoRequest) (*user.SetCriticalUserInfoResponse, error) {
-	// todo: add your logic here and delete this line
-	fmt.Println("password:" + in.Password)
+	userModel, err := l.svcCtx.UserInterface.GetUserByUid(in.Uid)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, status.Error(codes.NotFound, err.Error())
+		}
+		return nil, status.Error(codes.Unknown, err.Error())
+	}
+
+	userModel.Password = cryptx.PasswordEncrypt(l.svcCtx.Config.Salt, in.Password)
+	err = l.svcCtx.UserInterface.UpdateUserTX(userModel)
+	if err != nil {
+		return nil, status.Error(codes.Unknown, err.Error())
+	}
 
 	return &user.SetCriticalUserInfoResponse{}, nil
 }

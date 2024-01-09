@@ -97,7 +97,8 @@ message ForgetPasswordResponse {
 
 // SetCriticalUserInfo
 message SetCriticalUserInfoRequest {
-    string password = 1;
+    int64 uid = 1;
+    string password = 2;
 }
 
 message SetCriticalUserInfoResponse {

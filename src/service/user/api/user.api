@@ -4,58 +4,64 @@ type RegisterRequest {
 	Password string `json:"password"`
 	Code     string `json:"code"`
 }
+
 type RegisterResponse {
 	LoginSuccess bool   `json:"login_success"`
 	Token        string `json:"token"`
 	RefreshToken string `json:"refresh_token"`
 }
-// Register
 
+// Register
 // CheckEmailExists
 type CheckEmailExistsReqeust {
 	Email string `json:"email"`
 }
+
 type CheckEmailExistsResponse {
 	Exist bool `json:"exist"`
 }
-// CheckEmailExists
 
+// CheckEmailExists
 // Login
 type LoginReqeust {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
+
 type LoginResponse {
 	Token        string `json:"token"`
 	RefreshToken string `json:"refresh_token"`
 }
-// Login
 
+// Login
 // RefreshToken
 type RefreshTokenReqeust {}
+
 type RefreshTokenResponse {
 	Token        string `json:"token"`
 	RefreshToken string `json:"refresh_token"`
 }
-// RefreshToken
 
+// RefreshToken
 // SetUserBaseInfo
 type SetUserBaseInfoRequest {
 	Username     string `json:"username"`
 	Introduction string `json:"introduction"`
 }
-type SetUserBaseInfoResponse {}
-// SetUserBaseInfo
 
+type SetUserBaseInfoResponse {}
+
+// SetUserBaseInfo
 // GetMyBaseInfo
 type GetMyBaseInfoRequest {}
+
 type GetMyBaseInfoResponse {
 	Uid          string `json:"uid"`
 	UserName     string `json:"username"`
 	Introduction string `json:"introduction"`
 }
-// GetMyBaseInfo
 
+// GetMyBaseInfo
 // SendVerificationCode
 type SendVerificationCodeRegisterRequest {
 	Destination string `json:"destination"`
@@ -74,8 +80,8 @@ type SendVerificationCodeCriticalUserInfoRequest {
 }
 
 type SendVerificationCodeCriticalUserInfoResponse {}
-//SendVerificationCode
 
+//SendVerificationCode
 // ForgetPassword
 type ForgetPasswordRequest {
 	Email       string `json:"email"`
@@ -84,16 +90,16 @@ type ForgetPasswordRequest {
 }
 
 type ForgetPasswordResponse {}
-// ForgetPassword
 
+// ForgetPassword
 // SetCriticalUserInfo
 type SetCriticalUserInfoRequest {
 	Password string `json:"password""`
 }
 
 type SetCriticalUserInfoResponse {}
-// SetCriticalUserInfo
 
+// SetCriticalUserInfo
 // CheckVerificationCodeCriticalUserInfo
 type CheckVerificationCodeCriticalUserInfoRequest {
 	Email string `json:"email"`
@@ -101,12 +107,11 @@ type CheckVerificationCodeCriticalUserInfoRequest {
 }
 
 type CheckVerificationCodeCriticalUserInfoResponse {}
-// CheckVerificationCodeCriticalUserInfo
 
-@server(
+// CheckVerificationCodeCriticalUserInfo
+@server (
 	prefix: /api/user
 )
-
 service User {
 	@handler Register
 	post /register (RegisterRequest) returns (RegisterResponse)
@@ -128,7 +133,7 @@ service User {
 }
 
 @server (
-	jwt: Auth
+	jwt:    Auth
 	prefix: /api/user
 )
 service User {
@@ -150,3 +155,4 @@ service User {
 	@handler GetMyBaseInfo
 	post /getmybaseinfo (GetMyBaseInfoRequest) returns (GetMyBaseInfoResponse)
 }
+

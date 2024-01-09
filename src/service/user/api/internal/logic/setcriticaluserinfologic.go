@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"encoding/json"
 	"github.com/zeromicro/x/errors"
 	"net/http"
 	"nichebox/service/user/rpc/pb/user"
@@ -27,7 +28,13 @@ func NewSetCriticalUserInfoLogic(ctx context.Context, svcCtx *svc.ServiceContext
 }
 
 func (l *SetCriticalUserInfoLogic) SetCriticalUserInfo(req *types.SetCriticalUserInfoRequest) (resp *types.SetCriticalUserInfoResponse, err error) {
+	uid, err := l.ctx.Value("uid").(json.Number).Int64()
+	if err != nil {
+		return nil, errors.New(http.StatusUnauthorized, "uid无效")
+	}
+
 	in := user.SetCriticalUserInfoRequest{
+		Uid:      uid,
 		Password: req.Password,
 	}
 	_, err = l.svcCtx.UserRpc.SetCriticalUserInfo(l.ctx, &in)

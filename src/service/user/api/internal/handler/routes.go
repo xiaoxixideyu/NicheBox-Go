@@ -14,17 +14,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodPost,
-				Path:    "/register",
-				Handler: RegisterHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
 				Path:    "/checkemailexists",
 				Handler: CheckEmailExistsHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/api/user/forgetpassword",
+				Path:    "/forgetpassword",
 				Handler: ForgetPasswordHandler(serverCtx),
 			},
 			{
@@ -34,12 +29,17 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/api/user/sendverificationcodepwd",
+				Path:    "/register",
+				Handler: RegisterHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/sendverificationcodepwd",
 				Handler: SendVerificationCodePWDHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/api/user/sendverificationcoderegister",
+				Path:    "/sendverificationcoderegister",
 				Handler: SendVerificationCodeRegisterHandler(serverCtx),
 			},
 		},
@@ -50,8 +50,13 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodPost,
-				Path:    "/api/user/checkverificationcodecriticaluserinfo",
+				Path:    "/checkverificationcodecriticaluserinfo",
 				Handler: CheckVerificationCodeCriticalUserInfoHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/getmybaseinfo",
+				Handler: GetMyBaseInfoHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
@@ -60,23 +65,18 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/api/user/sendverificationcodecriticaluserinfo",
+				Path:    "/sendverificationcodecriticaluserinfo",
 				Handler: SendVerificationCodeCriticalUserInfoHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/api/user/setcriticaluserinfo",
+				Path:    "/setcriticaluserinfo",
 				Handler: SetCriticalUserInfoHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
 				Path:    "/setuserbaseinfo",
 				Handler: SetUserBaseInfoHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/getmybaseinfo",
-				Handler: GetMyBaseInfoHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
