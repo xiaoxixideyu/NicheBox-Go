@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+	"strconv"
 
 	"nichebox/service/user/api/internal/svc"
 	"nichebox/service/user/api/internal/types"
@@ -50,7 +51,7 @@ func (l *GetMyBaseInfoLogic) GetMyBaseInfo(req *types.GetMyBaseInfoRequest) (res
 	}
 
 	return &types.GetMyBaseInfoResponse{
-		Uid:          uid,
+		Uid:          strconv.FormatInt(uid, 10),
 		UserName:     res.Username,
 		Introduction: res.Introduction,
 	}, nil

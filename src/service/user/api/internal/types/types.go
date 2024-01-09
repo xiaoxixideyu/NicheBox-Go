@@ -51,7 +51,7 @@ type GetMyBaseInfoRequest struct {
 }
 
 type GetMyBaseInfoResponse struct {
-	Uid          int64  `json:"uid"`
+	Uid          string `json:"uid"`
 	UserName     string `json:"username"`
 	Introduction string `json:"introduction"`
 }

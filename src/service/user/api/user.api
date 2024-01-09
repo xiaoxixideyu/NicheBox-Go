@@ -50,7 +50,7 @@ type SetUserBaseInfoResponse {}
 // GetMyBaseInfo
 type GetMyBaseInfoRequest {}
 type GetMyBaseInfoResponse {
-	Uid          int64  `json:"uid"`
+	Uid          string `json:"uid"`
 	UserName     string `json:"username"`
 	Introduction string `json:"introduction"`
 }
