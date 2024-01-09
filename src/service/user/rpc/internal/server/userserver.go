@@ -42,6 +42,16 @@ func (s *UserServer) CheckUid(ctx context.Context, in *user.CheckUidRequest) (*u
 	return l.CheckUid(in)
 }
 
+func (s *UserServer) SetUserBaseInfo(ctx context.Context, in *user.SetUserBaseInfoRequest) (*user.SetUserBaseInfoResponse, error) {
+	l := logic.NewSetUserBaseInfoLogic(ctx, s.svcCtx)
+	return l.SetUserBaseInfo(in)
+}
+
+func (s *UserServer) GetUserBaseInfo(ctx context.Context, in *user.GetUserBaseInfoRequest) (*user.GetUserBaseInfoResponse, error) {
+	l := logic.NewGetUserBaseInfoLogic(ctx, s.svcCtx)
+	return l.GetUserBaseInfo(in)
+}
+
 func (s *UserServer) SetVerificationCode(ctx context.Context, in *user.SetVerificationCodeRequest) (*user.SetVerificationCodeResponse, error) {
 	l := logic.NewSetVerificationCodeLogic(ctx, s.svcCtx)
 	return l.SetVerificationCode(in)

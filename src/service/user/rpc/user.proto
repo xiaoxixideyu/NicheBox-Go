@@ -43,6 +43,26 @@ message CheckUidResponse {
 }
 // CheckUid
 
+// SetUserBaseInfo
+message SetUserBaseInfoRequest {
+    int64 Uid = 1;
+    string Username = 2;
+    string Introduction = 3;
+}
+message SetUserBaseInfoResponse {
+}
+// SetUserBaseInfo
+
+// GetUserBaseInfo
+message GetUserBaseInfoRequest {
+    int64 Uid = 1;
+}
+message GetUserBaseInfoResponse {
+    string Username = 1;
+    string Introduction = 2;
+}
+// GetUserBaseInfo
+
 // SetVerificationCode
 message SetVerificationCodeRequest {
     string key = 1;
@@ -90,6 +110,8 @@ service User {
     rpc CheckEmail(CheckEmailRequest) returns(CheckEmailResponse);
     rpc GetUidByEmailAndPwd(GetUidByEmailAndPwdRequest) returns(GetUidByEmailAndPwdResponse);
     rpc CheckUid(CheckUidRequest) returns(CheckUidResponse);
+    rpc SetUserBaseInfo(SetUserBaseInfoRequest) returns(SetUserBaseInfoResponse);
+    rpc GetUserBaseInfo(GetUserBaseInfoRequest) returns(GetUserBaseInfoResponse);
     rpc SetVerificationCode(SetVerificationCodeRequest) returns (SetVerificationCodeResponse);
     rpc GetVerificationCode(GetVerificationCodeRequest) returns (GetVerificationCodeResponse);
     rpc ForgetPassword(ForgetPasswordRequest) returns (ForgetPasswordResponse);

@@ -21,12 +21,16 @@ type (
 	ForgetPasswordResponse      = user.ForgetPasswordResponse
 	GetUidByEmailAndPwdRequest  = user.GetUidByEmailAndPwdRequest
 	GetUidByEmailAndPwdResponse = user.GetUidByEmailAndPwdResponse
+	GetUserBaseInfoRequest      = user.GetUserBaseInfoRequest
+	GetUserBaseInfoResponse     = user.GetUserBaseInfoResponse
 	GetVerificationCodeRequest  = user.GetVerificationCodeRequest
 	GetVerificationCodeResponse = user.GetVerificationCodeResponse
 	RegisterRequest             = user.RegisterRequest
 	RegisterResponse            = user.RegisterResponse
 	SetCriticalUserInfoRequest  = user.SetCriticalUserInfoRequest
 	SetCriticalUserInfoResponse = user.SetCriticalUserInfoResponse
+	SetUserBaseInfoRequest      = user.SetUserBaseInfoRequest
+	SetUserBaseInfoResponse     = user.SetUserBaseInfoResponse
 	SetVerificationCodeRequest  = user.SetVerificationCodeRequest
 	SetVerificationCodeResponse = user.SetVerificationCodeResponse
 
@@ -35,6 +39,8 @@ type (
 		CheckEmail(ctx context.Context, in *CheckEmailRequest, opts ...grpc.CallOption) (*CheckEmailResponse, error)
 		GetUidByEmailAndPwd(ctx context.Context, in *GetUidByEmailAndPwdRequest, opts ...grpc.CallOption) (*GetUidByEmailAndPwdResponse, error)
 		CheckUid(ctx context.Context, in *CheckUidRequest, opts ...grpc.CallOption) (*CheckUidResponse, error)
+		SetUserBaseInfo(ctx context.Context, in *SetUserBaseInfoRequest, opts ...grpc.CallOption) (*SetUserBaseInfoResponse, error)
+		GetUserBaseInfo(ctx context.Context, in *GetUserBaseInfoRequest, opts ...grpc.CallOption) (*GetUserBaseInfoResponse, error)
 		SetVerificationCode(ctx context.Context, in *SetVerificationCodeRequest, opts ...grpc.CallOption) (*SetVerificationCodeResponse, error)
 		GetVerificationCode(ctx context.Context, in *GetVerificationCodeRequest, opts ...grpc.CallOption) (*GetVerificationCodeResponse, error)
 		ForgetPassword(ctx context.Context, in *ForgetPasswordRequest, opts ...grpc.CallOption) (*ForgetPasswordResponse, error)
@@ -70,6 +76,16 @@ func (m *defaultUser) GetUidByEmailAndPwd(ctx context.Context, in *GetUidByEmail
 func (m *defaultUser) CheckUid(ctx context.Context, in *CheckUidRequest, opts ...grpc.CallOption) (*CheckUidResponse, error) {
 	client := user.NewUserClient(m.cli.Conn())
 	return client.CheckUid(ctx, in, opts...)
+}
+
+func (m *defaultUser) SetUserBaseInfo(ctx context.Context, in *SetUserBaseInfoRequest, opts ...grpc.CallOption) (*SetUserBaseInfoResponse, error) {
+	client := user.NewUserClient(m.cli.Conn())
+	return client.SetUserBaseInfo(ctx, in, opts...)
+}
+
+func (m *defaultUser) GetUserBaseInfo(ctx context.Context, in *GetUserBaseInfoRequest, opts ...grpc.CallOption) (*GetUserBaseInfoResponse, error) {
+	client := user.NewUserClient(m.cli.Conn())
+	return client.GetUserBaseInfo(ctx, in, opts...)
 }
 
 func (m *defaultUser) SetVerificationCode(ctx context.Context, in *SetVerificationCodeRequest, opts ...grpc.CallOption) (*SetVerificationCodeResponse, error) {

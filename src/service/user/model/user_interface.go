@@ -5,6 +5,7 @@ import "context"
 type UserInterface interface {
 	GetUserByUid(uid int64) (*User, error)
 	GetUserByEmail(email string) (*User, error)
+	UpdateUserTX(user *User) error
 	CreateUser(user *User) error
 	UpdatePasswordByEmail(email, password string) error
 

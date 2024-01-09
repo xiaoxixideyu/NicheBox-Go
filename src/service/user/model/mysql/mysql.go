@@ -132,3 +132,15 @@ func (m *MysqlInterface) UpdatePasswordByEmail(email, password string) error {
 	result := m.db.Model(&user).Where("email = ?", email).Update("password", password)
 	return result.Error
 }
+
+func (m *MysqlInterface) UpdateUserTX(user *model.User) error {
+	tx := m.db.Begin()
+	result := tx.Where("uid = ?", user.Uid).Find(&model.User{})
+	if result.Error != nil {
+		tx.Commit()
+		return result.Error
+	}
+	tx.Save(user)
+	tx.Commit()
+	return nil
+}

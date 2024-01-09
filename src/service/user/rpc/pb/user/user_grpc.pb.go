@@ -23,6 +23,8 @@ const (
 	User_CheckEmail_FullMethodName          = "/userclient.User/CheckEmail"
 	User_GetUidByEmailAndPwd_FullMethodName = "/userclient.User/GetUidByEmailAndPwd"
 	User_CheckUid_FullMethodName            = "/userclient.User/CheckUid"
+	User_SetUserBaseInfo_FullMethodName     = "/userclient.User/SetUserBaseInfo"
+	User_GetUserBaseInfo_FullMethodName     = "/userclient.User/GetUserBaseInfo"
 	User_SetVerificationCode_FullMethodName = "/userclient.User/SetVerificationCode"
 	User_GetVerificationCode_FullMethodName = "/userclient.User/GetVerificationCode"
 	User_ForgetPassword_FullMethodName      = "/userclient.User/ForgetPassword"
@@ -37,6 +39,8 @@ type UserClient interface {
 	CheckEmail(ctx context.Context, in *CheckEmailRequest, opts ...grpc.CallOption) (*CheckEmailResponse, error)
 	GetUidByEmailAndPwd(ctx context.Context, in *GetUidByEmailAndPwdRequest, opts ...grpc.CallOption) (*GetUidByEmailAndPwdResponse, error)
 	CheckUid(ctx context.Context, in *CheckUidRequest, opts ...grpc.CallOption) (*CheckUidResponse, error)
+	SetUserBaseInfo(ctx context.Context, in *SetUserBaseInfoRequest, opts ...grpc.CallOption) (*SetUserBaseInfoResponse, error)
+	GetUserBaseInfo(ctx context.Context, in *GetUserBaseInfoRequest, opts ...grpc.CallOption) (*GetUserBaseInfoResponse, error)
 	SetVerificationCode(ctx context.Context, in *SetVerificationCodeRequest, opts ...grpc.CallOption) (*SetVerificationCodeResponse, error)
 	GetVerificationCode(ctx context.Context, in *GetVerificationCodeRequest, opts ...grpc.CallOption) (*GetVerificationCodeResponse, error)
 	ForgetPassword(ctx context.Context, in *ForgetPasswordRequest, opts ...grpc.CallOption) (*ForgetPasswordResponse, error)
@@ -87,6 +91,24 @@ func (c *userClient) CheckUid(ctx context.Context, in *CheckUidRequest, opts ...
 	return out, nil
 }
 
+func (c *userClient) SetUserBaseInfo(ctx context.Context, in *SetUserBaseInfoRequest, opts ...grpc.CallOption) (*SetUserBaseInfoResponse, error) {
+	out := new(SetUserBaseInfoResponse)
+	err := c.cc.Invoke(ctx, User_SetUserBaseInfo_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) GetUserBaseInfo(ctx context.Context, in *GetUserBaseInfoRequest, opts ...grpc.CallOption) (*GetUserBaseInfoResponse, error) {
+	out := new(GetUserBaseInfoResponse)
+	err := c.cc.Invoke(ctx, User_GetUserBaseInfo_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *userClient) SetVerificationCode(ctx context.Context, in *SetVerificationCodeRequest, opts ...grpc.CallOption) (*SetVerificationCodeResponse, error) {
 	out := new(SetVerificationCodeResponse)
 	err := c.cc.Invoke(ctx, User_SetVerificationCode_FullMethodName, in, out, opts...)
@@ -131,6 +153,8 @@ type UserServer interface {
 	CheckEmail(context.Context, *CheckEmailRequest) (*CheckEmailResponse, error)
 	GetUidByEmailAndPwd(context.Context, *GetUidByEmailAndPwdRequest) (*GetUidByEmailAndPwdResponse, error)
 	CheckUid(context.Context, *CheckUidRequest) (*CheckUidResponse, error)
+	SetUserBaseInfo(context.Context, *SetUserBaseInfoRequest) (*SetUserBaseInfoResponse, error)
+	GetUserBaseInfo(context.Context, *GetUserBaseInfoRequest) (*GetUserBaseInfoResponse, error)
 	SetVerificationCode(context.Context, *SetVerificationCodeRequest) (*SetVerificationCodeResponse, error)
 	GetVerificationCode(context.Context, *GetVerificationCodeRequest) (*GetVerificationCodeResponse, error)
 	ForgetPassword(context.Context, *ForgetPasswordRequest) (*ForgetPasswordResponse, error)
@@ -153,6 +177,12 @@ func (UnimplementedUserServer) GetUidByEmailAndPwd(context.Context, *GetUidByEma
 }
 func (UnimplementedUserServer) CheckUid(context.Context, *CheckUidRequest) (*CheckUidResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CheckUid not implemented")
+}
+func (UnimplementedUserServer) SetUserBaseInfo(context.Context, *SetUserBaseInfoRequest) (*SetUserBaseInfoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetUserBaseInfo not implemented")
+}
+func (UnimplementedUserServer) GetUserBaseInfo(context.Context, *GetUserBaseInfoRequest) (*GetUserBaseInfoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserBaseInfo not implemented")
 }
 func (UnimplementedUserServer) SetVerificationCode(context.Context, *SetVerificationCodeRequest) (*SetVerificationCodeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetVerificationCode not implemented")
@@ -251,6 +281,42 @@ func _User_CheckUid_Handler(srv interface{}, ctx context.Context, dec func(inter
 	return interceptor(ctx, in, info, handler)
 }
 
+func _User_SetUserBaseInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetUserBaseInfoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).SetUserBaseInfo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_SetUserBaseInfo_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).SetUserBaseInfo(ctx, req.(*SetUserBaseInfoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_GetUserBaseInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserBaseInfoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).GetUserBaseInfo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_GetUserBaseInfo_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).GetUserBaseInfo(ctx, req.(*GetUserBaseInfoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _User_SetVerificationCode_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SetVerificationCodeRequest)
 	if err := dec(in); err != nil {
@@ -345,6 +411,14 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CheckUid",
 			Handler:    _User_CheckUid_Handler,
+		},
+		{
+			MethodName: "SetUserBaseInfo",
+			Handler:    _User_SetUserBaseInfo_Handler,
+		},
+		{
+			MethodName: "GetUserBaseInfo",
+			Handler:    _User_GetUserBaseInfo_Handler,
 		},
 		{
 			MethodName: "SetVerificationCode",
