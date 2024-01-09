@@ -14,30 +14,42 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodPost,
-				Path:    "/api/user/checkemailexists",
+				Path:    "/register",
+				Handler: RegisterHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/checkemailexists",
 				Handler: CheckEmailExistsHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/api/user/login",
+				Path:    "/login",
 				Handler: LoginHandler(serverCtx),
 			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/api/user/register",
-				Handler: RegisterHandler(serverCtx),
-			},
 		},
+		rest.WithPrefix("/api/user"),
 	)
 
 	server.AddRoutes(
 		[]rest.Route{
 			{
 				Method:  http.MethodPost,
-				Path:    "/api/user/refreshtoken",
+				Path:    "/refreshtoken",
 				Handler: RefreshTokenHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/setuserbaseinfo",
+				Handler: SetUserBaseInfoHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/getmybaseinfo",
+				Handler: GetMyBaseInfoHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/api/user"),
 	)
 }
