@@ -8,6 +8,7 @@ type User struct {
 	Email          string `gorm:"index:idx_user_email_pwd,priority:1;index:idx_user_email,unique"`
 	Password       string `gorm:"index:idx_user_email_pwd,priority:2"`
 	Username       string
+	Introduction   string
 	Avatar         string
 	Telephone      string
 	ShowCollection bool

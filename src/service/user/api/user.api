@@ -4,61 +4,83 @@ type RegisterRequest {
 	Password string `json:"password"`
 	Code     string `json:"code"`
 }
-
 type RegisterResponse {
 	LoginSuccess bool   `json:"login_success"`
 	Token        string `json:"token"`
 	RefreshToken string `json:"refresh_token"`
 }
-
 // Register
+
 // CheckEmailExists
 type CheckEmailExistsReqeust {
 	Email string `json:"email"`
 }
-
 type CheckEmailExistsResponse {
 	Exist bool `json:"exist"`
 }
-
 // CheckEmailExists
+
 // Login
 type LoginReqeust {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
-
 type LoginResponse {
 	Token        string `json:"token"`
 	RefreshToken string `json:"refresh_token"`
 }
-
 // Login
+
 // RefreshToken
 type RefreshTokenReqeust {}
-
 type RefreshTokenResponse {
 	Token        string `json:"token"`
 	RefreshToken string `json:"refresh_token"`
 }
-
 // RefreshToken
+
+// SetUserBaseInfo
+type SetUserBaseInfoRequest {
+	Username     string `json:"username"`
+	Introduction string `json:"introduction"`
+}
+type SetUserBaseInfoResponse {}
+// SetUserBaseInfo
+
+// GetMyBaseInfo
+type GetMyBaseInfoRequest {}
+type GetMyBaseInfoResponse {
+	Uid          int64  `json:"uid"`
+	UserName     string `json:"username"`
+	Introduction string `json:"introduction"`
+}
+// GetMyBaseInfo
+
+@server(
+	prefix: /api/user
+)
 service User {
 	@handler Register
-	post /api/user/register (RegisterRequest) returns (RegisterResponse)
+	post /register (RegisterRequest) returns (RegisterResponse)
 
 	@handler CheckEmailExists
-	post /api/user/checkemailexists (CheckEmailExistsReqeust) returns (CheckEmailExistsResponse)
+	post /checkemailexists (CheckEmailExistsReqeust) returns (CheckEmailExistsResponse)
 
 	@handler Login
-	post /api/user/login (LoginReqeust) returns (LoginResponse)
+	post /login (LoginReqeust) returns (LoginResponse)
 }
 
 @server (
 	jwt: Auth
+	prefix: /api/user
 )
 service User {
 	@handler RefreshToken
-	post /api/user/refreshtoken (RefreshTokenReqeust) returns (RefreshTokenResponse)
-}
+	post /refreshtoken (RefreshTokenReqeust) returns (RefreshTokenResponse)
 
+	@handler SetUserBaseInfo
+	post /setuserbaseinfo (SetUserBaseInfoRequest) returns (SetUserBaseInfoResponse)
+
+	@handler GetMyBaseInfo
+	post /getmybaseinfo (GetMyBaseInfoRequest) returns (GetMyBaseInfoResponse)
+}

@@ -43,9 +43,31 @@ message CheckUidResponse {
 }
 // CheckUid
 
+// SetUserBaseInfo
+message SetUserBaseInfoRequest {
+    int64 Uid = 1;
+    string Username = 2;
+    string Introduction = 3;
+}
+message SetUserBaseInfoResponse {
+}
+// SetUserBaseInfo
+
+// GetUserBaseInfo
+message GetUserBaseInfoRequest {
+    int64 Uid = 1;
+}
+message GetUserBaseInfoResponse {
+    string Username = 1;
+    string Introduction = 2;
+}
+// GetUserBaseInfo
+
 service User {
     rpc Register(RegisterRequest) returns(RegisterResponse);
     rpc CheckEmail(CheckEmailRequest) returns(CheckEmailResponse);
     rpc GetUidByEmailAndPwd(GetUidByEmailAndPwdRequest) returns(GetUidByEmailAndPwdResponse);
     rpc CheckUid(CheckUidRequest) returns(CheckUidResponse);
+    rpc SetUserBaseInfo(SetUserBaseInfoRequest) returns(SetUserBaseInfoResponse);
+    rpc GetUserBaseInfo(GetUserBaseInfoRequest) returns(GetUserBaseInfoResponse);
 }

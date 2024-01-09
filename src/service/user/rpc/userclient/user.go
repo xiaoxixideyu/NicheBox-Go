@@ -19,14 +19,20 @@ type (
 	CheckUidResponse            = user.CheckUidResponse
 	GetUidByEmailAndPwdRequest  = user.GetUidByEmailAndPwdRequest
 	GetUidByEmailAndPwdResponse = user.GetUidByEmailAndPwdResponse
+	GetUserBaseInfoRequest      = user.GetUserBaseInfoRequest
+	GetUserBaseInfoResponse     = user.GetUserBaseInfoResponse
 	RegisterRequest             = user.RegisterRequest
 	RegisterResponse            = user.RegisterResponse
+	SetUserBaseInfoRequest      = user.SetUserBaseInfoRequest
+	SetUserBaseInfoResponse     = user.SetUserBaseInfoResponse
 
 	User interface {
 		Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
 		CheckEmail(ctx context.Context, in *CheckEmailRequest, opts ...grpc.CallOption) (*CheckEmailResponse, error)
 		GetUidByEmailAndPwd(ctx context.Context, in *GetUidByEmailAndPwdRequest, opts ...grpc.CallOption) (*GetUidByEmailAndPwdResponse, error)
 		CheckUid(ctx context.Context, in *CheckUidRequest, opts ...grpc.CallOption) (*CheckUidResponse, error)
+		SetUserBaseInfo(ctx context.Context, in *SetUserBaseInfoRequest, opts ...grpc.CallOption) (*SetUserBaseInfoResponse, error)
+		GetUserBaseInfo(ctx context.Context, in *GetUserBaseInfoRequest, opts ...grpc.CallOption) (*GetUserBaseInfoResponse, error)
 	}
 
 	defaultUser struct {
@@ -58,4 +64,14 @@ func (m *defaultUser) GetUidByEmailAndPwd(ctx context.Context, in *GetUidByEmail
 func (m *defaultUser) CheckUid(ctx context.Context, in *CheckUidRequest, opts ...grpc.CallOption) (*CheckUidResponse, error) {
 	client := user.NewUserClient(m.cli.Conn())
 	return client.CheckUid(ctx, in, opts...)
+}
+
+func (m *defaultUser) SetUserBaseInfo(ctx context.Context, in *SetUserBaseInfoRequest, opts ...grpc.CallOption) (*SetUserBaseInfoResponse, error) {
+	client := user.NewUserClient(m.cli.Conn())
+	return client.SetUserBaseInfo(ctx, in, opts...)
+}
+
+func (m *defaultUser) GetUserBaseInfo(ctx context.Context, in *GetUserBaseInfoRequest, opts ...grpc.CallOption) (*GetUserBaseInfoResponse, error) {
+	client := user.NewUserClient(m.cli.Conn())
+	return client.GetUserBaseInfo(ctx, in, opts...)
 }

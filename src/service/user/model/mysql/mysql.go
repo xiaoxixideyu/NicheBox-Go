@@ -69,3 +69,15 @@ func (m *MysqlInterface) CreateUser(user *model.User) error {
 	result := m.db.Create(user)
 	return result.Error
 }
+
+func (m *MysqlInterface) UpdateUserTX(user *model.User) error {
+	tx := m.db.Begin()
+	result := tx.Where("uid = ?", user.Uid).Find(&model.User{})
+	if result.Error != nil {
+		tx.Commit()
+		return result.Error
+	}
+	tx.Save(user)
+	tx.Commit()
+	return nil
+}
