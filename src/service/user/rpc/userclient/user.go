@@ -19,14 +19,20 @@ type (
 	CheckUidResponse            = user.CheckUidResponse
 	GetUidByEmailAndPwdRequest  = user.GetUidByEmailAndPwdRequest
 	GetUidByEmailAndPwdResponse = user.GetUidByEmailAndPwdResponse
+	GetVerificationCodeRequest  = user.GetVerificationCodeRequest
+	GetVerificationCodeResponse = user.GetVerificationCodeResponse
 	RegisterRequest             = user.RegisterRequest
 	RegisterResponse            = user.RegisterResponse
+	SetVerificationCodeRequest  = user.SetVerificationCodeRequest
+	SetVerificationCodeResponse = user.SetVerificationCodeResponse
 
 	User interface {
 		Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
 		CheckEmail(ctx context.Context, in *CheckEmailRequest, opts ...grpc.CallOption) (*CheckEmailResponse, error)
 		GetUidByEmailAndPwd(ctx context.Context, in *GetUidByEmailAndPwdRequest, opts ...grpc.CallOption) (*GetUidByEmailAndPwdResponse, error)
 		CheckUid(ctx context.Context, in *CheckUidRequest, opts ...grpc.CallOption) (*CheckUidResponse, error)
+		SetVerificationCode(ctx context.Context, in *SetVerificationCodeRequest, opts ...grpc.CallOption) (*SetVerificationCodeResponse, error)
+		GetVerificationCode(ctx context.Context, in *GetVerificationCodeRequest, opts ...grpc.CallOption) (*GetVerificationCodeResponse, error)
 	}
 
 	defaultUser struct {
@@ -58,4 +64,14 @@ func (m *defaultUser) GetUidByEmailAndPwd(ctx context.Context, in *GetUidByEmail
 func (m *defaultUser) CheckUid(ctx context.Context, in *CheckUidRequest, opts ...grpc.CallOption) (*CheckUidResponse, error) {
 	client := user.NewUserClient(m.cli.Conn())
 	return client.CheckUid(ctx, in, opts...)
+}
+
+func (m *defaultUser) SetVerificationCode(ctx context.Context, in *SetVerificationCodeRequest, opts ...grpc.CallOption) (*SetVerificationCodeResponse, error) {
+	client := user.NewUserClient(m.cli.Conn())
+	return client.SetVerificationCode(ctx, in, opts...)
+}
+
+func (m *defaultUser) GetVerificationCode(ctx context.Context, in *GetVerificationCodeRequest, opts ...grpc.CallOption) (*GetVerificationCodeResponse, error) {
+	client := user.NewUserClient(m.cli.Conn())
+	return client.GetVerificationCode(ctx, in, opts...)
 }

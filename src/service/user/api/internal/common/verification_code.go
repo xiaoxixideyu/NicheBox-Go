@@ -1,4 +1,4 @@
-package logic
+package common
 
 import (
 	"math/rand"
@@ -8,11 +8,12 @@ import (
 const (
 	VERIFICATIONCODELENGTH = 6
 
-	TYPEREGISTER = "register"
-	TYPEPWD      = "pwd"
+	VERIFICATIONCODEEXPIRATION = 60 * 5
+	TYPEREGISTER               = "register"
+	TYPEPWD                    = "pwd"
 )
 
-func generateVerificationCode() string {
+func GenerateVerificationCode() string {
 	str := "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	bytes := []byte(str)
 	result := []byte{}

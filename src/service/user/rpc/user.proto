@@ -43,9 +43,32 @@ message CheckUidResponse {
 }
 // CheckUid
 
+// SetVerificationCode
+message SetVerificationCodeRequest {
+    string key = 1;
+    string val = 2;
+    int32 expiration = 3;
+}
+
+message SetVerificationCodeResponse {
+}
+// SetVerificationCode
+
+// GetVerificationCode
+message GetVerificationCodeRequest {
+    string key = 1;
+}
+
+message GetVerificationCodeResponse {
+    string val = 1;
+}
+// SetVerificationCode
+
 service User {
     rpc Register(RegisterRequest) returns(RegisterResponse);
     rpc CheckEmail(CheckEmailRequest) returns(CheckEmailResponse);
     rpc GetUidByEmailAndPwd(GetUidByEmailAndPwdRequest) returns(GetUidByEmailAndPwdResponse);
     rpc CheckUid(CheckUidRequest) returns(CheckUidResponse);
+    rpc SetVerificationCode(SetVerificationCodeRequest) returns (SetVerificationCodeResponse);
+    rpc GetVerificationCode(GetVerificationCodeRequest) returns (GetVerificationCodeResponse);
 }

@@ -4,9 +4,9 @@ import (
 	"net/http"
 
 	"github.com/zeromicro/go-zero/rest/httpx"
-	"nichebox/service/email/api/internal/logic"
-	"nichebox/service/email/api/internal/svc"
-	"nichebox/service/email/api/internal/types"
+	"nichebox/service/user/api/internal/logic"
+	"nichebox/service/user/api/internal/svc"
+	"nichebox/service/user/api/internal/types"
 )
 
 func SendVerificationCodeRegisterHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {

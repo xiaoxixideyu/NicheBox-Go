@@ -41,6 +41,8 @@ func (l *RegisterLogic) Register(req *types.RegisterRequest) (resp *types.Regist
 		if ok {
 			if rpcStatus.Code() == codes.AlreadyExists {
 				return nil, errors.New(http.StatusBadRequest, "此邮箱已被注册")
+			} else if rpcStatus.Code() == codes.NotFound {
+				return nil, errors.New(http.StatusBadRequest, "验证码错误或过期")
 			}
 		}
 		return nil, errors.New(http.StatusInternalServerError, "发生未知错误: 1")

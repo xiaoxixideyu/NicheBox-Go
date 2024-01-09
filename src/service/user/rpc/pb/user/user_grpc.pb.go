@@ -23,6 +23,8 @@ const (
 	User_CheckEmail_FullMethodName          = "/userclient.User/CheckEmail"
 	User_GetUidByEmailAndPwd_FullMethodName = "/userclient.User/GetUidByEmailAndPwd"
 	User_CheckUid_FullMethodName            = "/userclient.User/CheckUid"
+	User_SetVerificationCode_FullMethodName = "/userclient.User/SetVerificationCode"
+	User_GetVerificationCode_FullMethodName = "/userclient.User/GetVerificationCode"
 )
 
 // UserClient is the client API for User service.
@@ -33,6 +35,8 @@ type UserClient interface {
 	CheckEmail(ctx context.Context, in *CheckEmailRequest, opts ...grpc.CallOption) (*CheckEmailResponse, error)
 	GetUidByEmailAndPwd(ctx context.Context, in *GetUidByEmailAndPwdRequest, opts ...grpc.CallOption) (*GetUidByEmailAndPwdResponse, error)
 	CheckUid(ctx context.Context, in *CheckUidRequest, opts ...grpc.CallOption) (*CheckUidResponse, error)
+	SetVerificationCode(ctx context.Context, in *SetVerificationCodeRequest, opts ...grpc.CallOption) (*SetVerificationCodeResponse, error)
+	GetVerificationCode(ctx context.Context, in *GetVerificationCodeRequest, opts ...grpc.CallOption) (*GetVerificationCodeResponse, error)
 }
 
 type userClient struct {
@@ -79,6 +83,24 @@ func (c *userClient) CheckUid(ctx context.Context, in *CheckUidRequest, opts ...
 	return out, nil
 }
 
+func (c *userClient) SetVerificationCode(ctx context.Context, in *SetVerificationCodeRequest, opts ...grpc.CallOption) (*SetVerificationCodeResponse, error) {
+	out := new(SetVerificationCodeResponse)
+	err := c.cc.Invoke(ctx, User_SetVerificationCode_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) GetVerificationCode(ctx context.Context, in *GetVerificationCodeRequest, opts ...grpc.CallOption) (*GetVerificationCodeResponse, error) {
+	out := new(GetVerificationCodeResponse)
+	err := c.cc.Invoke(ctx, User_GetVerificationCode_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServer is the server API for User service.
 // All implementations must embed UnimplementedUserServer
 // for forward compatibility
@@ -87,6 +109,8 @@ type UserServer interface {
 	CheckEmail(context.Context, *CheckEmailRequest) (*CheckEmailResponse, error)
 	GetUidByEmailAndPwd(context.Context, *GetUidByEmailAndPwdRequest) (*GetUidByEmailAndPwdResponse, error)
 	CheckUid(context.Context, *CheckUidRequest) (*CheckUidResponse, error)
+	SetVerificationCode(context.Context, *SetVerificationCodeRequest) (*SetVerificationCodeResponse, error)
+	GetVerificationCode(context.Context, *GetVerificationCodeRequest) (*GetVerificationCodeResponse, error)
 	mustEmbedUnimplementedUserServer()
 }
 
@@ -105,6 +129,12 @@ func (UnimplementedUserServer) GetUidByEmailAndPwd(context.Context, *GetUidByEma
 }
 func (UnimplementedUserServer) CheckUid(context.Context, *CheckUidRequest) (*CheckUidResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CheckUid not implemented")
+}
+func (UnimplementedUserServer) SetVerificationCode(context.Context, *SetVerificationCodeRequest) (*SetVerificationCodeResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetVerificationCode not implemented")
+}
+func (UnimplementedUserServer) GetVerificationCode(context.Context, *GetVerificationCodeRequest) (*GetVerificationCodeResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetVerificationCode not implemented")
 }
 func (UnimplementedUserServer) mustEmbedUnimplementedUserServer() {}
 
@@ -191,6 +221,42 @@ func _User_CheckUid_Handler(srv interface{}, ctx context.Context, dec func(inter
 	return interceptor(ctx, in, info, handler)
 }
 
+func _User_SetVerificationCode_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetVerificationCodeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).SetVerificationCode(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_SetVerificationCode_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).SetVerificationCode(ctx, req.(*SetVerificationCodeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_GetVerificationCode_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetVerificationCodeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).GetVerificationCode(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_GetVerificationCode_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).GetVerificationCode(ctx, req.(*GetVerificationCodeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // User_ServiceDesc is the grpc.ServiceDesc for User service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -213,6 +279,14 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CheckUid",
 			Handler:    _User_CheckUid_Handler,
+		},
+		{
+			MethodName: "SetVerificationCode",
+			Handler:    _User_SetVerificationCode_Handler,
+		},
+		{
+			MethodName: "GetVerificationCode",
+			Handler:    _User_GetVerificationCode_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

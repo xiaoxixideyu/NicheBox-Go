@@ -38,3 +38,17 @@ type RegisterResponse struct {
 	Token        string `json:"token"`
 	RefreshToken string `json:"refresh_token"`
 }
+
+type SendVerificationCodePWDRequest struct {
+	Destination string `json:"destination"`
+}
+
+type SendVerificationCodePWDResponse struct {
+}
+
+type SendVerificationCodeRegisterRequest struct {
+	Destination string `json:"destination"`
+}
+
+type SendVerificationCodeRegisterResponse struct {
+}

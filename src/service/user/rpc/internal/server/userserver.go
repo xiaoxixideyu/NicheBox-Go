@@ -41,3 +41,13 @@ func (s *UserServer) CheckUid(ctx context.Context, in *user.CheckUidRequest) (*u
 	l := logic.NewCheckUidLogic(ctx, s.svcCtx)
 	return l.CheckUid(in)
 }
+
+func (s *UserServer) SetVerificationCode(ctx context.Context, in *user.SetVerificationCodeRequest) (*user.SetVerificationCodeResponse, error) {
+	l := logic.NewSetVerificationCodeLogic(ctx, s.svcCtx)
+	return l.SetVerificationCode(in)
+}
+
+func (s *UserServer) GetVerificationCode(ctx context.Context, in *user.GetVerificationCodeRequest) (*user.GetVerificationCodeResponse, error) {
+	l := logic.NewGetVerificationCodeLogic(ctx, s.svcCtx)
+	return l.GetVerificationCode(in)
+}

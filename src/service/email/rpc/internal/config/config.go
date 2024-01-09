@@ -12,12 +12,4 @@ type Config struct {
 		Host     string
 		Port     int
 	}
-	CacheRedis struct {
-		Host        []string
-		Type        string
-		Pass        string
-		Tls         bool
-		NonBlock    bool
-		PingTimeout int
-	}
 }

@@ -43,6 +43,20 @@ type RefreshTokenResponse {
 }
 
 // RefreshToken
+// SendVerificationCode
+type SendVerificationCodeRegisterRequest {
+	Destination string `json:"destination"`
+}
+
+type SendVerificationCodeRegisterResponse {}
+
+type SendVerificationCodePWDRequest {
+	Destination string `json:"destination"`
+}
+
+type SendVerificationCodePWDResponse {}
+
+//SendVerificationCode
 service User {
 	@handler Register
 	post /api/user/register (RegisterRequest) returns (RegisterResponse)
@@ -52,6 +66,12 @@ service User {
 
 	@handler Login
 	post /api/user/login (LoginReqeust) returns (LoginResponse)
+
+	@handler SendVerificationCodeRegister
+	post /api/user/sendverificationcoderegister (SendVerificationCodeRegisterRequest) returns (SendVerificationCodeRegisterResponse)
+
+	@handler SendVerificationCodePWD
+	post /api/user/sendverificationcodepwd (SendVerificationCodePWDRequest) returns (SendVerificationCodePWDResponse)
 }
 
 @server (

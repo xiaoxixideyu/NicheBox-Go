@@ -53,18 +53,6 @@ func (l *SendVerificationCodeLogic) SendVerificationCode(in *email.SendVerificat
 		return nil, err
 	}
 
-	if in.Type == TYPEREGISTER {
-		err = l.svcCtx.EmailRedisInterface.SetVerificationCodeRegister(context.Background(), in.Destination, in.Code, VERIFICATIONCODEEXPIRATION)
-		if err != nil {
-			return nil, err
-		}
-	} else if in.Type == TYPEPWD {
-		err = l.svcCtx.EmailRedisInterface.SetVerificationCodePWD(context.Background(), in.Destination, in.Code, VERIFICATIONCODEEXPIRATION)
-		if err != nil {
-			return nil, err
-		}
-	}
-
 	return &email.SendVerificationCodeResponse{}, nil
 }
 
