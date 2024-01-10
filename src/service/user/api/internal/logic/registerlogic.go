@@ -6,10 +6,10 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"net/http"
-	"nichebox/service/user/rpc/pb/user"
-
 	"nichebox/service/user/api/internal/svc"
 	"nichebox/service/user/api/internal/types"
+	"nichebox/service/user/rpc/pb/user"
+	"strings"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -32,14 +32,17 @@ func (l *RegisterLogic) Register(req *types.RegisterRequest) (resp *types.Regist
 	in := user.RegisterRequest{
 		Email:    req.Email,
 		Password: req.Password,
-		Code:     req.Code,
+		Code:     strings.ToUpper(req.Code),
 	}
+
 	_, err = l.svcCtx.UserRpc.Register(l.ctx, &in)
 	if err != nil {
 		rpcStatus, ok := status.FromError(err)
 		if ok {
 			if rpcStatus.Code() == codes.AlreadyExists {
 				return nil, errors.New(http.StatusBadRequest, "此邮箱已被注册")
+			} else if rpcStatus.Code() == codes.NotFound {
+				return nil, errors.New(http.StatusBadRequest, "验证码错误或过期")
 			}
 		}
 		return nil, errors.New(http.StatusInternalServerError, "发生未知错误: 1")

@@ -1,0 +1,12 @@
+Name: email.rpc
+ListenOn: 0.0.0.0:8081
+Etcd:
+  Hosts:
+  - etcd:2379
+  Key: email.rpc
+
+ServerMail:
+  Address: "detectionproject@163.com"
+  Password: "TQCKFVKLGZICJXSQ"
+  Host: "smtp.163.com"
+  Port: 25

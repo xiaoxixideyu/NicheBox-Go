@@ -63,6 +63,57 @@ message GetUserBaseInfoResponse {
 }
 // GetUserBaseInfo
 
+// SetVerificationCode
+message SetVerificationCodeRequest {
+    string key = 1;
+    string val = 2;
+    int32 expiration = 3;
+}
+
+message SetVerificationCodeResponse {
+}
+// SetVerificationCode
+
+// RemoveVerificationCode
+message RemoveVerificationCodeRequest {
+    string key = 1;
+}
+
+message RemoveVerificationCodeResponse {
+}
+// RemoveVerificationCode
+
+// GetVerificationCode
+message GetVerificationCodeRequest {
+    string key = 1;
+}
+
+message GetVerificationCodeResponse {
+    string val = 1;
+}
+// GetVerificationCode
+
+// ForgetPassword
+message ForgetPasswordRequest {
+    string email = 1;
+    string newPassword = 2;
+    string code = 3;
+}
+
+message ForgetPasswordResponse {
+}
+// ForgetPassword
+
+// SetCriticalUserInfo
+message SetCriticalUserInfoRequest {
+    int64 uid = 1;
+    string password = 2;
+}
+
+message SetCriticalUserInfoResponse {
+}
+// SetCriticalUserInfo
+
 service User {
     rpc Register(RegisterRequest) returns(RegisterResponse);
     rpc CheckEmail(CheckEmailRequest) returns(CheckEmailResponse);
@@ -70,4 +121,9 @@ service User {
     rpc CheckUid(CheckUidRequest) returns(CheckUidResponse);
     rpc SetUserBaseInfo(SetUserBaseInfoRequest) returns(SetUserBaseInfoResponse);
     rpc GetUserBaseInfo(GetUserBaseInfoRequest) returns(GetUserBaseInfoResponse);
+    rpc SetVerificationCode(SetVerificationCodeRequest) returns (SetVerificationCodeResponse);
+    rpc GetVerificationCode(GetVerificationCodeRequest) returns (GetVerificationCodeResponse);
+    rpc RemoveVerificationCode(RemoveVerificationCodeRequest) returns (RemoveVerificationCodeResponse);
+    rpc ForgetPassword(ForgetPasswordRequest) returns (ForgetPasswordResponse);
+    rpc SetCriticalUserInfo(SetCriticalUserInfoRequest) returns (SetCriticalUserInfoResponse);
 }

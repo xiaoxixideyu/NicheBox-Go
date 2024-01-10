@@ -13,18 +13,28 @@ import (
 )
 
 type (
-	CheckEmailRequest           = user.CheckEmailRequest
-	CheckEmailResponse          = user.CheckEmailResponse
-	CheckUidRequest             = user.CheckUidRequest
-	CheckUidResponse            = user.CheckUidResponse
-	GetUidByEmailAndPwdRequest  = user.GetUidByEmailAndPwdRequest
-	GetUidByEmailAndPwdResponse = user.GetUidByEmailAndPwdResponse
-	GetUserBaseInfoRequest      = user.GetUserBaseInfoRequest
-	GetUserBaseInfoResponse     = user.GetUserBaseInfoResponse
-	RegisterRequest             = user.RegisterRequest
-	RegisterResponse            = user.RegisterResponse
-	SetUserBaseInfoRequest      = user.SetUserBaseInfoRequest
-	SetUserBaseInfoResponse     = user.SetUserBaseInfoResponse
+	CheckEmailRequest              = user.CheckEmailRequest
+	CheckEmailResponse             = user.CheckEmailResponse
+	CheckUidRequest                = user.CheckUidRequest
+	CheckUidResponse               = user.CheckUidResponse
+	ForgetPasswordRequest          = user.ForgetPasswordRequest
+	ForgetPasswordResponse         = user.ForgetPasswordResponse
+	GetUidByEmailAndPwdRequest     = user.GetUidByEmailAndPwdRequest
+	GetUidByEmailAndPwdResponse    = user.GetUidByEmailAndPwdResponse
+	GetUserBaseInfoRequest         = user.GetUserBaseInfoRequest
+	GetUserBaseInfoResponse        = user.GetUserBaseInfoResponse
+	GetVerificationCodeRequest     = user.GetVerificationCodeRequest
+	GetVerificationCodeResponse    = user.GetVerificationCodeResponse
+	RegisterRequest                = user.RegisterRequest
+	RegisterResponse               = user.RegisterResponse
+	RemoveVerificationCodeRequest  = user.RemoveVerificationCodeRequest
+	RemoveVerificationCodeResponse = user.RemoveVerificationCodeResponse
+	SetCriticalUserInfoRequest     = user.SetCriticalUserInfoRequest
+	SetCriticalUserInfoResponse    = user.SetCriticalUserInfoResponse
+	SetUserBaseInfoRequest         = user.SetUserBaseInfoRequest
+	SetUserBaseInfoResponse        = user.SetUserBaseInfoResponse
+	SetVerificationCodeRequest     = user.SetVerificationCodeRequest
+	SetVerificationCodeResponse    = user.SetVerificationCodeResponse
 
 	User interface {
 		Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
@@ -33,6 +43,11 @@ type (
 		CheckUid(ctx context.Context, in *CheckUidRequest, opts ...grpc.CallOption) (*CheckUidResponse, error)
 		SetUserBaseInfo(ctx context.Context, in *SetUserBaseInfoRequest, opts ...grpc.CallOption) (*SetUserBaseInfoResponse, error)
 		GetUserBaseInfo(ctx context.Context, in *GetUserBaseInfoRequest, opts ...grpc.CallOption) (*GetUserBaseInfoResponse, error)
+		SetVerificationCode(ctx context.Context, in *SetVerificationCodeRequest, opts ...grpc.CallOption) (*SetVerificationCodeResponse, error)
+		GetVerificationCode(ctx context.Context, in *GetVerificationCodeRequest, opts ...grpc.CallOption) (*GetVerificationCodeResponse, error)
+		RemoveVerificationCode(ctx context.Context, in *RemoveVerificationCodeRequest, opts ...grpc.CallOption) (*RemoveVerificationCodeResponse, error)
+		ForgetPassword(ctx context.Context, in *ForgetPasswordRequest, opts ...grpc.CallOption) (*ForgetPasswordResponse, error)
+		SetCriticalUserInfo(ctx context.Context, in *SetCriticalUserInfoRequest, opts ...grpc.CallOption) (*SetCriticalUserInfoResponse, error)
 	}
 
 	defaultUser struct {
@@ -74,4 +89,29 @@ func (m *defaultUser) SetUserBaseInfo(ctx context.Context, in *SetUserBaseInfoRe
 func (m *defaultUser) GetUserBaseInfo(ctx context.Context, in *GetUserBaseInfoRequest, opts ...grpc.CallOption) (*GetUserBaseInfoResponse, error) {
 	client := user.NewUserClient(m.cli.Conn())
 	return client.GetUserBaseInfo(ctx, in, opts...)
+}
+
+func (m *defaultUser) SetVerificationCode(ctx context.Context, in *SetVerificationCodeRequest, opts ...grpc.CallOption) (*SetVerificationCodeResponse, error) {
+	client := user.NewUserClient(m.cli.Conn())
+	return client.SetVerificationCode(ctx, in, opts...)
+}
+
+func (m *defaultUser) GetVerificationCode(ctx context.Context, in *GetVerificationCodeRequest, opts ...grpc.CallOption) (*GetVerificationCodeResponse, error) {
+	client := user.NewUserClient(m.cli.Conn())
+	return client.GetVerificationCode(ctx, in, opts...)
+}
+
+func (m *defaultUser) RemoveVerificationCode(ctx context.Context, in *RemoveVerificationCodeRequest, opts ...grpc.CallOption) (*RemoveVerificationCodeResponse, error) {
+	client := user.NewUserClient(m.cli.Conn())
+	return client.RemoveVerificationCode(ctx, in, opts...)
+}
+
+func (m *defaultUser) ForgetPassword(ctx context.Context, in *ForgetPasswordRequest, opts ...grpc.CallOption) (*ForgetPasswordResponse, error) {
+	client := user.NewUserClient(m.cli.Conn())
+	return client.ForgetPassword(ctx, in, opts...)
+}
+
+func (m *defaultUser) SetCriticalUserInfo(ctx context.Context, in *SetCriticalUserInfoRequest, opts ...grpc.CallOption) (*SetCriticalUserInfoResponse, error) {
+	client := user.NewUserClient(m.cli.Conn())
+	return client.SetCriticalUserInfo(ctx, in, opts...)
 }

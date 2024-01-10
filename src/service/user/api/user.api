@@ -4,59 +4,119 @@ type RegisterRequest {
 	Password string `json:"password"`
 	Code     string `json:"code"`
 }
+
 type RegisterResponse {
 	LoginSuccess bool   `json:"login_success"`
 	Token        string `json:"token"`
 	RefreshToken string `json:"refresh_token"`
 }
-// Register
 
+// Register
 // CheckEmailExists
 type CheckEmailExistsReqeust {
 	Email string `json:"email"`
 }
+
 type CheckEmailExistsResponse {
 	Exist bool `json:"exist"`
 }
-// CheckEmailExists
 
+// CheckEmailExists
 // Login
 type LoginReqeust {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
+
 type LoginResponse {
 	Token        string `json:"token"`
 	RefreshToken string `json:"refresh_token"`
 }
-// Login
 
+// Login
 // RefreshToken
 type RefreshTokenReqeust {}
+
 type RefreshTokenResponse {
 	Token        string `json:"token"`
 	RefreshToken string `json:"refresh_token"`
 }
-// RefreshToken
 
+// RefreshToken
 // SetUserBaseInfo
 type SetUserBaseInfoRequest {
 	Username     string `json:"username"`
 	Introduction string `json:"introduction"`
 }
-type SetUserBaseInfoResponse {}
-// SetUserBaseInfo
 
+type SetUserBaseInfoResponse {}
+
+// SetUserBaseInfo
 // GetMyBaseInfo
 type GetMyBaseInfoRequest {}
+
 type GetMyBaseInfoResponse {
 	Uid          string `json:"uid"`
 	UserName     string `json:"username"`
 	Introduction string `json:"introduction"`
 }
-// GetMyBaseInfo
 
-@server(
+// GetMyBaseInfo
+// SendVerificationCodeRegister
+type SendVerificationCodeRegisterRequest {
+	Destination string `json:"destination"`
+}
+
+type SendVerificationCodeRegisterResponse {}
+
+// SendVerificationCodeRegister
+// SendVerificationCodeForgetPassword
+type SendVerificationCodeForgetPasswordRequest {
+	Destination string `json:"destination"`
+}
+
+type SendVerificationCodeForgetPasswordResponse {}
+
+// SendVerificationCodeForgetPassword
+//SendVerificationCodeCriticalUserInfo
+type SendVerificationCodeCriticalUserInfoRequest {
+	Destination string `json:"destination"`
+}
+
+type SendVerificationCodeCriticalUserInfoResponse {}
+
+//SendVerificationCodeCriticalUserInfo
+// ForgetPassword
+type ForgetPasswordRequest {
+	Email       string `json:"email"`
+	NewPassword string `json:"new_password"`
+	Code        string `json:"code"`
+}
+
+type ForgetPasswordResponse {}
+
+// ForgetPassword
+// SetCriticalUserInfo
+type SetCriticalUserInfoRequest {
+	Code     string `json:"code"`
+	Password string `json:"password""`
+}
+
+type SetCriticalUserInfoResponse {}
+
+// SetCriticalUserInfo
+// CheckVerificationCodeCriticalUserInfo
+type CheckVerificationCodeCriticalUserInfoRequest {
+	Email string `json:"email"`
+	Code  string `json:"code"`
+}
+
+type CheckVerificationCodeCriticalUserInfoResponse {
+	VerificationCode string `json:"verfication_code""`
+}
+
+// CheckVerificationCodeCriticalUserInfo
+@server (
 	prefix: /api/user
 )
 service User {
@@ -68,15 +128,33 @@ service User {
 
 	@handler Login
 	post /login (LoginReqeust) returns (LoginResponse)
+
+	@handler SendVerificationCodeRegister
+	post /sendverificationcode/register (SendVerificationCodeRegisterRequest) returns (SendVerificationCodeRegisterResponse)
+
+	@handler SendVerificationCodeForgetPassword
+	post /sendverificationcode/forgetpassword (SendVerificationCodeForgetPasswordRequest) returns (SendVerificationCodeForgetPasswordResponse)
+
+	@handler ForgetPassword
+	post /forgetpassword (ForgetPasswordRequest) returns (ForgetPasswordResponse)
 }
 
 @server (
-	jwt: Auth
+	jwt:    Auth
 	prefix: /api/user
 )
 service User {
 	@handler RefreshToken
 	post /refreshtoken (RefreshTokenReqeust) returns (RefreshTokenResponse)
+
+	@handler SetCriticalUserInfo
+	post /setcriticaluserinfo (SetCriticalUserInfoRequest) returns (SetCriticalUserInfoResponse)
+
+	@handler SendVerificationCodeCriticalUserInfo
+	post /sendverificationcode/criticaluserinfo (SendVerificationCodeCriticalUserInfoRequest) returns (SendVerificationCodeCriticalUserInfoResponse)
+
+	@handler CheckVerificationCodeCriticalUserInfo
+	post /checkverificationcode/criticaluserinfo (CheckVerificationCodeCriticalUserInfoRequest) returns (CheckVerificationCodeCriticalUserInfoResponse)
 
 	@handler SetUserBaseInfo
 	post /setuserbaseinfo (SetUserBaseInfoRequest) returns (SetUserBaseInfoResponse)
@@ -84,3 +162,4 @@ service User {
 	@handler GetMyBaseInfo
 	post /getmybaseinfo (GetMyBaseInfoRequest) returns (GetMyBaseInfoResponse)
 }
+

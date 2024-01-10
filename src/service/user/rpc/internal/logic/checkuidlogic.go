@@ -28,7 +28,7 @@ func NewCheckUidLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CheckUid
 }
 
 func (l *CheckUidLogic) CheckUid(in *user.CheckUidRequest) (*user.CheckUidResponse, error) {
-	_, err := l.svcCtx.UserInterface.GerUserByUid(in.Uid)
+	_, err := l.svcCtx.UserInterface.GetUserByUid(in.Uid)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return &user.CheckUidResponse{

@@ -14,18 +14,33 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodPost,
-				Path:    "/register",
-				Handler: RegisterHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
 				Path:    "/checkemailexists",
 				Handler: CheckEmailExistsHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
+				Path:    "/forgetpassword",
+				Handler: ForgetPasswordHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
 				Path:    "/login",
 				Handler: LoginHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/register",
+				Handler: RegisterHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/sendverificationcode/forgetpassword",
+				Handler: SendVerificationCodeForgetPasswordHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/sendverificationcode/register",
+				Handler: SendVerificationCodeRegisterHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/api/user"),
@@ -35,18 +50,33 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodPost,
-				Path:    "/refreshtoken",
-				Handler: RefreshTokenHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/setuserbaseinfo",
-				Handler: SetUserBaseInfoHandler(serverCtx),
+				Path:    "/checkverificationcode/criticaluserinfo",
+				Handler: CheckVerificationCodeCriticalUserInfoHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
 				Path:    "/getmybaseinfo",
 				Handler: GetMyBaseInfoHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/refreshtoken",
+				Handler: RefreshTokenHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/sendverificationcode/criticaluserinfo",
+				Handler: SendVerificationCodeCriticalUserInfoHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/setcriticaluserinfo",
+				Handler: SetCriticalUserInfoHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/setuserbaseinfo",
+				Handler: SetUserBaseInfoHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),

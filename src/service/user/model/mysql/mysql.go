@@ -56,7 +56,7 @@ func (m *MysqlInterface) GetUserByEmail(email string) (*model.User, error) {
 	return &user, nil
 }
 
-func (m *MysqlInterface) GerUserByUid(uid int64) (*model.User, error) {
+func (m *MysqlInterface) GetUserByUid(uid int64) (*model.User, error) {
 	var user model.User
 	result := m.db.Where("uid = ?", uid).First(&user)
 	if result.Error != nil {
@@ -67,6 +67,12 @@ func (m *MysqlInterface) GerUserByUid(uid int64) (*model.User, error) {
 
 func (m *MysqlInterface) CreateUser(user *model.User) error {
 	result := m.db.Create(user)
+	return result.Error
+}
+
+func (m *MysqlInterface) UpdatePasswordByEmail(email, password string) error {
+	var user model.User
+	result := m.db.Model(&user).Where("email = ?", email).Update("password", password)
 	return result.Error
 }
 

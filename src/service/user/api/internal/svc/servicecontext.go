@@ -1,6 +1,7 @@
 package svc
 
 import (
+	"nichebox/service/email/rpc/emailclient"
 	"nichebox/service/user/api/internal/config"
 	"nichebox/service/user/rpc/userclient"
 
@@ -8,13 +9,15 @@ import (
 )
 
 type ServiceContext struct {
-	Config  config.Config
-	UserRpc userclient.User
+	Config   config.Config
+	UserRpc  userclient.User
+	EmailRpc emailclient.Email
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
 	return &ServiceContext{
-		Config:  c,
-		UserRpc: userclient.NewUser(zrpc.MustNewClient(c.UserRpc)),
+		Config:   c,
+		UserRpc:  userclient.NewUser(zrpc.MustNewClient(c.UserRpc)),
+		EmailRpc: emailclient.NewEmail(zrpc.MustNewClient(c.EmailRpc)),
 	}
 }

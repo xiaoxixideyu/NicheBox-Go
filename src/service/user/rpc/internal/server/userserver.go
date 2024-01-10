@@ -51,3 +51,28 @@ func (s *UserServer) GetUserBaseInfo(ctx context.Context, in *user.GetUserBaseIn
 	l := logic.NewGetUserBaseInfoLogic(ctx, s.svcCtx)
 	return l.GetUserBaseInfo(in)
 }
+
+func (s *UserServer) SetVerificationCode(ctx context.Context, in *user.SetVerificationCodeRequest) (*user.SetVerificationCodeResponse, error) {
+	l := logic.NewSetVerificationCodeLogic(ctx, s.svcCtx)
+	return l.SetVerificationCode(in)
+}
+
+func (s *UserServer) GetVerificationCode(ctx context.Context, in *user.GetVerificationCodeRequest) (*user.GetVerificationCodeResponse, error) {
+	l := logic.NewGetVerificationCodeLogic(ctx, s.svcCtx)
+	return l.GetVerificationCode(in)
+}
+
+func (s *UserServer) RemoveVerificationCode(ctx context.Context, in *user.RemoveVerificationCodeRequest) (*user.RemoveVerificationCodeResponse, error) {
+	l := logic.NewRemoveVerificationCodeLogic(ctx, s.svcCtx)
+	return l.RemoveVerificationCode(in)
+}
+
+func (s *UserServer) ForgetPassword(ctx context.Context, in *user.ForgetPasswordRequest) (*user.ForgetPasswordResponse, error) {
+	l := logic.NewForgetPasswordLogic(ctx, s.svcCtx)
+	return l.ForgetPassword(in)
+}
+
+func (s *UserServer) SetCriticalUserInfo(ctx context.Context, in *user.SetCriticalUserInfoRequest) (*user.SetCriticalUserInfoResponse, error) {
+	l := logic.NewSetCriticalUserInfoLogic(ctx, s.svcCtx)
+	return l.SetCriticalUserInfo(in)
+}

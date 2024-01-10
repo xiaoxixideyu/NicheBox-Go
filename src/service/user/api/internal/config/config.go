@@ -12,5 +12,6 @@ type Config struct {
 		AccessExpire  int64
 		RefreshExpire int64
 	}
-	UserRpc zrpc.RpcClientConf
+	UserRpc  zrpc.RpcClientConf
+	EmailRpc zrpc.RpcClientConf
 }

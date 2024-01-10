@@ -28,7 +28,7 @@ func NewGetUserBaseInfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *G
 }
 
 func (l *GetUserBaseInfoLogic) GetUserBaseInfo(in *user.GetUserBaseInfoRequest) (*user.GetUserBaseInfoResponse, error) {
-	userModel, err := l.svcCtx.UserInterface.GerUserByUid(in.Uid)
+	userModel, err := l.svcCtx.UserInterface.GetUserByUid(in.Uid)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, status.Error(codes.NotFound, err.Error())

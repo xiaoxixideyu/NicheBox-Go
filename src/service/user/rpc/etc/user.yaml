@@ -15,6 +15,16 @@ Mysql:
   maxOpenConns: 100
   connMaxLifeTime: 3600
 
+CacheRedis:
+  Host:
+    - redis:6379
+  Type: node
+  Pass: ""
+  Tls: false
+  NonBlock: false
+  PingTimeout: 1
+
+
 Salt: HWVOFkGgPTryzICwd7qnJaZR9KQ2i8xe
 
 SnowFlake:

@@ -12,3 +12,9 @@ UserRpc:
     Hosts:
     - etcd:2379
     Key: user.rpc
+
+EmailRpc:
+  Etcd:
+    Hosts:
+      - etcd:2379
+    Key: email.rpc
