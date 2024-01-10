@@ -62,7 +62,7 @@ type GetMyBaseInfoResponse {
 }
 
 // GetMyBaseInfo
-// SendVerificationCode
+// SendVerificationCodeRegister
 type SendVerificationCodeRegisterRequest {
 	Destination string `json:"destination"`
 }
@@ -73,6 +73,9 @@ type SendVerificationCodeForgetPasswordRequest {
 	Destination string `json:"destination"`
 }
 
+// SendVerificationCodeRegister
+
+// SendVerificationCodeForgetPassword
 type SendVerificationCodeForgetPasswordResponse {}
 
 type SendVerificationCodeCriticalUserInfoRequest {
@@ -81,7 +84,7 @@ type SendVerificationCodeCriticalUserInfoRequest {
 
 type SendVerificationCodeCriticalUserInfoResponse {}
 
-//SendVerificationCode
+// SendVerificationCodeForgetPassword
 // ForgetPassword
 type ForgetPasswordRequest {
 	Email       string `json:"email"`
