@@ -33,7 +33,7 @@ func NewRegisterLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Register
 
 func (l *RegisterLogic) Register(in *user.RegisterRequest) (*user.RegisterResponse, error) {
 	key := redisBiz.KeyPrefixUser + redisBiz.KeyRegisterCode + in.Email
-	val, err := l.svcCtx.UserRedisInterface.GetVerificationCode(l.ctx, key)
+	val, err := l.svcCtx.UserCacheInterface.GetVerificationCode(l.ctx, key)
 	if err != nil && errors.As(err, &redis.ErrEmptyKey) {
 		return nil, status.Error(codes.NotFound, "验证码错误")
 	}
@@ -67,7 +67,7 @@ func (l *RegisterLogic) Register(in *user.RegisterRequest) (*user.RegisterRespon
 	}
 
 	// remove code from redis if register success
-	_ = l.svcCtx.UserRedisInterface.RemoveVerificationCode(l.ctx, key)
+	_ = l.svcCtx.UserCacheInterface.RemoveVerificationCode(l.ctx, key)
 
 	return &user.RegisterResponse{Uid: userModel.Uid}, nil
 }

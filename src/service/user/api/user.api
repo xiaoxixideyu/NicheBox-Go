@@ -69,22 +69,23 @@ type SendVerificationCodeRegisterRequest {
 
 type SendVerificationCodeRegisterResponse {}
 
+// SendVerificationCodeRegister
+// SendVerificationCodeForgetPassword
 type SendVerificationCodeForgetPasswordRequest {
 	Destination string `json:"destination"`
 }
 
-// SendVerificationCodeRegister
-
-// SendVerificationCodeForgetPassword
 type SendVerificationCodeForgetPasswordResponse {}
 
+// SendVerificationCodeForgetPassword
+//SendVerificationCodeCriticalUserInfo
 type SendVerificationCodeCriticalUserInfoRequest {
 	Destination string `json:"destination"`
 }
 
 type SendVerificationCodeCriticalUserInfoResponse {}
 
-// SendVerificationCodeForgetPassword
+//SendVerificationCodeCriticalUserInfo
 // ForgetPassword
 type ForgetPasswordRequest {
 	Email       string `json:"email"`
@@ -97,6 +98,7 @@ type ForgetPasswordResponse {}
 // ForgetPassword
 // SetCriticalUserInfo
 type SetCriticalUserInfoRequest {
+	Code     string `json:"code"`
 	Password string `json:"password""`
 }
 
@@ -109,7 +111,9 @@ type CheckVerificationCodeCriticalUserInfoRequest {
 	Code  string `json:"code"`
 }
 
-type CheckVerificationCodeCriticalUserInfoResponse {}
+type CheckVerificationCodeCriticalUserInfoResponse {
+	VerificationCode string `json:"verfication_code""`
+}
 
 // CheckVerificationCodeCriticalUserInfo
 @server (

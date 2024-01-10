@@ -11,7 +11,7 @@ type RedisInterface struct {
 	rds *redis.Redis
 }
 
-func NewRedisInterface(hosts []string, deployType, pass string, tls, nonBlock bool, pingTimeout int) (model.UserRedisInterface, error) {
+func NewRedisInterface(hosts []string, deployType, pass string, tls, nonBlock bool, pingTimeout int) (model.UserCacheInterface, error) {
 	conf := redis.RedisConf{
 		// todo: judge node or cluster
 		Host:        hosts[0],

@@ -19,16 +19,17 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	User_Register_FullMethodName            = "/userclient.User/Register"
-	User_CheckEmail_FullMethodName          = "/userclient.User/CheckEmail"
-	User_GetUidByEmailAndPwd_FullMethodName = "/userclient.User/GetUidByEmailAndPwd"
-	User_CheckUid_FullMethodName            = "/userclient.User/CheckUid"
-	User_SetUserBaseInfo_FullMethodName     = "/userclient.User/SetUserBaseInfo"
-	User_GetUserBaseInfo_FullMethodName     = "/userclient.User/GetUserBaseInfo"
-	User_SetVerificationCode_FullMethodName = "/userclient.User/SetVerificationCode"
-	User_GetVerificationCode_FullMethodName = "/userclient.User/GetVerificationCode"
-	User_ForgetPassword_FullMethodName      = "/userclient.User/ForgetPassword"
-	User_SetCriticalUserInfo_FullMethodName = "/userclient.User/SetCriticalUserInfo"
+	User_Register_FullMethodName               = "/userclient.User/Register"
+	User_CheckEmail_FullMethodName             = "/userclient.User/CheckEmail"
+	User_GetUidByEmailAndPwd_FullMethodName    = "/userclient.User/GetUidByEmailAndPwd"
+	User_CheckUid_FullMethodName               = "/userclient.User/CheckUid"
+	User_SetUserBaseInfo_FullMethodName        = "/userclient.User/SetUserBaseInfo"
+	User_GetUserBaseInfo_FullMethodName        = "/userclient.User/GetUserBaseInfo"
+	User_SetVerificationCode_FullMethodName    = "/userclient.User/SetVerificationCode"
+	User_GetVerificationCode_FullMethodName    = "/userclient.User/GetVerificationCode"
+	User_RemoveVerificationCode_FullMethodName = "/userclient.User/RemoveVerificationCode"
+	User_ForgetPassword_FullMethodName         = "/userclient.User/ForgetPassword"
+	User_SetCriticalUserInfo_FullMethodName    = "/userclient.User/SetCriticalUserInfo"
 )
 
 // UserClient is the client API for User service.
@@ -43,6 +44,7 @@ type UserClient interface {
 	GetUserBaseInfo(ctx context.Context, in *GetUserBaseInfoRequest, opts ...grpc.CallOption) (*GetUserBaseInfoResponse, error)
 	SetVerificationCode(ctx context.Context, in *SetVerificationCodeRequest, opts ...grpc.CallOption) (*SetVerificationCodeResponse, error)
 	GetVerificationCode(ctx context.Context, in *GetVerificationCodeRequest, opts ...grpc.CallOption) (*GetVerificationCodeResponse, error)
+	RemoveVerificationCode(ctx context.Context, in *RemoveVerificationCodeRequest, opts ...grpc.CallOption) (*RemoveVerificationCodeResponse, error)
 	ForgetPassword(ctx context.Context, in *ForgetPasswordRequest, opts ...grpc.CallOption) (*ForgetPasswordResponse, error)
 	SetCriticalUserInfo(ctx context.Context, in *SetCriticalUserInfoRequest, opts ...grpc.CallOption) (*SetCriticalUserInfoResponse, error)
 }
@@ -127,6 +129,15 @@ func (c *userClient) GetVerificationCode(ctx context.Context, in *GetVerificatio
 	return out, nil
 }
 
+func (c *userClient) RemoveVerificationCode(ctx context.Context, in *RemoveVerificationCodeRequest, opts ...grpc.CallOption) (*RemoveVerificationCodeResponse, error) {
+	out := new(RemoveVerificationCodeResponse)
+	err := c.cc.Invoke(ctx, User_RemoveVerificationCode_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *userClient) ForgetPassword(ctx context.Context, in *ForgetPasswordRequest, opts ...grpc.CallOption) (*ForgetPasswordResponse, error) {
 	out := new(ForgetPasswordResponse)
 	err := c.cc.Invoke(ctx, User_ForgetPassword_FullMethodName, in, out, opts...)
@@ -157,6 +168,7 @@ type UserServer interface {
 	GetUserBaseInfo(context.Context, *GetUserBaseInfoRequest) (*GetUserBaseInfoResponse, error)
 	SetVerificationCode(context.Context, *SetVerificationCodeRequest) (*SetVerificationCodeResponse, error)
 	GetVerificationCode(context.Context, *GetVerificationCodeRequest) (*GetVerificationCodeResponse, error)
+	RemoveVerificationCode(context.Context, *RemoveVerificationCodeRequest) (*RemoveVerificationCodeResponse, error)
 	ForgetPassword(context.Context, *ForgetPasswordRequest) (*ForgetPasswordResponse, error)
 	SetCriticalUserInfo(context.Context, *SetCriticalUserInfoRequest) (*SetCriticalUserInfoResponse, error)
 	mustEmbedUnimplementedUserServer()
@@ -189,6 +201,9 @@ func (UnimplementedUserServer) SetVerificationCode(context.Context, *SetVerifica
 }
 func (UnimplementedUserServer) GetVerificationCode(context.Context, *GetVerificationCodeRequest) (*GetVerificationCodeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetVerificationCode not implemented")
+}
+func (UnimplementedUserServer) RemoveVerificationCode(context.Context, *RemoveVerificationCodeRequest) (*RemoveVerificationCodeResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveVerificationCode not implemented")
 }
 func (UnimplementedUserServer) ForgetPassword(context.Context, *ForgetPasswordRequest) (*ForgetPasswordResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ForgetPassword not implemented")
@@ -353,6 +368,24 @@ func _User_GetVerificationCode_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _User_RemoveVerificationCode_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveVerificationCodeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).RemoveVerificationCode(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_RemoveVerificationCode_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).RemoveVerificationCode(ctx, req.(*RemoveVerificationCodeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _User_ForgetPassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ForgetPasswordRequest)
 	if err := dec(in); err != nil {
@@ -427,6 +460,10 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetVerificationCode",
 			Handler:    _User_GetVerificationCode_Handler,
+		},
+		{
+			MethodName: "RemoveVerificationCode",
+			Handler:    _User_RemoveVerificationCode_Handler,
 		},
 		{
 			MethodName: "ForgetPassword",

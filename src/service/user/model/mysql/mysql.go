@@ -1,11 +1,8 @@
 package mysql
 
 import (
-	"errors"
 	"fmt"
-	"nichebox/common/snowflake"
 	"nichebox/service/user/model"
-	"sync"
 	"time"
 
 	"gorm.io/driver/mysql"
@@ -14,9 +11,6 @@ import (
 
 type MysqlInterface struct {
 	db *gorm.DB
-
-	mu     sync.Mutex
-	txMaps map[int64]*gorm.DB
 }
 
 func NewMysqlInterface(database, username, password, host, port string, maxIdleConns, maxOpenConns, connMaxLifeTime int) (model.UserInterface, error) {
@@ -43,8 +37,7 @@ func NewMysqlInterface(database, username, password, host, port string, maxIdleC
 	sqlDB.SetConnMaxLifetime(time.Second * time.Duration(connMaxLifeTime))
 
 	m := &MysqlInterface{
-		db:     db,
-		txMaps: map[int64]*gorm.DB{},
+		db: db,
 	}
 	m.autoMigrate()
 	return m, nil
@@ -52,56 +45,6 @@ func NewMysqlInterface(database, username, password, host, port string, maxIdleC
 
 func (m *MysqlInterface) autoMigrate() {
 	m.db.AutoMigrate(&model.User{})
-}
-
-func (m *MysqlInterface) BeginTX() (int64, error) {
-	tx := m.db.Begin()
-	if tx.Error != nil {
-		return 0, tx.Error
-	}
-	id := snowflake.GenID()
-
-	m.mu.Lock()
-	defer m.mu.Unlock()
-	m.txMaps[id] = tx
-
-	return id, nil
-}
-
-func (m *MysqlInterface) CommitTX(txId int64) error {
-	m.mu.Lock()
-	defer m.mu.Unlock()
-
-	tx, ok := m.txMaps[txId]
-	if !ok {
-		return errors.New(fmt.Sprintf("tx:%d not found", txId))
-	}
-
-	result := tx.Commit()
-	if result.Error != nil {
-		return result.Error
-	}
-	delete(m.txMaps, txId)
-
-	return nil
-}
-
-func (m *MysqlInterface) RollbackTX(txId int64) error {
-	m.mu.Lock()
-	defer m.mu.Unlock()
-
-	tx, ok := m.txMaps[txId]
-	if !ok {
-		return errors.New(fmt.Sprintf("tx:%d not found", txId))
-	}
-
-	result := tx.Rollback()
-	if result.Error != nil {
-		return result.Error
-	}
-	delete(m.txMaps, txId)
-
-	return nil
 }
 
 func (m *MysqlInterface) GetUserByEmail(email string) (*model.User, error) {

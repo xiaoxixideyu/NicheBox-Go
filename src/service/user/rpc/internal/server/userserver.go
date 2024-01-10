@@ -62,6 +62,11 @@ func (s *UserServer) GetVerificationCode(ctx context.Context, in *user.GetVerifi
 	return l.GetVerificationCode(in)
 }
 
+func (s *UserServer) RemoveVerificationCode(ctx context.Context, in *user.RemoveVerificationCodeRequest) (*user.RemoveVerificationCodeResponse, error) {
+	l := logic.NewRemoveVerificationCodeLogic(ctx, s.svcCtx)
+	return l.RemoveVerificationCode(in)
+}
+
 func (s *UserServer) ForgetPassword(ctx context.Context, in *user.ForgetPasswordRequest) (*user.ForgetPasswordResponse, error) {
 	l := logic.NewForgetPasswordLogic(ctx, s.svcCtx)
 	return l.ForgetPassword(in)

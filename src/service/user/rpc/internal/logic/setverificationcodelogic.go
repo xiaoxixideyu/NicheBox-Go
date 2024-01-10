@@ -24,7 +24,7 @@ func NewSetVerificationCodeLogic(ctx context.Context, svcCtx *svc.ServiceContext
 }
 
 func (l *SetVerificationCodeLogic) SetVerificationCode(in *user.SetVerificationCodeRequest) (*user.SetVerificationCodeResponse, error) {
-	err := l.svcCtx.UserRedisInterface.SetVerificationCode(l.ctx, in.Key, in.Val, int(in.Expiration))
+	err := l.svcCtx.UserCacheInterface.SetVerificationCode(l.ctx, in.Key, in.Val, int(in.Expiration))
 	if err != nil {
 		return nil, err
 	}

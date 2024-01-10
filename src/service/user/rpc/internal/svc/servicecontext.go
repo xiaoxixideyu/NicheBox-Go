@@ -12,7 +12,7 @@ import (
 type ServiceContext struct {
 	Config             config.Config
 	UserInterface      model.UserInterface
-	UserRedisInterface model.UserRedisInterface
+	UserCacheInterface model.UserCacheInterface
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -35,6 +35,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	return &ServiceContext{
 		Config:             c,
 		UserInterface:      userInterface,
-		UserRedisInterface: userRedisInterface,
+		UserCacheInterface: userRedisInterface,
 	}
 }

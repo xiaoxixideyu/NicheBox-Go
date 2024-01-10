@@ -74,6 +74,15 @@ message SetVerificationCodeResponse {
 }
 // SetVerificationCode
 
+// RemoveVerificationCode
+message RemoveVerificationCodeRequest {
+    string key = 1;
+}
+
+message RemoveVerificationCodeResponse {
+}
+// RemoveVerificationCode
+
 // GetVerificationCode
 message GetVerificationCodeRequest {
     string key = 1;
@@ -103,7 +112,6 @@ message SetCriticalUserInfoRequest {
 
 message SetCriticalUserInfoResponse {
 }
-
 // SetCriticalUserInfo
 
 service User {
@@ -115,6 +123,7 @@ service User {
     rpc GetUserBaseInfo(GetUserBaseInfoRequest) returns(GetUserBaseInfoResponse);
     rpc SetVerificationCode(SetVerificationCodeRequest) returns (SetVerificationCodeResponse);
     rpc GetVerificationCode(GetVerificationCodeRequest) returns (GetVerificationCodeResponse);
+    rpc RemoveVerificationCode(RemoveVerificationCodeRequest) returns (RemoveVerificationCodeResponse);
     rpc ForgetPassword(ForgetPasswordRequest) returns (ForgetPasswordResponse);
     rpc SetCriticalUserInfo(SetCriticalUserInfoRequest) returns (SetCriticalUserInfoResponse);
 }

@@ -28,7 +28,7 @@ func NewGetVerificationCodeLogic(ctx context.Context, svcCtx *svc.ServiceContext
 }
 
 func (l *GetVerificationCodeLogic) GetVerificationCode(in *user.GetVerificationCodeRequest) (*user.GetVerificationCodeResponse, error) {
-	code, err := l.svcCtx.UserRedisInterface.GetVerificationCode(l.ctx, in.Key)
+	code, err := l.svcCtx.UserCacheInterface.GetVerificationCode(l.ctx, in.Key)
 	if err != nil {
 		return nil, err
 	}

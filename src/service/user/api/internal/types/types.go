@@ -15,6 +15,7 @@ type CheckVerificationCodeCriticalUserInfoRequest struct {
 }
 
 type CheckVerificationCodeCriticalUserInfoResponse struct {
+	VerificationCode string `json:"verfication_code""`
 }
 
 type ForgetPasswordRequest struct {
@@ -87,6 +88,7 @@ type SendVerificationCodeRegisterResponse struct {
 }
 
 type SetCriticalUserInfoRequest struct {
+	Code     string `json:"code"`
 	Password string `json:"password""`
 }
 

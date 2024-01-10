@@ -8,13 +8,9 @@ type UserInterface interface {
 	UpdateUserTX(user *User) error
 	CreateUser(user *User) error
 	UpdatePasswordByEmail(email, password string) error
-
-	BeginTX() (int64, error)
-	CommitTX(txId int64) error
-	RollbackTX(txId int64) error
 }
 
-type UserRedisInterface interface {
+type UserCacheInterface interface {
 	GetVerificationCode(ctx context.Context, key string) (string, error)
 	SetVerificationCode(ctx context.Context, key, code string, expiration int) error
 	RemoveVerificationCode(ctx context.Context, key string) error

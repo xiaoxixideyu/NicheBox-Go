@@ -31,7 +31,7 @@ func NewForgetPasswordLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Fo
 
 func (l *ForgetPasswordLogic) ForgetPassword(in *user.ForgetPasswordRequest) (*user.ForgetPasswordResponse, error) {
 	key := redisBiz.KeyPrefixUser + redisBiz.KeyForgetPasswordCode + in.Email
-	val, err := l.svcCtx.UserRedisInterface.GetVerificationCode(l.ctx, key)
+	val, err := l.svcCtx.UserCacheInterface.GetVerificationCode(l.ctx, key)
 	if err != nil && errors.As(err, &redis.ErrEmptyKey) {
 		return nil, status.Error(codes.NotFound, "验证码错误")
 	}
