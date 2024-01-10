@@ -69,11 +69,11 @@ type SendVerificationCodeRegisterRequest {
 
 type SendVerificationCodeRegisterResponse {}
 
-type SendVerificationCodePWDRequest {
+type SendVerificationCodeForgetPasswordRequest {
 	Destination string `json:"destination"`
 }
 
-type SendVerificationCodePWDResponse {}
+type SendVerificationCodeForgetPasswordResponse {}
 
 type SendVerificationCodeCriticalUserInfoRequest {
 	Destination string `json:"destination"`
@@ -123,10 +123,10 @@ service User {
 	post /login (LoginReqeust) returns (LoginResponse)
 
 	@handler SendVerificationCodeRegister
-	post /sendverificationcoderegister (SendVerificationCodeRegisterRequest) returns (SendVerificationCodeRegisterResponse)
+	post /sendverificationcode/register (SendVerificationCodeRegisterRequest) returns (SendVerificationCodeRegisterResponse)
 
-	@handler SendVerificationCodePWD
-	post /sendverificationcodepwd (SendVerificationCodePWDRequest) returns (SendVerificationCodePWDResponse)
+	@handler SendVerificationCodeForgetPassword
+	post /sendverificationcode/forgetpassword (SendVerificationCodeForgetPasswordRequest) returns (SendVerificationCodeForgetPasswordResponse)
 
 	@handler ForgetPassword
 	post /forgetpassword (ForgetPasswordRequest) returns (ForgetPasswordResponse)
@@ -144,10 +144,10 @@ service User {
 	post /setcriticaluserinfo (SetCriticalUserInfoRequest) returns (SetCriticalUserInfoResponse)
 
 	@handler SendVerificationCodeCriticalUserInfo
-	post /sendverificationcodecriticaluserinfo (SendVerificationCodeCriticalUserInfoRequest) returns (SendVerificationCodeCriticalUserInfoResponse)
+	post /sendverificationcode/criticaluserinfo (SendVerificationCodeCriticalUserInfoRequest) returns (SendVerificationCodeCriticalUserInfoResponse)
 
 	@handler CheckVerificationCodeCriticalUserInfo
-	post /checkverificationcodecriticaluserinfo (CheckVerificationCodeCriticalUserInfoRequest) returns (CheckVerificationCodeCriticalUserInfoResponse)
+	post /checkverificationcode/criticaluserinfo (CheckVerificationCodeCriticalUserInfoRequest) returns (CheckVerificationCodeCriticalUserInfoResponse)
 
 	@handler SetUserBaseInfo
 	post /setuserbaseinfo (SetUserBaseInfoRequest) returns (SetUserBaseInfoResponse)

@@ -34,12 +34,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/sendverificationcodepwd",
-				Handler: SendVerificationCodePWDHandler(serverCtx),
+				Path:    "/sendverificationcode/forgetpassword",
+				Handler: SendVerificationCodeForgetPasswordHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/sendverificationcoderegister",
+				Path:    "/sendverificationcode/register",
 				Handler: SendVerificationCodeRegisterHandler(serverCtx),
 			},
 		},
@@ -50,7 +50,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodPost,
-				Path:    "/checkverificationcodecriticaluserinfo",
+				Path:    "/checkverificationcode/criticaluserinfo",
 				Handler: CheckVerificationCodeCriticalUserInfoHandler(serverCtx),
 			},
 			{
@@ -65,7 +65,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/sendverificationcodecriticaluserinfo",
+				Path:    "/sendverificationcode/criticaluserinfo",
 				Handler: SendVerificationCodeCriticalUserInfoHandler(serverCtx),
 			},
 			{

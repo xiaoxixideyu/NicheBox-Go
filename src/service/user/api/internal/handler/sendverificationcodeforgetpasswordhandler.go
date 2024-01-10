@@ -9,16 +9,16 @@ import (
 	"nichebox/service/user/api/internal/types"
 )
 
-func SendVerificationCodePWDHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func SendVerificationCodeForgetPasswordHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.SendVerificationCodePWDRequest
+		var req types.SendVerificationCodeForgetPasswordRequest
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
 
-		l := logic.NewSendVerificationCodePWDLogic(r.Context(), svcCtx)
-		resp, err := l.SendVerificationCodePWD(&req)
+		l := logic.NewSendVerificationCodeForgetPasswordLogic(r.Context(), svcCtx)
+		resp, err := l.SendVerificationCodeForgetPassword(&req)
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 		} else {

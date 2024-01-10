@@ -72,11 +72,11 @@ type SendVerificationCodeCriticalUserInfoRequest struct {
 type SendVerificationCodeCriticalUserInfoResponse struct {
 }
 
-type SendVerificationCodePWDRequest struct {
+type SendVerificationCodeForgetPasswordRequest struct {
 	Destination string `json:"destination"`
 }
 
-type SendVerificationCodePWDResponse struct {
+type SendVerificationCodeForgetPasswordResponse struct {
 }
 
 type SendVerificationCodeRegisterRequest struct {

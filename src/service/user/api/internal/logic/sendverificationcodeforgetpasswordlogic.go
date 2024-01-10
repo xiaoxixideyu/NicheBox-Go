@@ -16,28 +16,26 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type SendVerificationCodePWDLogic struct {
+type SendVerificationCodeForgetPasswordLogic struct {
 	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 }
 
-func NewSendVerificationCodePWDLogic(ctx context.Context, svcCtx *svc.ServiceContext) *SendVerificationCodePWDLogic {
-	return &SendVerificationCodePWDLogic{
+func NewSendVerificationCodeForgetPasswordLogic(ctx context.Context, svcCtx *svc.ServiceContext) *SendVerificationCodeForgetPasswordLogic {
+	return &SendVerificationCodeForgetPasswordLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
 	}
 }
 
-func (l *SendVerificationCodePWDLogic) SendVerificationCodePWD(req *types.SendVerificationCodePWDRequest) (resp *types.SendVerificationCodePWDResponse, err error) {
-	// todo: 测试发现send过程很可能会比较耗时，应该投放到消息队列异步进行
-
+func (l *SendVerificationCodeForgetPasswordLogic) SendVerificationCodeForgetPassword(req *types.SendVerificationCodeForgetPasswordRequest) (resp *types.SendVerificationCodeForgetPasswordResponse, err error) {
 	code := common.GenerateVerificationCode()
 	inEmail := email.SendVerificationCodeRequest{
 		Destination: req.Destination,
 		Code:        code,
-		Type:        common.TYPEPWD,
+		Type:        common.TYPEFORGETPASSWORD,
 	}
 
 	_, err = l.svcCtx.EmailRpc.SendVerificationCode(l.ctx, &inEmail)
@@ -46,7 +44,7 @@ func (l *SendVerificationCodePWDLogic) SendVerificationCodePWD(req *types.SendVe
 	}
 
 	inUser := user.SetVerificationCodeRequest{
-		Key:        redis.KeyPrefixUser + redis.KeyPWDCode + req.Destination,
+		Key:        redis.KeyPrefixUser + redis.KeyForgetPasswordCode + req.Destination,
 		Val:        strings.ToUpper(code),
 		Expiration: common.VERIFICATIONCODEEXPIRATION,
 	}
@@ -56,5 +54,5 @@ func (l *SendVerificationCodePWDLogic) SendVerificationCodePWD(req *types.SendVe
 		return nil, errors.New(http.StatusInternalServerError, err.Error())
 	}
 
-	return &types.SendVerificationCodePWDResponse{}, nil
+	return &types.SendVerificationCodeForgetPasswordResponse{}, nil
 }
