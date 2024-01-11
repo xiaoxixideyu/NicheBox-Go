@@ -15,7 +15,7 @@ type CheckVerificationCodeCriticalUserInfoRequest struct {
 }
 
 type CheckVerificationCodeCriticalUserInfoResponse struct {
-	VerificationCode string `json:"verfication_code""`
+	VerificationCode string `json:"verification_code""`
 }
 
 type ForgetPasswordRequest struct {
@@ -25,6 +25,14 @@ type ForgetPasswordRequest struct {
 }
 
 type ForgetPasswordResponse struct {
+}
+
+type GetCriticalUserInfoRequest struct {
+}
+
+type GetCriticalUserInfoResponse struct {
+	Email     string `json:"email"`
+	Telephone string `json:"telephone"`
 }
 
 type GetMyBaseInfoRequest struct {

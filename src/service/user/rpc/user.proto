@@ -114,6 +114,17 @@ message SetCriticalUserInfoResponse {
 }
 // SetCriticalUserInfo
 
+// GetCriticalUserInfo
+message GetCriticalUserInfoRequest {
+    int64 uid = 1;
+}
+
+message GetCriticalUserInfoResponse {
+    string email = 1;
+    string telephone = 2;
+}
+// GetCriticalUserInfo
+
 service User {
     rpc Register(RegisterRequest) returns(RegisterResponse);
     rpc CheckEmail(CheckEmailRequest) returns(CheckEmailResponse);
@@ -126,4 +137,5 @@ service User {
     rpc RemoveVerificationCode(RemoveVerificationCodeRequest) returns (RemoveVerificationCodeResponse);
     rpc ForgetPassword(ForgetPasswordRequest) returns (ForgetPasswordResponse);
     rpc SetCriticalUserInfo(SetCriticalUserInfoRequest) returns (SetCriticalUserInfoResponse);
+    rpc GetCriticalUserInfo(GetCriticalUserInfoRequest) returns (GetCriticalUserInfoResponse);
 }

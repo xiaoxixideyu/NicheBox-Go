@@ -76,3 +76,8 @@ func (s *UserServer) SetCriticalUserInfo(ctx context.Context, in *user.SetCritic
 	l := logic.NewSetCriticalUserInfoLogic(ctx, s.svcCtx)
 	return l.SetCriticalUserInfo(in)
 }
+
+func (s *UserServer) GetCriticalUserInfo(ctx context.Context, in *user.GetCriticalUserInfoRequest) (*user.GetCriticalUserInfoResponse, error) {
+	l := logic.NewGetCriticalUserInfoLogic(ctx, s.svcCtx)
+	return l.GetCriticalUserInfo(in)
+}

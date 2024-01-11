@@ -19,6 +19,8 @@ type (
 	CheckUidResponse               = user.CheckUidResponse
 	ForgetPasswordRequest          = user.ForgetPasswordRequest
 	ForgetPasswordResponse         = user.ForgetPasswordResponse
+	GetCriticalUserInfoRequest     = user.GetCriticalUserInfoRequest
+	GetCriticalUserInfoResponse    = user.GetCriticalUserInfoResponse
 	GetUidByEmailAndPwdRequest     = user.GetUidByEmailAndPwdRequest
 	GetUidByEmailAndPwdResponse    = user.GetUidByEmailAndPwdResponse
 	GetUserBaseInfoRequest         = user.GetUserBaseInfoRequest
@@ -48,6 +50,7 @@ type (
 		RemoveVerificationCode(ctx context.Context, in *RemoveVerificationCodeRequest, opts ...grpc.CallOption) (*RemoveVerificationCodeResponse, error)
 		ForgetPassword(ctx context.Context, in *ForgetPasswordRequest, opts ...grpc.CallOption) (*ForgetPasswordResponse, error)
 		SetCriticalUserInfo(ctx context.Context, in *SetCriticalUserInfoRequest, opts ...grpc.CallOption) (*SetCriticalUserInfoResponse, error)
+		GetCriticalUserInfo(ctx context.Context, in *GetCriticalUserInfoRequest, opts ...grpc.CallOption) (*GetCriticalUserInfoResponse, error)
 	}
 
 	defaultUser struct {
@@ -114,4 +117,9 @@ func (m *defaultUser) ForgetPassword(ctx context.Context, in *ForgetPasswordRequ
 func (m *defaultUser) SetCriticalUserInfo(ctx context.Context, in *SetCriticalUserInfoRequest, opts ...grpc.CallOption) (*SetCriticalUserInfoResponse, error) {
 	client := user.NewUserClient(m.cli.Conn())
 	return client.SetCriticalUserInfo(ctx, in, opts...)
+}
+
+func (m *defaultUser) GetCriticalUserInfo(ctx context.Context, in *GetCriticalUserInfoRequest, opts ...grpc.CallOption) (*GetCriticalUserInfoResponse, error) {
+	client := user.NewUserClient(m.cli.Conn())
+	return client.GetCriticalUserInfo(ctx, in, opts...)
 }
