@@ -30,6 +30,7 @@ const (
 	User_RemoveVerificationCode_FullMethodName = "/userclient.User/RemoveVerificationCode"
 	User_ForgetPassword_FullMethodName         = "/userclient.User/ForgetPassword"
 	User_SetCriticalUserInfo_FullMethodName    = "/userclient.User/SetCriticalUserInfo"
+	User_GetCriticalUserInfo_FullMethodName    = "/userclient.User/GetCriticalUserInfo"
 )
 
 // UserClient is the client API for User service.
@@ -47,6 +48,7 @@ type UserClient interface {
 	RemoveVerificationCode(ctx context.Context, in *RemoveVerificationCodeRequest, opts ...grpc.CallOption) (*RemoveVerificationCodeResponse, error)
 	ForgetPassword(ctx context.Context, in *ForgetPasswordRequest, opts ...grpc.CallOption) (*ForgetPasswordResponse, error)
 	SetCriticalUserInfo(ctx context.Context, in *SetCriticalUserInfoRequest, opts ...grpc.CallOption) (*SetCriticalUserInfoResponse, error)
+	GetCriticalUserInfo(ctx context.Context, in *GetCriticalUserInfoRequest, opts ...grpc.CallOption) (*GetCriticalUserInfoResponse, error)
 }
 
 type userClient struct {
@@ -156,6 +158,15 @@ func (c *userClient) SetCriticalUserInfo(ctx context.Context, in *SetCriticalUse
 	return out, nil
 }
 
+func (c *userClient) GetCriticalUserInfo(ctx context.Context, in *GetCriticalUserInfoRequest, opts ...grpc.CallOption) (*GetCriticalUserInfoResponse, error) {
+	out := new(GetCriticalUserInfoResponse)
+	err := c.cc.Invoke(ctx, User_GetCriticalUserInfo_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServer is the server API for User service.
 // All implementations must embed UnimplementedUserServer
 // for forward compatibility
@@ -171,6 +182,7 @@ type UserServer interface {
 	RemoveVerificationCode(context.Context, *RemoveVerificationCodeRequest) (*RemoveVerificationCodeResponse, error)
 	ForgetPassword(context.Context, *ForgetPasswordRequest) (*ForgetPasswordResponse, error)
 	SetCriticalUserInfo(context.Context, *SetCriticalUserInfoRequest) (*SetCriticalUserInfoResponse, error)
+	GetCriticalUserInfo(context.Context, *GetCriticalUserInfoRequest) (*GetCriticalUserInfoResponse, error)
 	mustEmbedUnimplementedUserServer()
 }
 
@@ -210,6 +222,9 @@ func (UnimplementedUserServer) ForgetPassword(context.Context, *ForgetPasswordRe
 }
 func (UnimplementedUserServer) SetCriticalUserInfo(context.Context, *SetCriticalUserInfoRequest) (*SetCriticalUserInfoResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetCriticalUserInfo not implemented")
+}
+func (UnimplementedUserServer) GetCriticalUserInfo(context.Context, *GetCriticalUserInfoRequest) (*GetCriticalUserInfoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCriticalUserInfo not implemented")
 }
 func (UnimplementedUserServer) mustEmbedUnimplementedUserServer() {}
 
@@ -422,6 +437,24 @@ func _User_SetCriticalUserInfo_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _User_GetCriticalUserInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCriticalUserInfoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).GetCriticalUserInfo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_GetCriticalUserInfo_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).GetCriticalUserInfo(ctx, req.(*GetCriticalUserInfoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // User_ServiceDesc is the grpc.ServiceDesc for User service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -472,6 +505,10 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SetCriticalUserInfo",
 			Handler:    _User_SetCriticalUserInfo_Handler,
+		},
+		{
+			MethodName: "GetCriticalUserInfo",
+			Handler:    _User_GetCriticalUserInfo_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

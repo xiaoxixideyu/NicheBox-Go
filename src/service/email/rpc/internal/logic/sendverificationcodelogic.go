@@ -15,9 +15,9 @@ const (
 	SUBJECT                    = "【小众盒】验证码"
 	VERIFICATIONCODEEXPIRATION = 60 * 5
 
-	TYPEREGISTER = "register"
-	TYPEPWD      = "pwd"
-	TYPECRITICAL = "critical"
+	TYPEREGISTER       = "register"
+	TYPEFORGETPASSWORD = "forgetpassword"
+	TYPECRITICAL       = "critical"
 )
 
 type SendVerificationCodeLogic struct {
@@ -65,7 +65,7 @@ func generateBody(verificationCode string, bodyType string) string {
 		expirationNotification := "请在5分钟内进行验证哦"
 		body = fmt.Sprintf("%s<br>%s<br>%s", header, code, expirationNotification)
 
-	} else if bodyType == TYPEPWD {
+	} else if bodyType == TYPEFORGETPASSWORD {
 		header := "您正在尝试重设密码，验证码如下"
 		code := "<h2>" + verificationCode + "</h2>"
 		expirationNotification := "请在5分钟内进行验证"

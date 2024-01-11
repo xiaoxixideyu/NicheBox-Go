@@ -55,6 +55,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 			{
 				Method:  http.MethodPost,
+				Path:    "/getcriticaluserinfo",
+				Handler: GetCriticalUserInfoHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
 				Path:    "/getmybaseinfo",
 				Handler: GetMyBaseInfoHandler(serverCtx),
 			},

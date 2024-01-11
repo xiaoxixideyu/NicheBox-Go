@@ -105,6 +105,15 @@ type SetCriticalUserInfoRequest {
 type SetCriticalUserInfoResponse {}
 
 // SetCriticalUserInfo
+// GetCriticalUserInfo
+type GetCriticalUserInfoRequest {}
+
+type GetCriticalUserInfoResponse {
+	Email     string `json:"email"`
+	Telephone string `json:"telephone"`
+}
+
+// GetCriticalUserInfo
 // CheckVerificationCodeCriticalUserInfo
 type CheckVerificationCodeCriticalUserInfoRequest {
 	Email string `json:"email"`
@@ -112,7 +121,7 @@ type CheckVerificationCodeCriticalUserInfoRequest {
 }
 
 type CheckVerificationCodeCriticalUserInfoResponse {
-	VerificationCode string `json:"verfication_code""`
+	VerificationCode string `json:"verification_code""`
 }
 
 // CheckVerificationCodeCriticalUserInfo
@@ -149,6 +158,9 @@ service User {
 
 	@handler SetCriticalUserInfo
 	post /setcriticaluserinfo (SetCriticalUserInfoRequest) returns (SetCriticalUserInfoResponse)
+
+	@handler GetCriticalUserInfo
+	post /getcriticaluserinfo (GetCriticalUserInfoRequest) returns (GetCriticalUserInfoResponse)
 
 	@handler SendVerificationCodeCriticalUserInfo
 	post /sendverificationcode/criticaluserinfo (SendVerificationCodeCriticalUserInfoRequest) returns (SendVerificationCodeCriticalUserInfoResponse)
