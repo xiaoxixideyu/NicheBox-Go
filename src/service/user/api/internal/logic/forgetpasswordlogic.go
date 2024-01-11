@@ -3,6 +3,8 @@ package logic
 import (
 	"context"
 	"github.com/zeromicro/x/errors"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"net/http"
 	"nichebox/service/user/rpc/pb/user"
 	"strings"
@@ -35,6 +37,12 @@ func (l *ForgetPasswordLogic) ForgetPassword(req *types.ForgetPasswordRequest) (
 	}
 	_, err = l.svcCtx.UserRpc.ForgetPassword(l.ctx, &in)
 	if err != nil {
+		rpcStatus, ok := status.FromError(err)
+		if ok {
+			if rpcStatus.Code() == codes.NotFound {
+				return nil, errors.New(http.StatusBadRequest, "验证码错误或过期")
+			}
+		}
 		return nil, errors.New(http.StatusInternalServerError, "发生未知错误: 1")
 	}
 
