@@ -1,0 +1,83 @@
+// CreatePost
+type CreatePostRequest {
+	//authorID int64    `json:"author_id,string"`
+	boxID   int64    `json:"box_id,string"`
+	title   string   `json:"title"`
+	content string   `json:"content"`
+	photos  []string `json:"photos"`
+	cover   string   `json:"cover"`
+}
+
+type CreatePostResponse {
+	postID int64 `json:"post_id,string"`
+}
+
+// CreatePost
+// DeletePost
+type DeletePostRequest {
+	postID   int64  `json:"post_id,string"`
+	operator string `json:"operator"`
+}
+
+type DeletePostResponse {}
+
+// DeletePost
+// GetPostDetail
+type GetPostDetailRequest {
+	postID int64 `json:"post_id,string"`
+//uid    int64 `json:"uid,string"`
+}
+
+type GetPostDetailResponse {
+	authorID   int64    `json:"author_id,string"`
+	authorName string   `json:"author_name"`
+	boxID      int64    `json:"box_id,string"`
+	boxName    string   `json:"box_name"`
+	title      string   `json:"title"`
+	content    string   `json:"content"`
+	photos     []string `json:"photos"`
+	userView   int      `json:"user_view"`
+}
+
+// GetPostDetail
+//// GetPostBriefList
+//type GetPostBriefListRequest {
+// postIDs []string `json:"post_ids"`
+//}
+//
+//type GetPostBriefListResponse {
+// covers     []string `json:"covers"`
+// userViews  []int    `json:"user_views"`
+// likeCounts []int    `json:"like_counts"`
+// titles     []string `json:"titles"`
+// authors    []string `json:"authors"`
+//}
+//
+//// GetPostBriefList
+// IncreaseUserView
+type IncreaseUserViewRequest {
+	postID int64 `json:"post_id,string"`
+	uid    int64 `json:"uid,string"`
+}
+
+type IncreaseUserViewResponse {}
+
+// IncreaseUserView
+@server (
+	jwt:    Auth
+	prefix: /api/post
+)
+service Post {
+	@handler CreatePost
+	post /createpost (CreatePostRequest) returns (CreatePostResponse)
+
+	@handler DeletePost
+	post /deletepost (DeletePostRequest) returns (DeletePostResponse)
+
+	@handler GetPostDetail
+	post /getpostdetail (GetPostDetailRequest) returns (GetPostDetailResponse)
+
+	@handler IncreaseUserView
+	post /increaseuserview (IncreaseUserViewRequest) returns (IncreaseUserViewResponse)
+}
+
