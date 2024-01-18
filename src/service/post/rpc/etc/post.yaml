@@ -23,6 +23,7 @@ CacheRedis:
   Tls: false
   NonBlock: false
   PingTimeout: 1
+  BloomFilterBits: 1000
 
 KqUpdateUserViewPusherConf:
   Brokers:

@@ -23,7 +23,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		log.Printf("failed to create user interface, err: %v\n", err)
 		return nil
 	}
-	postRedisInterface, err := redis.NewRedisInterface(c.CacheRedis.Host, c.CacheRedis.Type, c.CacheRedis.Pass, c.CacheRedis.Tls, c.CacheRedis.NonBlock, c.CacheRedis.PingTimeout)
+	postRedisInterface, err := redis.NewRedisInterface(c.CacheRedis.Host, c.CacheRedis.Type, c.CacheRedis.Pass, c.CacheRedis.Tls, c.CacheRedis.NonBlock, c.CacheRedis.PingTimeout, c.CacheRedis.BloomFilterBits)
 	if err != nil {
 		log.Printf("failed to create email redis interface, err:%v\n", err)
 		return nil
@@ -34,6 +34,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		return nil
 	}
 	kqUpdateUserViewPusher := kq.NewPusher(c.KqUpdateUserViewPusherConf.Brokers, c.KqUpdateUserViewPusherConf.Topic)
+
 	return &ServiceContext{
 		Config:                       c,
 		PostInterface:                postInterface,

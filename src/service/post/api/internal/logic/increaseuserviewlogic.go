@@ -29,7 +29,6 @@ func (l *IncreaseUserViewLogic) IncreaseUserView(req *types.IncreaseUserViewRequ
 		PostID:    req.PostID,
 		VisitorID: req.Uid,
 	}
-
 	_, _ = l.svcCtx.PostRpc.IncreaseUserView(l.ctx, &in)
 
 	return

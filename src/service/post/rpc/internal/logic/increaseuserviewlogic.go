@@ -2,9 +2,12 @@ package logic
 
 import (
 	"context"
-
+	"encoding/json"
+	"fmt"
+	"nichebox/service/post/model/dto"
 	"nichebox/service/post/rpc/internal/svc"
 	"nichebox/service/post/rpc/pb/post"
+	"time"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -27,9 +30,36 @@ func (l *IncreaseUserViewLogic) IncreaseUserView(in *post.IncreaseUserViewReques
 	// todo: 如果是游客的话，调用此RPC的visitorID应该换成ip地址
 	err := l.svcCtx.PostCacheInterface.IncrUserView(l.ctx, in.PostID, in.VisitorID)
 	if err != nil {
+		fmt.Printf("redis error:%v\n", err)
 		return nil, err
 	}
-	// todo: 新增定时任务
 
+	// 通过Kafka新增任务
+	exists, err := l.svcCtx.PostCacheInterface.BloomCheckPostExists(l.ctx, in.PostID)
+	if err != nil {
+		fmt.Printf("redis2 error:%v\n", err)
+	}
+
+	if !exists {
+		task := dto.UpdateUserViewTask{
+			CreateDate: time.Now().Format("2006-01-02"),
+			PostID:     in.PostID,
+		}
+		bytes, err := json.Marshal(task)
+		if err != nil {
+			fmt.Printf("json error:%v\n", err)
+			return &post.IncreaseUserViewResponse{}, nil
+		}
+		name := l.svcCtx.KqUpdateUserViewPusherClient.Name()
+		fmt.Printf("going kafka:%v\n name:%v", string(bytes), name)
+		err = l.svcCtx.KqUpdateUserViewPusherClient.Push(string(bytes))
+
+		if err != nil {
+			fmt.Printf("kafka error:%v\n", err)
+			return &post.IncreaseUserViewResponse{}, nil
+		}
+		l.svcCtx.PostCacheInterface.BloomAddPost(l.ctx, in.PostID)
+	}
+	fmt.Printf("success:\n")
 	return &post.IncreaseUserViewResponse{}, nil
 }

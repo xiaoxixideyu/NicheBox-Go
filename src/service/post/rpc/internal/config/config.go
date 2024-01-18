@@ -22,12 +22,13 @@ type Config struct {
 		Topic   string
 	}
 	CacheRedis struct {
-		Host        []string
-		Type        string
-		Pass        string
-		Tls         bool
-		NonBlock    bool
-		PingTimeout int
+		Host            []string
+		Type            string
+		Pass            string
+		Tls             bool
+		NonBlock        bool
+		PingTimeout     int
+		BloomFilterBits uint
 	}
 	Salt string
 }

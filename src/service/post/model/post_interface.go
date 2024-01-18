@@ -10,5 +10,7 @@ type PostInterface interface {
 
 type PostCacheInterface interface {
 	GetUserView(ctx context.Context, postID int64) (int64, error)
-	IncrUserView(ctx context.Context, postID int64, uid int64) error
+	IncrUserView(ctx context.Context, postID int64, visitorID int64) error
+	BloomCheckPostExists(ctx context.Context, postID int64) (bool, error)
+	BloomAddPost(ctx context.Context, postID int64) error
 }
