@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package taskclient;
+
+option go_package = "./task";
+
+// CreateTask
+message CreateTaskRequest {
+
+}
+
+message CreateTaskResponse {
+
+}
+// CreateTask
+
+service Task {
+  rpc CreateTask(CreateTaskRequest) returns (CreateTaskResponse);
+}
