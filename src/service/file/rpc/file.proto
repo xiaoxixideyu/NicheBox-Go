@@ -1,0 +1,37 @@
+syntax="proto3";
+
+package filecient;
+
+option go_package="./file";
+
+enum UploadStatusCode {
+    Unknow = 0;
+    Ok = 1;
+    Failed = 2;
+}
+
+// UploadImage
+message UploadImageRequest {
+    string FileName = 1;
+    bytes Content = 2;
+}
+message UploadImageResponse {
+    int64 WebpId = 1;
+    int64 OriginId = 2;
+    UploadStatusCode code = 3;
+}
+// UploadImage
+
+// GetFileUrl
+message GetFileUrlRequest {
+    int64 FileId = 1;
+}
+message GetFileUrlResponse {
+    string FileUrl = 1;
+}
+// GetFileUrl
+
+service File {
+    rpc UploadImage(stream UploadImageRequest) returns (UploadImageResponse);
+    rpc GetFileUrl(GetFileUrlRequest) returns (GetFileUrlResponse);
+}
