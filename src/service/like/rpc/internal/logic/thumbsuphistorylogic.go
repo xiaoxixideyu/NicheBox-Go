@@ -44,7 +44,7 @@ func (l *ThumbsUpHistoryLogic) ThumbsUpHistory(in *like.ThumbsUpHistoryRequest) 
 		}
 	}
 	messageIDs := make([]int64, 0, len(ids))
-	// convert string to int64
+	// redis result convert string to int64
 	for _, id := range ids {
 		messageID, err := strconv.ParseInt(id, 10, 64)
 		if err != nil {
@@ -59,7 +59,7 @@ func (l *ThumbsUpHistoryLogic) ThumbsUpHistory(in *like.ThumbsUpHistoryRequest) 
 
 	// query DB
 	startFromDB := int(stop) - sizeFromDB + 1
-	likesFromDB, err := l.svcCtx.LikeInterface.GetLikeByUpdateDateDesc(uint8(in.MessageType), in.Uid, startFromDB, sizeFromDB)
+	likesFromDB, err := l.svcCtx.LikeInterface.GetLikeByUpdateDateDesc(uint8(in.MessageType), in.Uid, sizeFromDB, startFromDB)
 	if err != nil {
 		return nil, err
 	}
