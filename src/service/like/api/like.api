@@ -1,0 +1,59 @@
+// ThumbsUp
+type ThumbsUpRequest {
+	MessageID   int64 `json:"message_id,string"`
+	MessageType int   `json:"message_type" binding:"oneof=1 2"`
+}
+
+type ThumbsUpResponse {}
+
+// ThumbsUp
+// CancelThumbsUp
+type CancelThumbsUpRequest {
+	MessageID   int64 `json:"message_id,string"`
+	MessageType int   `json:"message_type" binding:"oneof=1 2"`
+}
+
+type CancelThumbsUpResponse {}
+
+// CancelThumbsUp
+// ThumbsUpCount
+type ThumbsUpCountRequest {
+	MessageID   int64 `json:"message_id,string"`
+	MessageType int   `json:"message_type" binding:"oneof=1 2"`
+}
+
+type ThumbsUpCountResponse {
+	Count int `json:"count"`
+}
+
+// ThumbsUpCount
+// ThumbsUpHistory
+type ThumbsUpHistoryRequest {
+	MessageType int `json:"message_type" binding:"oneof=1 2"`
+	Page        int `json:"page"`
+	Size        int `json:"size"`
+}
+
+type ThumbsUpHistoryResponse {
+	MessageIDs []int64 `json:"message_ids,[]string"`
+}
+
+// ThumbsUpHistory
+@server (
+	jwt:    Auth
+	prefix: /api/like
+)
+service Like {
+	@handler ThumbsUp
+	post /thumbsup (ThumbsUpRequest) returns (ThumbsUpResponse)
+
+	@handler CancelThumbsUp
+	post /cancelthumbsup (CancelThumbsUpRequest) returns (CancelThumbsUpResponse)
+
+	@handler ThumbsUpCount
+	post /thumbsupcount (ThumbsUpCountRequest) returns (ThumbsUpCountResponse)
+
+	@handler ThumbsUpHistory
+	post /thumbsuphistory (ThumbsUpHistoryRequest) returns (ThumbsUpHistoryResponse)
+}
+

@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+package likeclient;
+
+option go_package = "./like";
+
+// ThumbsUp
+message ThumbsUpRequest {
+  int64 Uid = 1;
+  int64 MessageID = 2;
+  int32 MessageType = 3;
+}
+
+message ThumbsUpResponse {
+}
+// ThumbsUp
+
+// CancelThumbsUp
+message CancelThumbsUpRequest {
+  int64 Uid = 1;
+  int64 MessageID = 2;
+  int32 MessageType = 3;
+}
+
+message CancelThumbsResponse {
+}
+// CancelThumbsUp
+
+// ThumbsUpCount
+message ThumbsUpCountRequest {
+  int64 MessageID = 1;
+  int32 MessageType = 2;
+}
+
+message ThumbsUpCountResponse {
+  int32 Count = 1;
+}
+// ThumbsUpCount
+
+// ThumbsUpHistory
+message ThumbsUpHistoryRequest {
+  int64 Uid = 1;
+  int32 MessageType = 2;
+  int32 Page = 3;
+  int32 Size = 4;
+}
+
+message ThumbsUpHistoryResponse {
+  repeated int64 MessageIDs = 1;
+}
+// ThumbsUpHistory
+
+service Like {
+  rpc ThumbsUp(ThumbsUpRequest) returns(ThumbsUpResponse);
+  rpc CancelThumbsUp(CancelThumbsUpRequest) returns(CancelThumbsResponse);
+  rpc ThumbsUpCount(ThumbsUpCountRequest) returns(ThumbsUpCountResponse);
+  rpc ThumbsUpHistory(ThumbsUpHistoryRequest) returns(ThumbsUpHistoryResponse);
+}
