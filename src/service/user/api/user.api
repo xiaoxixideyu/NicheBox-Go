@@ -11,7 +11,6 @@ type RegisterResponse {
 	RefreshToken string `json:"refresh_token"`
 }
 
-// Register
 // CheckEmailExists
 type CheckEmailExistsReqeust {
 	Email string `json:"email"`
@@ -21,7 +20,6 @@ type CheckEmailExistsResponse {
 	Exist bool `json:"exist"`
 }
 
-// CheckEmailExists
 // Login
 type LoginReqeust {
 	Email    string `json:"email"`
@@ -33,7 +31,6 @@ type LoginResponse {
 	RefreshToken string `json:"refresh_token"`
 }
 
-// Login
 // RefreshToken
 type RefreshTokenReqeust {}
 
@@ -42,7 +39,6 @@ type RefreshTokenResponse {
 	RefreshToken string `json:"refresh_token"`
 }
 
-// RefreshToken
 // SetUserBaseInfo
 type SetUserBaseInfoRequest {
 	Username     string `json:"username"`
@@ -51,7 +47,6 @@ type SetUserBaseInfoRequest {
 
 type SetUserBaseInfoResponse {}
 
-// SetUserBaseInfo
 // GetMyBaseInfo
 type GetMyBaseInfoRequest {}
 
@@ -61,7 +56,6 @@ type GetMyBaseInfoResponse {
 	Introduction string `json:"introduction"`
 }
 
-// GetMyBaseInfo
 // SendVerificationCodeRegister
 type SendVerificationCodeRegisterRequest {
 	Destination string `json:"destination"`
@@ -69,7 +63,6 @@ type SendVerificationCodeRegisterRequest {
 
 type SendVerificationCodeRegisterResponse {}
 
-// SendVerificationCodeRegister
 // SendVerificationCodeForgetPassword
 type SendVerificationCodeForgetPasswordRequest {
 	Destination string `json:"destination"`
@@ -77,7 +70,6 @@ type SendVerificationCodeForgetPasswordRequest {
 
 type SendVerificationCodeForgetPasswordResponse {}
 
-// SendVerificationCodeForgetPassword
 //SendVerificationCodeCriticalUserInfo
 type SendVerificationCodeCriticalUserInfoRequest {
 	Destination string `json:"destination"`
@@ -85,7 +77,6 @@ type SendVerificationCodeCriticalUserInfoRequest {
 
 type SendVerificationCodeCriticalUserInfoResponse {}
 
-//SendVerificationCodeCriticalUserInfo
 // ForgetPassword
 type ForgetPasswordRequest {
 	Email       string `json:"email"`
@@ -95,7 +86,6 @@ type ForgetPasswordRequest {
 
 type ForgetPasswordResponse {}
 
-// ForgetPassword
 // SetCriticalUserInfo
 type SetCriticalUserInfoRequest {
 	Code     string `json:"code"`
@@ -104,7 +94,6 @@ type SetCriticalUserInfoRequest {
 
 type SetCriticalUserInfoResponse {}
 
-// SetCriticalUserInfo
 // GetCriticalUserInfo
 type GetCriticalUserInfoRequest {}
 
@@ -113,7 +102,6 @@ type GetCriticalUserInfoResponse {
 	Telephone string `json:"telephone"`
 }
 
-// GetCriticalUserInfo
 // CheckVerificationCodeCriticalUserInfo
 type CheckVerificationCodeCriticalUserInfoRequest {
 	Email string `json:"email"`
@@ -124,7 +112,19 @@ type CheckVerificationCodeCriticalUserInfoResponse {
 	VerificationCode string `json:"verification_code""`
 }
 
-// CheckVerificationCodeCriticalUserInfo
+// UploadAvatar
+type UploadAvatarResponse {}
+
+// GetAvatar
+type GetAvatarRequest {
+	Uid string `json:"uid"`
+}
+
+type GetAvatarResponse {
+	OriginUrl string `json:"origin_url"`
+	WebpUrl   string `json:"webp_url"`
+}
+
 @server (
 	prefix: /api/user
 )
@@ -146,6 +146,9 @@ service User {
 
 	@handler ForgetPassword
 	post /forgetpassword (ForgetPasswordRequest) returns (ForgetPasswordResponse)
+
+	@handler GetAvatar
+	post /getavatar (GetAvatarRequest) returns (GetAvatarResponse)
 }
 
 @server (
@@ -173,5 +176,8 @@ service User {
 
 	@handler GetMyBaseInfo
 	post /getmybaseinfo (GetMyBaseInfoRequest) returns (GetMyBaseInfoResponse)
+
+	@handler UploadAvatar
+	post /uploadavatar returns (UploadAvatarResponse)
 }
 

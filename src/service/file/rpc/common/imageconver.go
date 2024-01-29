@@ -3,6 +3,9 @@ package common
 import (
 	"bytes"
 	"image"
+	_ "image/gif"
+	_ "image/jpeg"
+	_ "image/png"
 	"log"
 
 	"github.com/chai2010/webp"
@@ -12,10 +15,9 @@ func ImageToWebp(data []byte, quality float32) ([]byte, error) {
 	// decode image
 	img, format, err := image.Decode(bytes.NewBuffer(data))
 	if err != nil {
-		log.Printf("failed to decode image, err: %v\n", err)
+		log.Printf("failed to decode image, bytes len: %v, format: %v,  err: %v\n", len(data), format, err)
 		return nil, err
 	}
-	log.Printf("format of origin: %v\n", format)
 
 	// convert to webp
 	webpBytes, err := webp.EncodeRGBA(img, quality)

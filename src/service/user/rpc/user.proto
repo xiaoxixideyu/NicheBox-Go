@@ -125,6 +125,26 @@ message GetCriticalUserInfoResponse {
 }
 // GetCriticalUserInfo
 
+// SetUserAvatarFileId
+message SetUserAvatarFileIdRequest {
+    int64 uid = 1;
+    int64 originId = 2;
+    int64 webpId = 3;
+}
+message SetUserAvatarFileIdResponse {
+}
+// SetUserAvatarFileId
+
+// GetUserAvatarFileId
+message GetUserAvatarFileIdRequest {
+    int64 uid = 1;
+}
+message GetUserAvatarFileIdResponse {
+    int64 originId = 1;
+    int64 webpId = 2;
+}
+
+
 service User {
     rpc Register(RegisterRequest) returns(RegisterResponse);
     rpc CheckEmail(CheckEmailRequest) returns(CheckEmailResponse);
@@ -138,4 +158,6 @@ service User {
     rpc ForgetPassword(ForgetPasswordRequest) returns (ForgetPasswordResponse);
     rpc SetCriticalUserInfo(SetCriticalUserInfoRequest) returns (SetCriticalUserInfoResponse);
     rpc GetCriticalUserInfo(GetCriticalUserInfoRequest) returns (GetCriticalUserInfoResponse);
+    rpc SetUserAvatarFileId(SetUserAvatarFileIdRequest) returns (SetUserAvatarFileIdResponse);
+    rpc GetUserAvatarFileId(GetUserAvatarFileIdRequest) returns (GetUserAvatarFileIdResponse);
 }

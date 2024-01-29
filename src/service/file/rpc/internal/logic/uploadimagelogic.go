@@ -29,7 +29,7 @@ func NewUploadImageLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Uploa
 }
 
 func (l *UploadImageLogic) UploadImage(stream file.File_UploadImageServer) error {
-	var originData []byte
+	originData := make([]byte, 0)
 	var originName string
 
 	// get image data
