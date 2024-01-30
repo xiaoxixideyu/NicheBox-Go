@@ -3,7 +3,6 @@ package logic
 import (
 	"context"
 	"errors"
-	"fmt"
 	"github.com/zeromicro/go-zero/core/stores/redis"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -33,12 +32,11 @@ func NewThumbsUpCountLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Thu
 
 func (l *ThumbsUpCountLogic) ThumbsUpCount(in *like.ThumbsUpCountRequest) (*like.ThumbsUpCountResponse, error) {
 	countStr, err := l.svcCtx.LikeCacheInterface.GetThumbsUpCountCtx(l.ctx, in.MessageID, uint8(in.MessageType))
-	if err != nil && !errors.Is(err, redis.Nil) {
-		return nil, err
-	}
-	// cache expired
-	if err != nil && errors.Is(err, redis.Nil) {
-		fmt.Printf("expired")
+	if err != nil {
+		if !errors.Is(err, redis.Nil) {
+			l.Logger.Errorf("[Redis] Get thumbs up count error", err)
+		}
+		// cache expired
 		likeCountModel := model.LikeCount{
 			TypeID:    uint8(in.MessageType),
 			MessageID: in.MessageID,
@@ -57,7 +55,7 @@ func (l *ThumbsUpCountLogic) ThumbsUpCount(in *like.ThumbsUpCountRequest) (*like
 		return &like.ThumbsUpCountResponse{Count: int32(likeCountModel.Count)}, nil
 	}
 
-	// return count from cache
+	// cache valid, return count from cache
 	count, _ := strconv.Atoi(countStr)
 	return &like.ThumbsUpCountResponse{Count: int32(count)}, nil
 }
