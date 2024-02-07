@@ -2,7 +2,9 @@ package logic
 
 import (
 	"context"
+	"nichebox/common/snowflake"
 	"nichebox/service/comment/model"
+	"time"
 
 	"nichebox/service/comment/rpc/internal/svc"
 	"nichebox/service/comment/rpc/pb/comment"
@@ -26,7 +28,7 @@ func NewCommentLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CommentLo
 
 func (l *CommentLogic) Comment(in *comment.CommentRequest) (*comment.CommentResponse, error) {
 	sbj := model.Subject{
-		TypeID:       uint8(in.MessageType),
+		TypeID:       int(in.MessageType),
 		MessageID:    in.MessageID,
 		CommentCount: 0,
 	}
@@ -39,12 +41,14 @@ func (l *CommentLogic) Comment(in *comment.CommentRequest) (*comment.CommentResp
 		RootID:          in.RootID,
 		ParentID:        in.ParentID,
 		DialogID:        in.DialogID,
+		CommentID:       snowflake.GenID(),
 		OwnerID:         in.Uid,
 		InnerFloorCount: 0,
 		Status:          CommentStatusNormal,
 	}
 	content := model.CommentContent{
-		Content: in.Content,
+		CommentID: cmt.CommentID,
+		Content:   in.Content,
 	}
 	err = l.svcCtx.CommentInterface.AddCommentAndUpdateSubjectTX(&sbj, &cmt, &content)
 	if err != nil {
@@ -66,7 +70,7 @@ func (l *CommentLogic) Comment(in *comment.CommentRequest) (*comment.CommentResp
 		OwnerID:            cmt.OwnerID,
 		ThumbsUp:           false,
 		Floor:              int32(cmt.Floor),
-		CreateTime:         cmt.CreatedAt.Format("2006-01-02"),
+		CreateTime:         cmt.CreatedAt.Format(time.DateTime),
 		InnerFloorCount:    int32(cmt.InnerFloorCount),
 		InnerFloorComments: nil,
 		Content:            content.Content,

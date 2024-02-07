@@ -29,7 +29,7 @@ func NewThumbsUpHistoryLogic(ctx context.Context, svcCtx *svc.ServiceContext) *T
 func (l *ThumbsUpHistoryLogic) ThumbsUpHistory(in *like.ThumbsUpHistoryRequest) (*like.ThumbsUpHistoryResponse, error) {
 	start := (in.Page - 1) * in.Size
 	stop := start + in.Size - 1
-	ids, err := l.svcCtx.LikeCacheInterface.GetThumbsUpHistoryCtx(l.ctx, uint8(in.MessageType), in.Uid, int(start), int(stop))
+	ids, err := l.svcCtx.LikeCacheInterface.GetThumbsUpHistoryCtx(l.ctx, int(in.MessageType), in.Uid, int(start), int(stop))
 	var sizeFromDB int
 	needRewriteCache := false
 	if err != nil || len(ids) == 0 {
@@ -59,7 +59,7 @@ func (l *ThumbsUpHistoryLogic) ThumbsUpHistory(in *like.ThumbsUpHistoryRequest) 
 
 	// query DB
 	startFromDB := int(stop) - sizeFromDB + 1
-	likesFromDB, err := l.svcCtx.LikeInterface.GetLikeByUpdateDateDesc(uint8(in.MessageType), in.Uid, sizeFromDB, startFromDB)
+	likesFromDB, err := l.svcCtx.LikeInterface.GetLikeByUpdateDateDesc(int(in.MessageType), in.Uid, sizeFromDB, startFromDB)
 	if err != nil {
 		return nil, err
 	}
@@ -75,7 +75,7 @@ func (l *ThumbsUpHistoryLogic) ThumbsUpHistory(in *like.ThumbsUpHistoryRequest) 
 			likesToRewrite := likesFromDB[0:int(cap)]
 			err := l.svcCtx.LikeCacheInterface.BatchAddThumbsUpHistoryCtx(context.Background(), likesToRewrite)
 			if err != nil {
-				l.svcCtx.LikeCacheInterface.ClearAllThumbsUpHistoryCtx(context.Background(), uint8(in.MessageType), in.Uid)
+				l.svcCtx.LikeCacheInterface.ClearAllThumbsUpHistoryCtx(context.Background(), int(in.MessageType), in.Uid)
 			}
 		}
 	}()

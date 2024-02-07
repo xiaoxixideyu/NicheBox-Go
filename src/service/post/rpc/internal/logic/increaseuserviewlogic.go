@@ -42,7 +42,7 @@ func (l *IncreaseUserViewLogic) IncreaseUserView(in *post.IncreaseUserViewReques
 
 	if !exists {
 		task := dto.UpdateUserViewTask{
-			CreateDate: time.Now().Format("2006-01-02"),
+			CreateDate: time.Now().Format(time.DateOnly),
 			PostID:     in.PostID,
 		}
 		bytes, err := json.Marshal(task)
@@ -60,6 +60,5 @@ func (l *IncreaseUserViewLogic) IncreaseUserView(in *post.IncreaseUserViewReques
 		}
 		l.svcCtx.PostCacheInterface.BloomAddPost(l.ctx, in.PostID)
 	}
-	fmt.Printf("success:\n")
 	return &post.IncreaseUserViewResponse{}, nil
 }

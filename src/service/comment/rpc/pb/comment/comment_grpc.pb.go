@@ -25,6 +25,7 @@ const (
 	Comment_GetCommentsFromSubject_FullMethodName = "/commentclient.Comment/GetCommentsFromSubject"
 	Comment_GetSubComments_FullMethodName         = "/commentclient.Comment/GetSubComments"
 	Comment_GetSubject_FullMethodName             = "/commentclient.Comment/GetSubject"
+	Comment_GetSubjectByMessage_FullMethodName    = "/commentclient.Comment/GetSubjectByMessage"
 )
 
 // CommentClient is the client API for Comment service.
@@ -37,6 +38,7 @@ type CommentClient interface {
 	GetCommentsFromSubject(ctx context.Context, in *GetCommentsFromSubjectRequest, opts ...grpc.CallOption) (*GetCommentsFromSubjectResponse, error)
 	GetSubComments(ctx context.Context, in *GetSubCommentsRequest, opts ...grpc.CallOption) (*GetSubCommentsResponse, error)
 	GetSubject(ctx context.Context, in *GetSubjectRequest, opts ...grpc.CallOption) (*GetSubjectResponse, error)
+	GetSubjectByMessage(ctx context.Context, in *GetSubjectByMessageRequest, opts ...grpc.CallOption) (*GetSubjectByMessageResponse, error)
 }
 
 type commentClient struct {
@@ -101,6 +103,15 @@ func (c *commentClient) GetSubject(ctx context.Context, in *GetSubjectRequest, o
 	return out, nil
 }
 
+func (c *commentClient) GetSubjectByMessage(ctx context.Context, in *GetSubjectByMessageRequest, opts ...grpc.CallOption) (*GetSubjectByMessageResponse, error) {
+	out := new(GetSubjectByMessageResponse)
+	err := c.cc.Invoke(ctx, Comment_GetSubjectByMessage_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CommentServer is the server API for Comment service.
 // All implementations must embed UnimplementedCommentServer
 // for forward compatibility
@@ -111,6 +122,7 @@ type CommentServer interface {
 	GetCommentsFromSubject(context.Context, *GetCommentsFromSubjectRequest) (*GetCommentsFromSubjectResponse, error)
 	GetSubComments(context.Context, *GetSubCommentsRequest) (*GetSubCommentsResponse, error)
 	GetSubject(context.Context, *GetSubjectRequest) (*GetSubjectResponse, error)
+	GetSubjectByMessage(context.Context, *GetSubjectByMessageRequest) (*GetSubjectByMessageResponse, error)
 	mustEmbedUnimplementedCommentServer()
 }
 
@@ -135,6 +147,9 @@ func (UnimplementedCommentServer) GetSubComments(context.Context, *GetSubComment
 }
 func (UnimplementedCommentServer) GetSubject(context.Context, *GetSubjectRequest) (*GetSubjectResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetSubject not implemented")
+}
+func (UnimplementedCommentServer) GetSubjectByMessage(context.Context, *GetSubjectByMessageRequest) (*GetSubjectByMessageResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSubjectByMessage not implemented")
 }
 func (UnimplementedCommentServer) mustEmbedUnimplementedCommentServer() {}
 
@@ -257,6 +272,24 @@ func _Comment_GetSubject_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Comment_GetSubjectByMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetSubjectByMessageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CommentServer).GetSubjectByMessage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Comment_GetSubjectByMessage_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CommentServer).GetSubjectByMessage(ctx, req.(*GetSubjectByMessageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Comment_ServiceDesc is the grpc.ServiceDesc for Comment service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -287,6 +320,10 @@ var Comment_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetSubject",
 			Handler:    _Comment_GetSubject_Handler,
+		},
+		{
+			MethodName: "GetSubjectByMessage",
+			Handler:    _Comment_GetSubjectByMessage_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

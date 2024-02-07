@@ -31,27 +31,27 @@ func NewThumbsUpCountLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Thu
 }
 
 func (l *ThumbsUpCountLogic) ThumbsUpCount(in *like.ThumbsUpCountRequest) (*like.ThumbsUpCountResponse, error) {
-	countStr, err := l.svcCtx.LikeCacheInterface.GetThumbsUpCountCtx(l.ctx, in.MessageID, uint8(in.MessageType))
+	countStr, err := l.svcCtx.LikeCacheInterface.GetThumbsUpCountCtx(l.ctx, in.MessageID, int(in.MessageType))
 	if err != nil {
 		if !errors.Is(err, redis.Nil) {
 			l.Logger.Errorf("[Redis] Get thumbs up count error", err)
 		}
 		// cache expired
 		likeCountModel := model.LikeCount{
-			TypeID:    uint8(in.MessageType),
+			TypeID:    int(in.MessageType),
 			MessageID: in.MessageID,
 		}
 		err := l.svcCtx.LikeInterface.GetLikeCount(&likeCountModel)
 		if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
 			// rewrite cache
-			l.svcCtx.LikeCacheInterface.SetThumbsUpCountCtx(l.ctx, in.MessageID, uint8(in.MessageType), 0)
+			l.svcCtx.LikeCacheInterface.SetThumbsUpCountCtx(l.ctx, in.MessageID, int(in.MessageType), 0)
 			return nil, status.Error(codes.NotFound, err.Error())
 		}
 		if err != nil {
 			return nil, err
 		}
 		// rewrite cache and return count from mysql
-		l.svcCtx.LikeCacheInterface.SetThumbsUpCountCtx(l.ctx, in.MessageID, uint8(in.MessageType), likeCountModel.Count)
+		l.svcCtx.LikeCacheInterface.SetThumbsUpCountCtx(l.ctx, in.MessageID, int(in.MessageType), likeCountModel.Count)
 		return &like.ThumbsUpCountResponse{Count: int32(likeCountModel.Count)}, nil
 	}
 

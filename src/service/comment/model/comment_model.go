@@ -13,14 +13,15 @@ type Comment struct {
 	ParentID        int64
 	DialogID        int64
 	OwnerID         int64
-	Floor           int `gorm:"autoIncrement"`
+	LikeCount       int
+	Floor           int
 	InnerFloorCount int
-	Status          uint8
+	Status          int
 }
 
 type Subject struct {
 	gorm.Model
-	TypeID       uint8 `gorm:"index:idx_like_message_type,priority:2"`
+	TypeID       int   `gorm:"index:idx_like_message_type,priority:2"`
 	MessageID    int64 `gorm:"index:idx_like_message_type,priority:1"`
 	CommentCount int
 }
@@ -30,7 +31,7 @@ type CommentContent struct {
 	Content   string
 }
 
-type CommentInfoCache struct {
+type CommentCache struct {
 	CommentID       int64
 	SubjectID       int64
 	RootID          int64
@@ -39,7 +40,7 @@ type CommentInfoCache struct {
 	OwnerID         int64
 	Floor           int
 	InnerFloorCount int
-	Status          uint8
+	Status          int
 	Content         string
 	CreatedAt       time.Time
 	UpdatedAt       time.Time

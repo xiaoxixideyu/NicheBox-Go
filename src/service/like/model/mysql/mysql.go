@@ -14,7 +14,7 @@ type MysqlInterface struct {
 	db *gorm.DB
 }
 
-func (m *MysqlInterface) GetLikeByUpdateDateDesc(typeID uint8, uid int64, limit int, offset int) ([]*model.Like, error) {
+func (m *MysqlInterface) GetLikeByUpdateDateDesc(typeID int, uid int64, limit int, offset int) ([]*model.Like, error) {
 	likeList := make([]*model.Like, 0)
 	result := m.db.Model(&model.Like{}).Where("uid = ? AND type_id = ?", uid, typeID).Order("updated_at desc").Limit(limit).Offset(offset).Find(&likeList)
 	if result.Error != nil {

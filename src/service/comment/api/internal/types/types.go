@@ -13,13 +13,13 @@ type CommentInfo struct {
 	Floor              int            `json:"floor"`
 	CreateTime         string         `json:"create_time"`
 	InnerFloorCount    int            `json:"inner_floor_count"`
-	InnerFloorComments []*CommentInfo `json:"inner_floor_comments"`
 	Content            string         `json:"content"`
+	InnerFloorComments []*CommentInfo `json:"inner_floor_comments"`
 }
 
 type CommentRequest struct {
 	MessageID   int64  `json:"message_id,string"`
-	MessageType uint8  `json:"message_type"`
+	MessageType int    `json:"message_type"`
 	RootID      int64  `json:"root_id,string"`
 	ParentID    int64  `json:"parent_id,string"`
 	DialogID    int64  `json:"dialog_id,string"`
@@ -40,7 +40,7 @@ type DeleteCommentResponse struct {
 
 type GetCommentsFromSubjectRequest struct {
 	MessageID   int64  `json:"message_id,string"`
-	MessageType uint8  `json:"message_type"`
+	MessageType int    `json:"message_type"`
 	Page        int    `json:"page"`
 	Size        int    `json:"size"`
 	Order       string `json:"order"`
@@ -58,4 +58,14 @@ type GetSubCommentsRequest struct {
 
 type GetSubCommentsResponse struct {
 	SubComments []*CommentInfo `json:"sub_comments"`
+}
+
+type GetSubjectInfoByMessageRequest struct {
+	MessageID   int64 `json:"message_id,string"`
+	MessageType int   `json:"message_type"`
+}
+
+type GetSubjectInfoByMessageResponse struct {
+	SubjectID    int64 `json:"subject_id,string"`
+	CommentCount int   `json:"comment_count"`
 }

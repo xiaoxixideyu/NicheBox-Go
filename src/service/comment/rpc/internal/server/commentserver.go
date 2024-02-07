@@ -51,3 +51,8 @@ func (s *CommentServer) GetSubject(ctx context.Context, in *comment.GetSubjectRe
 	l := logic.NewGetSubjectLogic(ctx, s.svcCtx)
 	return l.GetSubject(in)
 }
+
+func (s *CommentServer) GetSubjectByMessage(ctx context.Context, in *comment.GetSubjectByMessageRequest) (*comment.GetSubjectByMessageResponse, error) {
+	l := logic.NewGetSubjectByMessageLogic(ctx, s.svcCtx)
+	return l.GetSubjectByMessage(in)
+}

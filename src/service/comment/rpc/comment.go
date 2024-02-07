@@ -1,8 +1,11 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
+	"log"
+	"nichebox/service/comment/rpc/internal/mqs"
 
 	"nichebox/service/comment/rpc/internal/config"
 	"nichebox/service/comment/rpc/internal/server"
@@ -23,10 +26,28 @@ func main() {
 
 	var c config.Config
 	conf.MustLoad(*configFile, &c)
-	ctx := svc.NewServiceContext(c)
+	svcCtx := svc.NewServiceContext(c)
+
+	// mq
+	go func() {
+		defer func() {
+			if p := recover(); p != nil {
+				log.Printf("mq panic:%v", p)
+			}
+		}()
+
+		serviceGroup := service.NewServiceGroup()
+		defer serviceGroup.Stop()
+
+		for _, mq := range mqs.Consumers(c, context.Background(), svcCtx) {
+			serviceGroup.Add(mq)
+		}
+		serviceGroup.Start()
+
+	}()
 
 	s := zrpc.MustNewServer(c.RpcServerConf, func(grpcServer *grpc.Server) {
-		comment.RegisterCommentServer(grpcServer, server.NewCommentServer(ctx))
+		comment.RegisterCommentServer(grpcServer, server.NewCommentServer(svcCtx))
 
 		if c.Mode == service.DevMode || c.Mode == service.TestMode {
 			reflection.Register(grpcServer)

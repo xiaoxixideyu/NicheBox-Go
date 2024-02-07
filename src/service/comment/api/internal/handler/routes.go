@@ -32,8 +32,13 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/getsubcomments",
 				Handler: GetSubCommentsHandler(serverCtx),
 			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/getsubjectinfobymessage",
+				Handler: GetSubjectInfoByMessageHandler(serverCtx),
+			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
-		rest.WithPrefix("/api/like"),
+		rest.WithPrefix("/api/comment"),
 	)
 }

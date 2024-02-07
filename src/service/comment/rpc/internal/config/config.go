@@ -1,6 +1,9 @@
 package config
 
-import "github.com/zeromicro/go-zero/zrpc"
+import (
+	"github.com/zeromicro/go-queue/kq"
+	"github.com/zeromicro/go-zero/zrpc"
+)
 
 type Config struct {
 	zrpc.RpcServerConf
@@ -21,6 +24,19 @@ type Config struct {
 		Tls         bool
 		NonBlock    bool
 		PingTimeout int
+	}
+	Snowflake struct {
+		MachineID int64
+	}
+	KqRebuildCacheInnerFloorCommentIndexConsumerConf kq.KqConf
+	KqRebuildCacheSubjectCommentIndexConsumerConf    kq.KqConf
+	KqRebuildCacheSubjectCommentIndexPusherConf      struct {
+		Brokers []string
+		Topic   string
+	}
+	KqRebuildCacheInnerFloorCommentIndexPusherConf struct {
+		Brokers []string
+		Topic   string
 	}
 	Salt string
 }

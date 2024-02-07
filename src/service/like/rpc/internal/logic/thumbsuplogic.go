@@ -31,7 +31,7 @@ func (l *ThumbsUpLogic) ThumbsUp(in *like.ThumbsUpRequest) (*like.ThumbsUpRespon
 	likeModel := model.Like{
 		Uid:       in.Uid,
 		MessageID: in.MessageID,
-		TypeID:    uint8(in.MessageType),
+		TypeID:    int(in.MessageType),
 	}
 	err := l.svcCtx.LikeInterface.CreateLikeAndUpdateLikeCountTX(&likeModel)
 	if err != nil {

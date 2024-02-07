@@ -81,6 +81,8 @@ func (l *DeleteCommentLogic) DeleteComment(req *types.DeleteCommentRequest) (res
 		} else {
 			return nil, errors.New(http.StatusInternalServerError, "消息类型错误")
 		}
+	} else {
+		return nil, errors.New(http.StatusBadRequest, "role不存在")
 	}
 
 	// delete comment

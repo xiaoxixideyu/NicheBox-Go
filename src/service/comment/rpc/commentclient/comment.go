@@ -24,6 +24,8 @@ type (
 	GetCommentsFromSubjectResponse = comment.GetCommentsFromSubjectResponse
 	GetSubCommentsRequest          = comment.GetSubCommentsRequest
 	GetSubCommentsResponse         = comment.GetSubCommentsResponse
+	GetSubjectByMessageRequest     = comment.GetSubjectByMessageRequest
+	GetSubjectByMessageResponse    = comment.GetSubjectByMessageResponse
 	GetSubjectRequest              = comment.GetSubjectRequest
 	GetSubjectResponse             = comment.GetSubjectResponse
 
@@ -34,6 +36,7 @@ type (
 		GetCommentsFromSubject(ctx context.Context, in *GetCommentsFromSubjectRequest, opts ...grpc.CallOption) (*GetCommentsFromSubjectResponse, error)
 		GetSubComments(ctx context.Context, in *GetSubCommentsRequest, opts ...grpc.CallOption) (*GetSubCommentsResponse, error)
 		GetSubject(ctx context.Context, in *GetSubjectRequest, opts ...grpc.CallOption) (*GetSubjectResponse, error)
+		GetSubjectByMessage(ctx context.Context, in *GetSubjectByMessageRequest, opts ...grpc.CallOption) (*GetSubjectByMessageResponse, error)
 	}
 
 	defaultComment struct {
@@ -75,4 +78,9 @@ func (m *defaultComment) GetSubComments(ctx context.Context, in *GetSubCommentsR
 func (m *defaultComment) GetSubject(ctx context.Context, in *GetSubjectRequest, opts ...grpc.CallOption) (*GetSubjectResponse, error) {
 	client := comment.NewCommentClient(m.cli.Conn())
 	return client.GetSubject(ctx, in, opts...)
+}
+
+func (m *defaultComment) GetSubjectByMessage(ctx context.Context, in *GetSubjectByMessageRequest, opts ...grpc.CallOption) (*GetSubjectByMessageResponse, error) {
+	client := comment.NewCommentClient(m.cli.Conn())
+	return client.GetSubjectByMessage(ctx, in, opts...)
 }

@@ -76,7 +76,6 @@ message GetSubCommentsRequest {
   int64 RootID = 1;
   int32 Page = 2;
   int32 Size = 3;
-  int64 Uid = 4;
 }
 
 message GetSubCommentsResponse {
@@ -96,6 +95,19 @@ message GetSubjectResponse {
 }
 // GetSubject
 
+// GetSubjectByMessage
+message GetSubjectByMessageRequest {
+  int64 MessageID = 1;
+  int32 MessageType = 2;
+}
+
+message GetSubjectByMessageResponse {
+  int64 SubjectID = 1;
+  int32 CommentCount = 2;
+}
+// GetSubjectByMessage
+
+
 service Comment {
   rpc Comment(CommentRequest) returns(CommentResponse);
   rpc DeleteComment(DeleteCommentRequest) returns(DeleteCommentResponse);
@@ -103,4 +115,5 @@ service Comment {
   rpc GetCommentsFromSubject(GetCommentsFromSubjectRequest) returns(GetCommentsFromSubjectResponse);
   rpc GetSubComments(GetSubCommentsRequest) returns(GetSubCommentsResponse);
   rpc GetSubject(GetSubjectRequest) returns(GetSubjectResponse);
+  rpc GetSubjectByMessage(GetSubjectByMessageRequest) returns(GetSubjectByMessageResponse);
 }
