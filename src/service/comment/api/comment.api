@@ -1,0 +1,102 @@
+// GetSubjectInfoByMessage
+type GetSubjectInfoByMessageRequest {
+	MessageID   int64 `json:"message_id,string"`
+	MessageType int   `json:"message_type"`
+}
+
+type GetSubjectInfoByMessageResponse {
+	SubjectID    int64 `json:"subject_id,string"`
+	CommentCount int   `json:"comment_count"`
+}
+
+// GetSubjectInfoByMessage
+// Comment
+type CommentRequest {
+	MessageID   int64  `json:"message_id,string"`
+	MessageType int    `json:"message_type"`
+	RootID      int64  `json:"root_id,string"`
+	ParentID    int64  `json:"parent_id,string"`
+	DialogID    int64  `json:"dialog_id,string"`
+	Content     string `json:"content"`
+}
+
+type CommentResponse {
+	Comment CommentInfo `json:"comment"`
+}
+
+// Comment
+// DeleteComment
+type DeleteCommentRequest {
+	CommentID int64  `json:"comment_id,string"`
+	Operator  string `json:"operator"`
+}
+
+type DeleteCommentResponse {}
+
+// DeleteComment
+type CommentInfo {
+	CommentID          int64          `json:"comment_id,string"`
+	SubjectID          int64          `json:"subject_id,string"`
+	RootID             int64          `json:"root_id,string"`
+	ParentID           int64          `json:"parent_id,string"`
+	DialogID           int64          `json:"dialog_id,string"`
+	OwnerID            int64          `json:"owner_id,string"`
+	LikeCount          int            `json:"like_count"`
+	ThumbsUp           bool           `json:"thumbs_up"`
+	Floor              int            `json:"floor"`
+	CreateTime         string         `json:"create_time"`
+	InnerFloorCount    int            `json:"inner_floor_count"`
+	Content            string         `json:"content"`
+	InnerFloorComments []*CommentInfo `json:"inner_floor_comments"`
+}
+
+// GetCommentsFromSubject
+type GetCommentsFromSubjectRequest {
+	MessageID   int64  `json:"message_id,string"`
+	MessageType int    `json:"message_type"`
+	Page        int    `json:"page"`
+	Size        int    `json:"size"`
+	Order       string `json:"order"`
+}
+
+type GetCommentsFromSubjectResponse {
+	Comments []*CommentInfo `json:"comments"`
+}
+
+// GetCommentsFromSubject
+// GetSubComments
+type GetSubCommentsRequest {
+	RootID int64 `json:"root_id,string"`
+	Page   int   `json:"page"`
+	Size   int   `json:"size"`
+//Order string `json:"order"`
+}
+
+type GetSubCommentsResponse {
+	SubComments []*CommentInfo `json:"sub_comments"`
+}
+
+// GetSubComments
+@server (
+	jwt:    Auth
+	prefix: /api/comment
+)
+service Comment {
+	// @handler GetSubjectInfo
+	// post /getsubjectinfo (GetSubjectInfoRequest) returns (GetSubjectInfoResponse)
+	@handler GetSubjectInfoByMessage
+	post /getsubjectinfobymessage (GetSubjectInfoByMessageRequest) returns (GetSubjectInfoByMessageResponse)
+
+	@handler Comment
+	post /comment (CommentRequest) returns (CommentResponse)
+
+	@handler DeleteComment
+	post /deletecomment (DeleteCommentRequest) returns (DeleteCommentResponse)
+
+	@handler GetCommentsFromSubject
+	post /getcommentsfromsubject (GetCommentsFromSubjectRequest) returns (GetCommentsFromSubjectResponse)
+
+	@handler GetSubComments
+	post /getsubcomments (GetSubCommentsRequest) returns (GetSubCommentsResponse)
+}
+

@@ -1,0 +1,70 @@
+Name: comment.rpc
+ListenOn: 0.0.0.0:8060
+Etcd:
+  Hosts:
+  - etcd:2379
+  Key: comment.rpc
+
+Mysql:
+  Database: nichebox
+  Username: root
+  Password: "123456"
+  Host: mysql
+  Port: "3306"
+  MaxIdleConns: 10
+  maxOpenConns: 100
+  connMaxLifeTime: 3600
+
+CacheRedis:
+  Host:
+    - redis:6379
+  Type: node
+  Pass: ""
+  Tls: false
+  NonBlock: false
+  PingTimeout: 1
+
+KqRebuildCacheSubjectCommentIndexPusherConf:
+  Brokers:
+    - kafka:9092
+  Topic: rebuild-cache-subject-comment-index
+
+KqRebuildCacheInnerFloorCommentIndexPusherConf:
+  Brokers:
+    - kafka:9092
+  Topic: rebuild-cache-inner-floor-comment-index
+
+KqRebuildCacheSubjectCommentIndexConsumerConf:
+  Name: kqRebuildCacheSubjectCommentIndexConsumer1
+  Brokers:
+    - kafka:9092
+  Group: kqRebuildCacheSubjectCommentIndexConsumerGroup
+  Topic: rebuild-cache-subject-comment-index
+  Offset: first
+  Consumers: 8
+  Processors: 8
+
+KqRebuildCacheInnerFloorCommentIndexConsumerConf:
+  Name: kqRebuildCacheInnerFloorCommentIndexConsumer1
+  Brokers:
+    - kafka:9092
+  Group: kqRebuildCacheInnerFloorCommentIndexConsumerGroup
+  Topic: rebuild-cache-inner-floor-comment-index
+  Offset: first
+  Consumers: 8
+  Processors: 8
+
+KqUpdateCommentLikeCountConsumerConf:
+  Name: kqUpdateCommentLikeCountConsumer1
+  Brokers:
+    - kafka:9092
+  Group: kqUpdateCommentLikeCountConsumerGroup
+  Topic: update-comment-like-count
+  Offset: first
+  Consumers: 8
+  Processors: 8
+
+SnowFlake:
+  MachineID: 1  # 取值范围 [1, 1024]
+
+Salt: HWVOFkGgPTryzICwd7qnJaZR9KQ2i8xe

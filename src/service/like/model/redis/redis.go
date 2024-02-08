@@ -41,14 +41,14 @@ func (r *RedisInterface) BatchAddThumbsUpHistoryCtx(ctx context.Context, likes [
 	return nil
 }
 
-func (r *RedisInterface) ClearAllThumbsUpHistoryCtx(ctx context.Context, typeID uint8, uid int64) error {
-	key := KeyPrefixLike + KeyHistory + strconv.FormatInt(uid, 10) + Separator + string(typeID)
+func (r *RedisInterface) ClearAllThumbsUpHistoryCtx(ctx context.Context, typeID int, uid int64) error {
+	key := KeyPrefixLike + KeyHistory + strconv.FormatInt(uid, 10) + Separator + strconv.Itoa(typeID)
 	_, err := r.rds.ZremrangebyrankCtx(ctx, key, 0, -1)
 	return err
 }
 
-func (r *RedisInterface) GetThumbsUpHistoryCtx(ctx context.Context, typeID uint8, uid int64, start int, stop int) ([]string, error) {
-	key := KeyPrefixLike + KeyHistory + strconv.FormatInt(uid, 10) + Separator + string(typeID)
+func (r *RedisInterface) GetThumbsUpHistoryCtx(ctx context.Context, typeID int, uid int64, start int, stop int) ([]string, error) {
+	key := KeyPrefixLike + KeyHistory + strconv.FormatInt(uid, 10) + Separator + strconv.Itoa(typeID)
 	messageIDs, err := r.rds.ZrevrangeCtx(ctx, key, int64(start), int64(stop))
 	if err != nil {
 		return nil, err
@@ -56,8 +56,8 @@ func (r *RedisInterface) GetThumbsUpHistoryCtx(ctx context.Context, typeID uint8
 	return messageIDs, nil
 }
 
-func (r *RedisInterface) RemoveThumbsUpHistoryCtx(ctx context.Context, messageID int64, typeID uint8, uid int64) error {
-	key := KeyPrefixLike + KeyHistory + strconv.FormatInt(uid, 10) + Separator + string(typeID)
+func (r *RedisInterface) RemoveThumbsUpHistoryCtx(ctx context.Context, messageID int64, typeID int, uid int64) error {
+	key := KeyPrefixLike + KeyHistory + strconv.FormatInt(uid, 10) + Separator + strconv.Itoa(typeID)
 	_, err := r.rds.ZremCtx(ctx, key, strconv.FormatInt(messageID, 10))
 	if err != nil {
 		return err
@@ -82,14 +82,14 @@ func NewRedisInterface(hosts []string, deployType, pass string, tls, nonBlock bo
 	return r, nil
 }
 
-func (r *RedisInterface) SetThumbsUpCountCtx(ctx context.Context, messageID int64, typeID uint8, count int) error {
-	key := KeyPrefixLike + KeyCount + string(typeID) + Separator + strconv.FormatInt(messageID, 10)
+func (r *RedisInterface) SetThumbsUpCountCtx(ctx context.Context, messageID int64, typeID int, count int) error {
+	key := KeyPrefixLike + KeyCount + strconv.Itoa(typeID) + Separator + strconv.FormatInt(messageID, 10)
 	err := r.rds.SetexCtx(ctx, key, strconv.Itoa(count), LikeCountExpiration)
 	return err
 }
 
-func (r *RedisInterface) GetThumbsUpCountCtx(ctx context.Context, messageID int64, typeID uint8) (string, error) {
-	key := KeyPrefixLike + KeyCount + string(typeID) + Separator + strconv.FormatInt(messageID, 10)
+func (r *RedisInterface) GetThumbsUpCountCtx(ctx context.Context, messageID int64, typeID int) (string, error) {
+	key := KeyPrefixLike + KeyCount + strconv.Itoa(typeID) + Separator + strconv.FormatInt(messageID, 10)
 	val, err := r.rds.GetCtx(ctx, key)
 	if err != nil {
 		return "", err
@@ -100,8 +100,8 @@ func (r *RedisInterface) GetThumbsUpCountCtx(ctx context.Context, messageID int6
 	return val, nil
 }
 
-func (r *RedisInterface) DeleteThumbsUpCountCtx(ctx context.Context, messageID int64, typeID uint8) (int, error) {
-	key := KeyPrefixLike + KeyCount + string(typeID) + Separator + strconv.FormatInt(messageID, 10)
+func (r *RedisInterface) DeleteThumbsUpCountCtx(ctx context.Context, messageID int64, typeID int) (int, error) {
+	key := KeyPrefixLike + KeyCount + strconv.Itoa(typeID) + Separator + strconv.FormatInt(messageID, 10)
 	val, err := r.rds.DelCtx(ctx, key)
 	if err != nil {
 		return 0, err
@@ -109,8 +109,8 @@ func (r *RedisInterface) DeleteThumbsUpCountCtx(ctx context.Context, messageID i
 	return val, nil
 }
 
-func (r *RedisInterface) AddThumbsUpHistoryCtx(ctx context.Context, messageID int64, typeID uint8, uid int64) error {
-	key := KeyPrefixLike + KeyHistory + strconv.FormatInt(uid, 10) + Separator + string(typeID)
+func (r *RedisInterface) AddThumbsUpHistoryCtx(ctx context.Context, messageID int64, typeID int, uid int64) error {
+	key := KeyPrefixLike + KeyHistory + strconv.FormatInt(uid, 10) + Separator + strconv.Itoa(typeID)
 	now := time.Now().Unix()
 	_, err := r.rds.ZaddCtx(ctx, key, now, strconv.FormatInt(messageID, 10))
 	if err != nil {
@@ -124,8 +124,8 @@ func (r *RedisInterface) AddThumbsUpHistoryCtx(ctx context.Context, messageID in
 	return nil
 }
 
-//func (r *RedisInterface) IncreaseThumbsUpCountCtx(ctx context.Context, messageID int64, typeID uint8) (int64, error) {
-//	key := KeyPrefixLike + KeyCount + string(typeID) + Separator + strconv.FormatInt(messageID, 10)
+//func (r *RedisInterface) IncreaseThumbsUpCountCtx(ctx context.Context, messageID int64, typeID int) (int64, error) {
+//	key := KeyPrefixLike + KeyCount + strconv.Itoa(typeID) + Separator + strconv.FormatInt(messageID, 10)
 //	val, err := r.rds.IncrCtx(ctx, key)
 //	if err != nil {
 //		return 0, err

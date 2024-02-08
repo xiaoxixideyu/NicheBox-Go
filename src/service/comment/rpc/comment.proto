@@ -1,0 +1,120 @@
+syntax = "proto3";
+
+package commentclient;
+
+option go_package = "./comment";
+
+message CommentInfo {
+  int64 CommentID = 1;
+  int64 SubjectID = 2;
+  int64 RootID = 3;
+  int64 ParentID = 4;
+  int64 DialogID = 5;
+  int64 OwnerID = 6;
+  bool ThumbsUp = 7;
+  int32 Floor = 8;
+  string CreateTime = 9;
+  int32 InnerFloorCount = 10;
+  repeated CommentInfo InnerFloorComments = 11;
+  string Content = 12;
+  int32 LikeCount = 13;
+}
+
+// Comment
+message CommentRequest {
+  int64 Uid = 1;
+  int64 MessageID = 2;
+  int32 MessageType = 3;
+  int64 RootID = 4;
+  int64 ParentID = 5;
+  int64 DialogID = 6;
+  string Content = 7;
+}
+
+message CommentResponse {
+  CommentInfo comment = 1;
+}
+// Comment
+
+// DeleteComment
+message DeleteCommentRequest {
+  int64 CommentID = 1;
+  string Operator = 2;
+}
+
+message DeleteCommentResponse {
+
+}
+// DeleteComment
+
+// GetComment
+message GetCommentRequest {
+  int64 CommentID = 1;
+}
+
+message GetCommentResponse {
+  CommentInfo Comment = 1;
+}
+// GetComment
+
+// GetCommentsFromSubject
+message GetCommentsFromSubjectRequest {
+  int64 MessageID = 1;
+  int32 MessageType = 2;
+  int32 Page = 3;
+  int32 Size = 4;
+  string Order = 5;
+  int64 Uid = 6;
+}
+
+message GetCommentsFromSubjectResponse {
+  repeated CommentInfo Comments = 1;
+}
+// GetCommentsFromSubject
+
+// GetSubComments
+message GetSubCommentsRequest {
+  int64 RootID = 1;
+  int32 Page = 2;
+  int32 Size = 3;
+}
+
+message GetSubCommentsResponse {
+  repeated CommentInfo SubComments = 1;
+}
+// GetSubComments
+
+// GetSubject
+message GetSubjectRequest {
+  int64 SubjectID = 1;
+}
+
+message GetSubjectResponse {
+  int64 MessageID = 1;
+  int32 MessageType = 2;
+  int32 CommentCount = 3;
+}
+// GetSubject
+
+// GetSubjectByMessage
+message GetSubjectByMessageRequest {
+  int64 MessageID = 1;
+  int32 MessageType = 2;
+}
+
+message GetSubjectByMessageResponse {
+  int64 SubjectID = 1;
+  int32 CommentCount = 2;
+}
+// GetSubjectByMessage
+
+
+service Comment {
+  rpc Comment(CommentRequest) returns(CommentResponse);
+  rpc DeleteComment(DeleteCommentRequest) returns(DeleteCommentResponse);
+  rpc GetComment(GetCommentRequest) returns(GetCommentResponse);
+  rpc GetCommentsFromSubject(GetCommentsFromSubjectRequest) returns(GetCommentsFromSubjectResponse);
+  rpc GetSubComments(GetSubCommentsRequest) returns(GetSubCommentsResponse);
+  rpc GetSubject(GetSubjectRequest) returns(GetSubjectResponse);
+  rpc GetSubjectByMessage(GetSubjectByMessageRequest) returns(GetSubjectByMessageResponse);
+}

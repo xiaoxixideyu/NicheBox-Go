@@ -28,7 +28,7 @@ func (l *CancelThumbsUpLogic) CancelThumbsUp(in *like.CancelThumbsUpRequest) (*l
 	likeModel := model.Like{
 		MessageID: in.MessageID,
 		Uid:       in.Uid,
-		TypeID:    uint8(in.MessageType),
+		TypeID:    int(in.MessageType),
 	}
 	err := l.svcCtx.LikeInterface.DeleteLikeAndUpdateLikeCountTX(&likeModel)
 	if err != nil {
