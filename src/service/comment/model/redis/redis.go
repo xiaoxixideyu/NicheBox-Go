@@ -36,11 +36,15 @@ func (r *RedisInterface) SetSubjectInfoCtx(ctx context.Context, subject *model.S
 }
 
 func (r *RedisInterface) SetInnerFloorCommentIDs(ctx context.Context, rootID string, comments []*model.Comment) error {
-	key := KeyPrefixComment + KeyInnerFloor + rootID
+	key := KeyPrefixComment + KeyInnerFloor + KeyCreateTime + rootID
 	zs := make([]*redis.Z, 0, len(comments))
 	for _, c := range comments {
+		//z := redis.Z{
+		//	Score:  float64(c.LikeCount),
+		//	Member: c.CommentID,
+		//}
 		z := redis.Z{
-			Score:  float64(c.LikeCount),
+			Score:  float64(c.CreatedAt.Unix()),
 			Member: c.CommentID,
 		}
 		zs = append(zs, &z)
@@ -99,9 +103,9 @@ func (r *RedisInterface) BatchSetCommentsCtx(ctx context.Context, caches []*mode
 	return nil
 }
 
-func (r *RedisInterface) GetInnerFloorCommentIDs(ctx context.Context, rootID string) ([]string, error) {
-	key := KeyPrefixComment + KeyInnerFloor + rootID
-	vals, err := r.rds.ZrevrangeCtx(ctx, key, 0, -1)
+func (r *RedisInterface) GetInnerFloorCommentIDs(ctx context.Context, rootID string, start, stop int) ([]string, error) {
+	key := KeyPrefixComment + KeyInnerFloor + KeyCreateTime + rootID
+	vals, err := r.rds.ZrevrangeCtx(ctx, key, int64(start), int64(stop))
 	if err != nil {
 		return nil, err
 	}
@@ -113,37 +117,48 @@ func (r *RedisInterface) GetInnerFloorCommentIDs(ctx context.Context, rootID str
 
 func (r *RedisInterface) BatchGetCommentsByIDsCtx(ctx context.Context, ids []string) (map[string]string, []string, error) {
 	errIDs := make([]string, 0, len(ids))
-	vals := make(map[string]string, 0)
-	err := r.rds.PipelinedCtx(ctx, func(pipeliner redis.Pipeliner) error {
-		for _, id := range ids {
-			key := KeyPrefixComment + KeyContent + id
-			val := pipeliner.Get(ctx, key)
+	vals := make(map[string]string)
 
-			if val.Err() != nil || val.Val() == "" {
-				// record the id that cache expired or occurred error
-				errIDs = append(errIDs, id)
-			} else {
-				// record values
-				vals[id] = val.Val()
-			}
+	for _, id := range ids {
+		key := KeyPrefixComment + KeyContent + id
+		val, err := r.rds.GetCtx(ctx, key)
+
+		if err != nil || val == "" {
+			// record the id that cache expired or occurred error
+			errIDs = append(errIDs, id)
+		} else {
+			// record values
+			vals[id] = val
 		}
-		_, err := pipeliner.Exec(ctx)
-		if err != nil {
-			return err
-		}
-		return nil
-	})
-	if err != nil {
-		return nil, nil, err
 	}
+
 	return vals, errIDs, nil
 }
 
 func (r *RedisInterface) GetCommentIndexesWithScoreBySubjectIDCtx(ctx context.Context, subjectID int64, page, size int, order string) ([]redis.Pair, error) {
-	key := KeyPrefixComment + KeyCommentIndex + KeyFloor + strconv.FormatInt(subjectID, 10)
+	var err error
+	var indexes []redis.Pair
+	var key string
+
 	start := (page - 1) * size
 	stop := start + size - 1
-	indexes, err := r.rds.ZrangeWithScoresCtx(ctx, key, int64(start), int64(stop))
+
+	if order == biz.OrderByTimeAsc {
+		key = KeyPrefixComment + KeyCommentIndex + KeyFloor + strconv.FormatInt(subjectID, 10)
+		indexes, err = r.rds.ZrangeWithScoresCtx(ctx, key, int64(start), int64(stop))
+
+	} else if order == biz.OrderByTimeDesc {
+		key = KeyPrefixComment + KeyCommentIndex + KeyFloor + strconv.FormatInt(subjectID, 10)
+		indexes, err = r.rds.ZrevrangeWithScoresCtx(ctx, key, int64(start), int64(stop))
+
+	} else if order == biz.OrderByLikeCount {
+		key = KeyPrefixComment + KeyCommentIndex + KeyLikeCount + strconv.FormatInt(subjectID, 10)
+		indexes, err = r.rds.ZrevrangeWithScoresCtx(ctx, key, int64(start), int64(stop))
+
+	} else {
+		return nil, biz.ErrRedisUnknownOrder
+	}
+
 	if err != nil {
 		return nil, err
 	}

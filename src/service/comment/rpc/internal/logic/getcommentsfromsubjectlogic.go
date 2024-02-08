@@ -172,7 +172,7 @@ func (l *GetCommentsFromSubjectLogic) queryInnerFloorCommentsAndContentsFromCach
 
 func (l *GetCommentsFromSubjectLogic) queryInnerFloorCommentIDsFromCache(rootIDs []string, m map[string][]string, s map[string]struct{}, sr *[]int64) {
 	for _, id := range rootIDs {
-		innerFloorIDs, err := l.svcCtx.CommentCacheInterface.GetInnerFloorCommentIDs(l.ctx, id)
+		innerFloorIDs, err := l.svcCtx.CommentCacheInterface.GetInnerFloorCommentIDs(l.ctx, id, 0, MaxAmountsOfSubCommentsToShow-1)
 		if err != nil {
 			s[id] = struct{}{}
 			idInt64, _ := strconv.ParseInt(id, 10, 64)
@@ -190,6 +190,7 @@ func (l *GetCommentsFromSubjectLogic) queryRootCommentsAndContentsFromCache(ids 
 		// copy all ids to errRootIDs
 		errRootIDs = make([]string, 0, len(ids))
 		copy(errRootIDs, ids)
+
 	} else {
 		// try to use comment cache
 		for id, val := range vals {
@@ -396,7 +397,7 @@ func (l *GetCommentsFromSubjectLogic) pushRebuildInnerFloorCommentIndexesCacheMe
 }
 
 func (l *GetCommentsFromSubjectLogic) queryRootAndInnerFloorCommentsAndContentsBySubjectIDFromDB(subjectID int64, in *comment.GetCommentsFromSubjectRequest) ([]int64, map[string]*model.Comment, map[string]*model.CommentContent, map[string][]string, error) {
-	rootComments, err := l.svcCtx.CommentInterface.GetRootCommentsBySubjectID(subjectID, int(in.Page), int(in.Size))
+	rootComments, err := l.svcCtx.CommentInterface.GetRootCommentsBySubjectID(subjectID, int(in.Page), int(in.Size), in.Order)
 	if err != nil {
 		l.Logger.Errorf("[MySQL] Get root comments by subject id from db error", err)
 		return nil, nil, nil, nil, err
@@ -405,7 +406,7 @@ func (l *GetCommentsFromSubjectLogic) queryRootAndInnerFloorCommentsAndContentsB
 	for _, c := range rootComments {
 		rootIDs = append(rootIDs, c.CommentID)
 	}
-	subComments, err := l.svcCtx.CommentInterface.BatchGetInnerFloorComments(rootIDs, 1, 3)
+	subComments, err := l.svcCtx.CommentInterface.BatchGetInnerFloorComments(rootIDs, 1, MaxAmountsOfSubCommentsToShow)
 	if err != nil {
 		l.Logger.Errorf("[MySQL] Get inner floor comments by root ids from db error", err)
 		return nil, nil, nil, nil, err
@@ -464,8 +465,16 @@ func (l *GetCommentsFromSubjectLogic) assembleRpcCommentInfoFromCacheMapOrDBMap(
 			Content:            cache.Content,
 		}
 	} else {
-		info := infos[commentID]
-		content := contents[commentID]
+		info, ok := infos[commentID]
+		if !ok {
+			l.Logger.Errorf("[Logic] Not found comment", commentID)
+			return &commentInfo
+		}
+		content, ok := contents[commentID]
+		if !ok {
+			l.Logger.Errorf("[Logic] Not found comment", commentID)
+			return &commentInfo
+		}
 		commentInfo = comment.CommentInfo{
 			CommentID:          info.CommentID,
 			SubjectID:          info.SubjectID,

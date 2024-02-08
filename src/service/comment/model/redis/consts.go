@@ -9,6 +9,7 @@ const (
 
 	KeyFloor            = "floor:"
 	KeyLikeCount        = "likecount:"
+	KeyCreateTime       = "createtime:"
 	KeyInnerFloor       = "innerfloor:"
 	KeySubject          = "subject:"
 	KeySubjectByMessage = "subjectbymessage:"

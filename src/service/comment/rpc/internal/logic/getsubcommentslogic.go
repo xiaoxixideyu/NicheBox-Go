@@ -32,7 +32,7 @@ func NewGetSubCommentsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ge
 }
 
 func (l *GetSubCommentsLogic) GetSubComments(in *comment.GetSubCommentsRequest) (*comment.GetSubCommentsResponse, error) {
-	innerFloorIDs, err := l.svcCtx.CommentCacheInterface.GetInnerFloorCommentIDs(l.ctx, strconv.FormatInt(in.RootID, 10))
+	innerFloorIDs, err := l.svcCtx.CommentCacheInterface.GetInnerFloorCommentIDs(l.ctx, strconv.FormatInt(in.RootID, 10), 0, -1)
 	if err != nil {
 		if !errors.Is(err, redis.Nil) {
 			l.Logger.Errorf("[Redis] Get inner floor comment ids error", err)
