@@ -62,7 +62,7 @@ func (l *GetSubCommentsLogic) GetSubComments(req *types.GetSubCommentsRequest) (
 			ParentID:           c.ParentID,
 			DialogID:           c.DialogID,
 			OwnerID:            c.OwnerID,
-			LikeCount:          -1,
+			LikeCount:          int(c.LikeCount),
 			ThumbsUp:           false,
 			Floor:              int(c.Floor),
 			CreateTime:         c.CreateTime,

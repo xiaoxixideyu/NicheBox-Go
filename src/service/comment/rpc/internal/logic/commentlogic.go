@@ -68,6 +68,7 @@ func (l *CommentLogic) Comment(in *comment.CommentRequest) (*comment.CommentResp
 		ParentID:           cmt.ParentID,
 		DialogID:           cmt.DialogID,
 		OwnerID:            cmt.OwnerID,
+		LikeCount:          int32(cmt.LikeCount),
 		ThumbsUp:           false,
 		Floor:              int32(cmt.Floor),
 		CreateTime:         cmt.CreatedAt.Format(time.DateTime),

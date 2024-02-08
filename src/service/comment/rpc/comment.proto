@@ -17,6 +17,7 @@ message CommentInfo {
   int32 InnerFloorCount = 10;
   repeated CommentInfo InnerFloorComments = 11;
   string Content = 12;
+  int32 LikeCount = 13;
 }
 
 // Comment

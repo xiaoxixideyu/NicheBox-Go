@@ -54,6 +54,16 @@ KqRebuildCacheInnerFloorCommentIndexConsumerConf:
   Consumers: 8
   Processors: 8
 
+KqUpdateCommentLikeCountConsumerConf:
+  Name: kqUpdateCommentLikeCountConsumer1
+  Brokers:
+    - kafka:9092
+  Group: kqUpdateCommentLikeCountConsumerGroup
+  Topic: update-comment-like-count
+  Offset: first
+  Consumers: 8
+  Processors: 8
+
 SnowFlake:
   MachineID: 1  # 取值范围 [1, 1024]
 

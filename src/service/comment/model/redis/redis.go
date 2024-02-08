@@ -14,6 +14,16 @@ type RedisInterface struct {
 	rds *redis.Redis
 }
 
+func (r *RedisInterface) DeleteCommentCtx(ctx context.Context, commentID int64) error {
+	key := KeyPrefixComment + KeyContent + strconv.FormatInt(commentID, 10)
+	_, err := r.rds.DelCtx(ctx, key)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (r *RedisInterface) SetSubjectInfoCtx(ctx context.Context, subject *model.Subject) error {
 	keyMsg := KeyPrefixComment + KeySubjectByMessage + strconv.FormatInt(int64(subject.TypeID), 10) + Separator + strconv.FormatInt(subject.MessageID, 10)
 	keySbj := KeyPrefixComment + KeySubject + strconv.Itoa(int(subject.ID))

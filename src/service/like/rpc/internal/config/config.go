@@ -22,5 +22,9 @@ type Config struct {
 		NonBlock    bool
 		PingTimeout int
 	}
+	KqUpdateCommentLikeCountPusherConf struct {
+		Brokers []string
+		Topic   string
+	}
 	Salt string
 }

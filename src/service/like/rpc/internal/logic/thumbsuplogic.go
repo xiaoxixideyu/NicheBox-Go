@@ -2,11 +2,14 @@ package logic
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"github.com/go-sql-driver/mysql"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"nichebox/common/biz"
 	"nichebox/service/like/model"
+	"nichebox/service/like/model/dto"
 	"nichebox/service/like/rpc/internal/svc"
 	"nichebox/service/like/rpc/pb/like"
 
@@ -52,5 +55,34 @@ func (l *ThumbsUpLogic) ThumbsUp(in *like.ThumbsUpRequest) (*like.ThumbsUpRespon
 		l.svcCtx.LikeCacheInterface.ClearAllThumbsUpHistoryCtx(context.Background(), likeModel.TypeID, in.Uid)
 	}
 
+	// push mq to update biz
+	err = l.PushMQToUpdateBiz(int(in.MessageType), in.MessageID)
+	if err != nil {
+		// todo: save db
+	}
+
 	return &like.ThumbsUpResponse{}, nil
+}
+
+func (l *ThumbsUpLogic) PushMQToUpdateBiz(messageType int, messageID int64) error {
+	if messageType == biz.MessageTypeComment {
+		message := dto.UpdateCommentLikeCountMessage{CommentID: messageID, Delta: 1}
+		bytes, err := json.Marshal(&message)
+		if err != nil {
+			l.Logger.Errorf("[Json][Producer] Json marshal error", err)
+			return err
+		}
+		err = l.svcCtx.KqUpdateCommentLikeCountPusher.Push(string(bytes))
+		if err != nil {
+			l.Logger.Errorf("[Json][Producer] Kafka push error", err)
+			return err
+		}
+
+	} else if messageType == biz.MessageTypePost {
+
+	} else if messageType == biz.MessageTypeVideo {
+
+	}
+
+	return nil
 }

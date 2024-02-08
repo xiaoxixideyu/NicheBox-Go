@@ -13,7 +13,7 @@ type Comment struct {
 	ParentID        int64
 	DialogID        int64
 	OwnerID         int64
-	LikeCount       int
+	LikeCount       int `gorm:"default:0"`
 	Floor           int
 	InnerFloorCount int
 	Status          int
@@ -38,6 +38,7 @@ type CommentCache struct {
 	ParentID        int64
 	DialogID        int64
 	OwnerID         int64
+	LikeCount       int
 	Floor           int
 	InnerFloorCount int
 	Status          int

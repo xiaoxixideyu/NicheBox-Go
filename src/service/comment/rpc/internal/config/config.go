@@ -30,6 +30,7 @@ type Config struct {
 	}
 	KqRebuildCacheInnerFloorCommentIndexConsumerConf kq.KqConf
 	KqRebuildCacheSubjectCommentIndexConsumerConf    kq.KqConf
+	KqUpdateCommentLikeCountConsumerConf             kq.KqConf
 	KqRebuildCacheSubjectCommentIndexPusherConf      struct {
 		Brokers []string
 		Topic   string

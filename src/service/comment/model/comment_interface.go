@@ -7,6 +7,7 @@ import (
 
 type CommentInterface interface {
 	FirstOrCreateSubject(subject *Subject) error
+	UpdateCommentLikeCount(commentID int64, delta int) (*Comment, error)
 	GetSubjectBySubjectID(subjectID int64) (*Subject, error)
 	AddCommentAndUpdateSubjectTX(subject *Subject, comment *Comment, content *CommentContent) error
 	GetComment(commentID int64) (*Comment, error)
@@ -31,6 +32,7 @@ type CommentCacheInterface interface {
 	SetInnerFloorCommentIDs(ctx context.Context, rootID string, comments []*Comment) error
 	SetSubjectInfoCtx(ctx context.Context, subject *Subject) error
 	DeleteSubjectInfoCtx(ctx context.Context, subjectID int64) error
+	DeleteCommentCtx(ctx context.Context, commentID int64) error
 	DeleteCommentsBySubjectIDCtx(ctx context.Context, subjectID int64) error
 	DeleteInnerFloorCommentsByRootIDCtx(ctx context.Context, rootID int64) error
 	BatchSetCommentsCtx(ctx context.Context, caches []*CommentCache) error

@@ -15,6 +15,15 @@ type MysqlInterface struct {
 	db *gorm.DB
 }
 
+func (m *MysqlInterface) UpdateCommentLikeCount(commentID int64, delta int) (*model.Comment, error) {
+	comment := model.Comment{}
+	result := m.db.Model(&comment).Clauses(clause.Returning{}).Where("comment_id = ?", commentID).UpdateColumn("like_count", gorm.Expr("like_count + ?", delta))
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return &comment, nil
+}
+
 func (m *MysqlInterface) GetSubjectBySubjectID(subjectID int64) (*model.Subject, error) {
 	subject := model.Subject{}
 	result := m.db.Model(&model.Subject{}).Where("id = ?", subjectID).First(&subject)

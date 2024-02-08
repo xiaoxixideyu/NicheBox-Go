@@ -14,6 +14,7 @@ func Consumers(c config.Config, ctx context.Context, svcContext *svc.ServiceCont
 		//Listening for changes in consumption flow status
 		kq.MustNewQueue(c.KqRebuildCacheSubjectCommentIndexConsumerConf, NewRebuildCacheSubjectCommentIndex(ctx, svcContext)),
 		kq.MustNewQueue(c.KqRebuildCacheInnerFloorCommentIndexConsumerConf, NewRebuildCacheInnerFloorCommentIndex(ctx, svcContext)),
+		kq.MustNewQueue(c.KqUpdateCommentLikeCountConsumerConf, NewUpdateCommentLikeCount(ctx, svcContext)),
 	}
 
 }

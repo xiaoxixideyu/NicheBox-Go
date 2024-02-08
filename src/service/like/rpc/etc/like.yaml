@@ -24,5 +24,9 @@ CacheRedis:
   NonBlock: false
   PingTimeout: 1
 
+KqUpdateCommentLikeCountPusherConf:
+  Brokers:
+    - kafka:9092
+  Topic: update-comment-like-count
 
 Salt: HWVOFkGgPTryzICwd7qnJaZR9KQ2i8xe
