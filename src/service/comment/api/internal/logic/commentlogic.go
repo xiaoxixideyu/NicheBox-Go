@@ -60,7 +60,6 @@ func (l *CommentLogic) Comment(req *types.CommentRequest) (resp *types.CommentRe
 		InnerFloorCount: int(out.Comment.InnerFloorCount),
 		Content:         out.Comment.Content,
 	}}
-	// todo: get root like count and sub like count
 
 	// todo: notification
 
