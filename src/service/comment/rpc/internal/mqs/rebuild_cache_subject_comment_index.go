@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/zeromicro/go-zero/core/logx"
+	"nichebox/common/biz"
 	"nichebox/service/comment/model/dto"
 	"nichebox/service/comment/rpc/internal/svc"
 	"time"
@@ -45,7 +46,7 @@ func (l *RebuildCacheSubjectCommentIndex) Consume(key, value string) error {
 		return nil
 	}
 
-	rootComments, err := l.svcCtx.CommentInterface.GetRootCommentsBySubjectID(msg.SubjectID, 1, -1)
+	rootComments, err := l.svcCtx.CommentInterface.GetRootCommentsBySubjectID(msg.SubjectID, 1, -1, biz.OrderByTimeAsc)
 	if err != nil {
 		l.Logger.Errorf("[MySQL][Consumer] Get root comments by subject id error", err)
 		return err

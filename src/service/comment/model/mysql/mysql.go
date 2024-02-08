@@ -6,6 +6,7 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 	"math"
+	"nichebox/common/biz"
 	"nichebox/service/comment/model"
 	"time"
 )
@@ -45,21 +46,30 @@ func (m *MysqlInterface) BatchGetAllInnerFloorCommentsAndInnerFloorCounts(rootID
 	return subComments, counts, nil
 }
 
-func (m *MysqlInterface) GetRootCommentsBySubjectID(subjectID int64, page, size int) ([]*model.Comment, error) {
-	// todo: order by like count/floor
+func (m *MysqlInterface) GetRootCommentsBySubjectID(subjectID int64, page, size int, order string) ([]*model.Comment, error) {
 	comments := make([]*model.Comment, 0)
 	var result *gorm.DB
+	var orderExpr string
+	switch order {
+	case biz.OrderByTimeAsc:
+		orderExpr = "floor asc"
+	case biz.OrderByTimeDesc:
+		orderExpr = "floor desc"
+	case biz.OrderByLikeCount:
+		orderExpr = "like_count desc"
+	default:
+		orderExpr = "floor asc"
+	}
 	if size == -1 {
-		result = m.db.Model(&model.Comment{}).Where("subject_id = ? AND root_id = 0", subjectID).Find(&comments)
+		result = m.db.Model(&model.Comment{}).Where("subject_id = ? AND root_id = 0", subjectID).Order(orderExpr).Find(&comments)
 	} else {
 		offset := (page - 1) * size
-		result = m.db.Model(&model.Comment{}).Where("subject_id = ? AND root_id = 0", subjectID).Offset(offset).Limit(size).Find(&comments)
+		result = m.db.Model(&model.Comment{}).Where("subject_id = ? AND root_id = 0", subjectID).Order(orderExpr).Offset(offset).Limit(size).Find(&comments)
 	}
 	return comments, result.Error
 }
 
 func (m *MysqlInterface) BatchGetInnerFloorComments(rootIDs []int64, page, size int) ([]*model.Comment, error) {
-	//mp := make(map[int64]*model.Comment)
 	offset := (page - 1) * size
 	subComments := make([]*model.Comment, 0, len(rootIDs))
 	if size == -1 {
