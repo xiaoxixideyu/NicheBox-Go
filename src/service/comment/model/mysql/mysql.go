@@ -28,7 +28,10 @@ func (m *MysqlInterface) BatchGetAllInnerFloorCommentsAndInnerFloorCounts(rootID
 	tx := m.db.Begin()
 
 	counts := make([]int, 0, len(rootIDs))
-	result := tx.Model(&model.Comment{}).Select("inner_floor_count").Where("comment_id in ?", rootIDs).Find(&counts)
+	result := tx.Model(&model.Comment{}).Select("inner_floor_count").Where("comment_id in ?", rootIDs).Clauses(clause.OrderBy{
+		Expression: clause.Expr{SQL: "FIELD(comment_id,?)", Vars: []interface{}{rootIDs}, WithoutParentheses: true},
+	}).Find(&counts)
+	fmt.Printf("rootids:%v\ncounts:%v\n", rootIDs, counts)
 	if result.Error != nil {
 		tx.Rollback()
 		return nil, nil, result.Error
