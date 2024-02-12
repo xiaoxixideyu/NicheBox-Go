@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package boxcontentclient;
+
+option go_package = "./box-content";
+
+// GetPostList
+message GetPostListRequest {
+  int64 BoxID = 1;
+  int32 Page = 2;
+  int32 Size = 3;
+  string order = 4;
+}
+
+message GetPostListResponse {
+  repeated int64 IDs = 1;
+}
+// GetPostList
+
+message ModifiedPostInfo {
+  int64 PostID = 1;
+  string Time = 2;
+  int64 BoxID = 3;
+  int32 InfoCount = 4;
+}
+
+// UpdateNewPosts
+message UpdateNewPostsRequest {
+  repeated ModifiedPostInfo NewPosts = 1;
+}
+
+message UpdateNewPostsResponse {
+
+}
+// UpdateNewPosts
+
+// UpdateDeletedPosts
+message UpdateDeletedPostsRequest {
+  repeated ModifiedPostInfo DeletedPosts = 1;
+}
+
+message UpdateDeletedPostsResponse {
+
+}
+// UpdateDeletedPosts
+
+service BoxContent {
+  rpc GetPostList(GetPostListRequest) returns(GetPostListResponse);
+  rpc UpdateNewPosts(UpdateNewPostsRequest) returns(UpdateNewPostsResponse);
+  rpc UpdateDeletedPosts(UpdateDeletedPostsRequest) returns(UpdateDeletedPostsResponse);
+}

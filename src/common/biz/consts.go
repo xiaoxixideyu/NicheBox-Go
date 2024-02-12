@@ -7,7 +7,8 @@ const (
 )
 
 const (
-	OrderByTimeAsc   = "time_asc"
-	OrderByTimeDesc  = "time_desc"
-	OrderByLikeCount = "like_count"
+	OrderByCreateTimeAsc  = "createtime_asc"
+	OrderByCreateTimeDesc = "createtime_desc"
+	OrderByLikeCount      = "like_count"
+	// OrderByView           = "view"
 )

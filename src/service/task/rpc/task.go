@@ -58,6 +58,8 @@ func main() {
 	// cron
 	userViewTask := cronx.NewUpdateUserView(context.Background(), svcCtx)
 	userViewTask.AddUpdateUserViewTask()
+	updateBoxContentTask := cronx.NewUpdateBoxContent(context.Background(), svcCtx)
+	updateBoxContentTask.AddUpdateBoxContentTask()
 
 	fmt.Printf("Starting rpc server at %s...\n", c.ListenOn)
 	s.Start()

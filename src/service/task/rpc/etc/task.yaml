@@ -33,3 +33,15 @@ CacheRedis:
   Tls: false
   NonBlock: false
   PingTimeout: 1
+
+PostRpc:
+  Etcd:
+    Hosts:
+      - etcd:2379
+    Key: post.rpc
+
+BoxContentRpc:
+  Etcd:
+    Hosts:
+      - etcd:2379
+    Key: boxcontent.rpc

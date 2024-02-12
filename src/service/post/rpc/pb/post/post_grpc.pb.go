@@ -23,6 +23,7 @@ const (
 	Post_DeletePost_FullMethodName       = "/postclient.Post/DeletePost"
 	Post_GetPostDetail_FullMethodName    = "/postclient.Post/GetPostDetail"
 	Post_IncreaseUserView_FullMethodName = "/postclient.Post/IncreaseUserView"
+	Post_GetModifiedPosts_FullMethodName = "/postclient.Post/GetModifiedPosts"
 )
 
 // PostClient is the client API for Post service.
@@ -33,6 +34,7 @@ type PostClient interface {
 	DeletePost(ctx context.Context, in *DeletePostRequest, opts ...grpc.CallOption) (*DeletePostResponse, error)
 	GetPostDetail(ctx context.Context, in *GetPostDetailRequest, opts ...grpc.CallOption) (*GetPostDetailResponse, error)
 	IncreaseUserView(ctx context.Context, in *IncreaseUserViewRequest, opts ...grpc.CallOption) (*IncreaseUserViewResponse, error)
+	GetModifiedPosts(ctx context.Context, in *GetModifiedPostsRequest, opts ...grpc.CallOption) (*GetModifiedPostsResponse, error)
 }
 
 type postClient struct {
@@ -79,6 +81,15 @@ func (c *postClient) IncreaseUserView(ctx context.Context, in *IncreaseUserViewR
 	return out, nil
 }
 
+func (c *postClient) GetModifiedPosts(ctx context.Context, in *GetModifiedPostsRequest, opts ...grpc.CallOption) (*GetModifiedPostsResponse, error) {
+	out := new(GetModifiedPostsResponse)
+	err := c.cc.Invoke(ctx, Post_GetModifiedPosts_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // PostServer is the server API for Post service.
 // All implementations must embed UnimplementedPostServer
 // for forward compatibility
@@ -87,6 +98,7 @@ type PostServer interface {
 	DeletePost(context.Context, *DeletePostRequest) (*DeletePostResponse, error)
 	GetPostDetail(context.Context, *GetPostDetailRequest) (*GetPostDetailResponse, error)
 	IncreaseUserView(context.Context, *IncreaseUserViewRequest) (*IncreaseUserViewResponse, error)
+	GetModifiedPosts(context.Context, *GetModifiedPostsRequest) (*GetModifiedPostsResponse, error)
 	mustEmbedUnimplementedPostServer()
 }
 
@@ -105,6 +117,9 @@ func (UnimplementedPostServer) GetPostDetail(context.Context, *GetPostDetailRequ
 }
 func (UnimplementedPostServer) IncreaseUserView(context.Context, *IncreaseUserViewRequest) (*IncreaseUserViewResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method IncreaseUserView not implemented")
+}
+func (UnimplementedPostServer) GetModifiedPosts(context.Context, *GetModifiedPostsRequest) (*GetModifiedPostsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetModifiedPosts not implemented")
 }
 func (UnimplementedPostServer) mustEmbedUnimplementedPostServer() {}
 
@@ -191,6 +206,24 @@ func _Post_IncreaseUserView_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Post_GetModifiedPosts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetModifiedPostsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PostServer).GetModifiedPosts(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Post_GetModifiedPosts_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PostServer).GetModifiedPosts(ctx, req.(*GetModifiedPostsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Post_ServiceDesc is the grpc.ServiceDesc for Post service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -213,6 +246,10 @@ var Post_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "IncreaseUserView",
 			Handler:    _Post_IncreaseUserView_Handler,
+		},
+		{
+			MethodName: "GetModifiedPosts",
+			Handler:    _Post_GetModifiedPosts_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

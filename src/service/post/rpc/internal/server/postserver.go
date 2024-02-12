@@ -41,3 +41,8 @@ func (s *PostServer) IncreaseUserView(ctx context.Context, in *post.IncreaseUser
 	l := logic.NewIncreaseUserViewLogic(ctx, s.svcCtx)
 	return l.IncreaseUserView(in)
 }
+
+func (s *PostServer) GetModifiedPosts(ctx context.Context, in *post.GetModifiedPostsRequest) (*post.GetModifiedPostsResponse, error) {
+	l := logic.NewGetModifiedPostsLogic(ctx, s.svcCtx)
+	return l.GetModifiedPosts(in)
+}
