@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"github.com/zeromicro/x/errors"
 	"net/http"
-	"nichebox/service/comment/api/internal/common"
+	"nichebox/common/biz"
 	"nichebox/service/comment/rpc/pb/comment"
 
 	"nichebox/service/comment/api/internal/svc"
@@ -34,7 +34,7 @@ func (l *GetCommentsFromSubjectLogic) GetCommentsFromSubject(req *types.GetComme
 		return nil, errors.New(http.StatusUnauthorized, "uid无效")
 	}
 
-	if !common.CheckIfOrderValid(req.Order) {
+	if !biz.CheckIfCommentOrderValid(req.Order) {
 		return nil, errors.New(http.StatusBadRequest, "order invalid")
 	}
 

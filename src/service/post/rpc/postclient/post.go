@@ -17,16 +17,20 @@ type (
 	CreatePostResponse       = post.CreatePostResponse
 	DeletePostRequest        = post.DeletePostRequest
 	DeletePostResponse       = post.DeletePostResponse
+	GetModifiedPostsRequest  = post.GetModifiedPostsRequest
+	GetModifiedPostsResponse = post.GetModifiedPostsResponse
 	GetPostDetailRequest     = post.GetPostDetailRequest
 	GetPostDetailResponse    = post.GetPostDetailResponse
 	IncreaseUserViewRequest  = post.IncreaseUserViewRequest
 	IncreaseUserViewResponse = post.IncreaseUserViewResponse
+	ModifiedPostInfo         = post.ModifiedPostInfo
 
 	Post interface {
 		CreatePost(ctx context.Context, in *CreatePostRequest, opts ...grpc.CallOption) (*CreatePostResponse, error)
 		DeletePost(ctx context.Context, in *DeletePostRequest, opts ...grpc.CallOption) (*DeletePostResponse, error)
 		GetPostDetail(ctx context.Context, in *GetPostDetailRequest, opts ...grpc.CallOption) (*GetPostDetailResponse, error)
 		IncreaseUserView(ctx context.Context, in *IncreaseUserViewRequest, opts ...grpc.CallOption) (*IncreaseUserViewResponse, error)
+		GetModifiedPosts(ctx context.Context, in *GetModifiedPostsRequest, opts ...grpc.CallOption) (*GetModifiedPostsResponse, error)
 	}
 
 	defaultPost struct {
@@ -58,4 +62,9 @@ func (m *defaultPost) GetPostDetail(ctx context.Context, in *GetPostDetailReques
 func (m *defaultPost) IncreaseUserView(ctx context.Context, in *IncreaseUserViewRequest, opts ...grpc.CallOption) (*IncreaseUserViewResponse, error) {
 	client := post.NewPostClient(m.cli.Conn())
 	return client.IncreaseUserView(ctx, in, opts...)
+}
+
+func (m *defaultPost) GetModifiedPosts(ctx context.Context, in *GetModifiedPostsRequest, opts ...grpc.CallOption) (*GetModifiedPostsResponse, error) {
+	client := post.NewPostClient(m.cli.Conn())
+	return client.GetModifiedPosts(ctx, in, opts...)
 }

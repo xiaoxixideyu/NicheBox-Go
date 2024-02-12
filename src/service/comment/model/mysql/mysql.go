@@ -40,7 +40,7 @@ func (m *MysqlInterface) BatchGetAllInnerFloorCommentsAndInnerFloorCounts(rootID
 	result := tx.Model(&model.Comment{}).Select("inner_floor_count").Where("comment_id in ?", rootIDs).Clauses(clause.OrderBy{
 		Expression: clause.Expr{SQL: "FIELD(comment_id,?)", Vars: []interface{}{rootIDs}, WithoutParentheses: true},
 	}).Find(&counts)
-	fmt.Printf("rootids:%v\ncounts:%v\n", rootIDs, counts)
+
 	if result.Error != nil {
 		tx.Rollback()
 		return nil, nil, result.Error
@@ -63,9 +63,9 @@ func (m *MysqlInterface) GetRootCommentsBySubjectID(subjectID int64, page, size 
 	var result *gorm.DB
 	var orderExpr string
 	switch order {
-	case biz.OrderByTimeAsc:
+	case biz.OrderByCreateTimeAsc:
 		orderExpr = "floor asc"
-	case biz.OrderByTimeDesc:
+	case biz.OrderByCreateTimeDesc:
 		orderExpr = "floor desc"
 	case biz.OrderByLikeCount:
 		orderExpr = "like_count desc"
@@ -247,7 +247,7 @@ func (m *MysqlInterface) AddCommentAndUpdateSubjectTX(subject *model.Subject, co
 }
 
 func NewMysqlInterface(database, username, password, host, port string, maxIdleConns, maxOpenConns, connMaxLifeTime int) (model.CommentInterface, error) {
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True",
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		username,
 		password,
 		host,

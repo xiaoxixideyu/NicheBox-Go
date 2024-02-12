@@ -3,7 +3,6 @@ package mqs
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"github.com/zeromicro/go-zero/core/logx"
 	"nichebox/common/biz"
 	"nichebox/service/comment/model/dto"
@@ -47,8 +46,8 @@ func (l *RebuildCacheSubjectCommentIndex) Consume(key, value string) error {
 		return nil
 	}
 
-	rootComments, err := l.svcCtx.CommentInterface.GetRootCommentsBySubjectID(msg.SubjectID, 1, -1, biz.OrderByTimeAsc)
-	fmt.Printf("len(cmt):%v\n", len(rootComments))
+	rootComments, err := l.svcCtx.CommentInterface.GetRootCommentsBySubjectID(msg.SubjectID, 1, -1, biz.OrderByCreateTimeAsc)
+
 	if err != nil {
 		l.Logger.Errorf("[MySQL][Consumer] Get root comments by subject id error", err)
 		return err

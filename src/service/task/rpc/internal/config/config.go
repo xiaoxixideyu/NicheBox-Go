@@ -26,4 +26,6 @@ type Config struct {
 		PingTimeout int
 	}
 	KqUpdateUserViewConsumerConf kq.KqConf
+	PostRpc                      zrpc.RpcClientConf
+	BoxContentRpc                zrpc.RpcClientConf
 }

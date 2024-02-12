@@ -153,11 +153,11 @@ func (r *RedisInterface) GetCommentIndexesWithScoreBySubjectIDCtx(ctx context.Co
 	start := (page - 1) * size
 	stop := start + size - 1
 
-	if order == biz.OrderByTimeAsc {
+	if order == biz.OrderByCreateTimeAsc {
 		key = KeyPrefixComment + KeyCommentIndex + KeyFloor + strconv.FormatInt(subjectID, 10)
 		indexes, err = r.rds.ZrangeWithScoresCtx(ctx, key, int64(start), int64(stop))
 
-	} else if order == biz.OrderByTimeDesc {
+	} else if order == biz.OrderByCreateTimeDesc {
 		key = KeyPrefixComment + KeyCommentIndex + KeyFloor + strconv.FormatInt(subjectID, 10)
 		indexes, err = r.rds.ZrevrangeWithScoresCtx(ctx, key, int64(start), int64(stop))
 

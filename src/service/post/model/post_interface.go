@@ -1,11 +1,16 @@
 package model
 
-import "context"
+import (
+	"context"
+	"nichebox/service/post/model/dto"
+	"time"
+)
 
 type PostInterface interface {
 	CreatePost(post *Post) error
 	DeletePost(post *Post) error
 	GetPostByID(postID int64) (*Post, error)
+	GetModifiedPosts(from time.Time, to time.Time) ([]*dto.NewPostInfo, []*dto.DeletedPostInfo, error)
 }
 
 type PostCacheInterface interface {

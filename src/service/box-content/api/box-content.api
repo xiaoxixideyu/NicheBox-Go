@@ -1,0 +1,22 @@
+// GetPostList
+type GetPostListRequest {
+	BoxID int64  `json:"box_id,string"`
+	Page  int    `json:"page"`
+	Size  int    `json:"size"`
+	Order string `json:"order"`
+}
+
+type GetPostListResponse {
+	IDs []int64 `json:"ids,[]string"`
+}
+
+// GetPostList
+@server (
+	jwt:    Auth
+	prefix: /api/boxcontent
+)
+service BoxContent {
+	@handler GetPostList
+	post /getpostlist (GetPostListRequest) returns (GetPostListResponse)
+}
+

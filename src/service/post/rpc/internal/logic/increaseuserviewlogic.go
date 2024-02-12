@@ -30,7 +30,6 @@ func (l *IncreaseUserViewLogic) IncreaseUserView(in *post.IncreaseUserViewReques
 	// todo: 如果是游客的话，调用此RPC的visitorID应该换成ip地址
 	err := l.svcCtx.PostCacheInterface.IncrUserView(l.ctx, in.PostID, in.VisitorID)
 	if err != nil {
-		fmt.Printf("redis error:%v\n", err)
 		return nil, err
 	}
 
@@ -50,8 +49,7 @@ func (l *IncreaseUserViewLogic) IncreaseUserView(in *post.IncreaseUserViewReques
 			fmt.Printf("json error:%v\n", err)
 			return &post.IncreaseUserViewResponse{}, nil
 		}
-		name := l.svcCtx.KqUpdateUserViewPusherClient.Name()
-		fmt.Printf("going kafka:%v\n name:%v", string(bytes), name)
+
 		err = l.svcCtx.KqUpdateUserViewPusherClient.Push(string(bytes))
 
 		if err != nil {

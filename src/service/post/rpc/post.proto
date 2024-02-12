@@ -21,8 +21,8 @@ message CreatePostResponse {
 
 // DeletePost
 message DeletePostRequest {
-  int64 postID = 1;
-  string operator = 2;
+  int64 PostID = 1;
+  string Operator = 2;
 }
 
 message DeletePostResponse {
@@ -31,7 +31,7 @@ message DeletePostResponse {
 
 // GetPostDetail
 message GetPostDetailRequest {
-  int64 postID = 1;
+  int64 PostID = 1;
 }
 
 message GetPostDetailResponse {
@@ -41,23 +41,43 @@ message GetPostDetailResponse {
   string Content = 4;
   repeated string Photos = 5;
   string Cover = 6;
-  int32 userView = 7;
+  int32 UserView = 7;
 }
 // GetPostDetail
 
 // IncreaseUserView
 message IncreaseUserViewRequest {
-  int64 postID = 1;
-  int64 visitorID = 2;
+  int64 PostID = 1;
+  int64 VisitorID = 2;
 }
 
 message IncreaseUserViewResponse {
 }
 // IncreaseUserView
 
+// GetModifiedPosts
+message GetModifiedPostsRequest {
+  string FromTime = 1;
+  string ToTime = 2;
+}
+
+message GetModifiedPostsResponse {
+  repeated ModifiedPostInfo NewPosts = 1;
+  repeated ModifiedPostInfo DeletedPosts = 2;
+}
+
+message ModifiedPostInfo {
+  int64 PostID = 1;
+  string Time = 2;
+  int64 BoxID = 3;
+  int32 InfoCount = 4;
+}
+// GetModifiedPostIDs
+
 service Post {
   rpc CreatePost(CreatePostRequest) returns (CreatePostResponse);
   rpc DeletePost(DeletePostRequest) returns (DeletePostResponse);
   rpc GetPostDetail(GetPostDetailRequest) returns (GetPostDetailResponse);
   rpc IncreaseUserView(IncreaseUserViewRequest) returns (IncreaseUserViewResponse);
+  rpc GetModifiedPosts(GetModifiedPostsRequest) returns (GetModifiedPostsResponse);
 }

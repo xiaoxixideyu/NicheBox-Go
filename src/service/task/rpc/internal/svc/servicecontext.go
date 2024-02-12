@@ -2,7 +2,11 @@ package svc
 
 import (
 	"github.com/robfig/cron/v3"
+	"github.com/zeromicro/go-zero/zrpc"
 	"log"
+	"nichebox/service/box-content/rpc/boxcontent"
+	box_content "nichebox/service/box-content/rpc/pb/box-content"
+	"nichebox/service/post/rpc/postclient"
 	"nichebox/service/task/model"
 	"nichebox/service/task/model/mysql"
 	"nichebox/service/task/model/redis"
@@ -16,6 +20,9 @@ type ServiceContext struct {
 	Cron               *cron.Cron
 	TaskInterface      model.TaskInterface
 	TaskCacheInterface model.TaskCacheInterface
+
+	PostRpc       postclient.Post
+	BoxContentRpc box_content.BoxContentClient
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -29,7 +36,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		log.Printf("failed to create task redis interface, err:%v\n", err)
 		return nil
 	}
-	rootCron := cron.New()
+	rootCron := cron.New(cron.WithParser(cron.NewParser(cron.SecondOptional | cron.Minute | cron.Hour | cron.Dom | cron.Month | cron.Dow | cron.Descriptor)))
 	rootCron.Start()
 	return &ServiceContext{
 		Config:             c,
@@ -37,5 +44,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		Cron:               rootCron,
 		TaskInterface:      taskInterface,
 		TaskCacheInterface: taskRedisInterface,
+		PostRpc:            postclient.NewPost(zrpc.MustNewClient(c.PostRpc)),
+		BoxContentRpc:      boxcontent.NewBoxContent(zrpc.MustNewClient(c.BoxContentRpc)),
 	}
 }
