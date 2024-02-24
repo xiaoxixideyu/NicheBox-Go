@@ -13,6 +13,12 @@ CommentRpc:
       - etcd:2379
     Key: comment.rpc
 
+PushRpc:
+  Etcd:
+    Hosts:
+      - etcd:2379
+    Key: push.rpc
+
 PostRpc:
   Etcd:
     Hosts:

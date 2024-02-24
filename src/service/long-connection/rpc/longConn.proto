@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package longconnclient;
+
+option go_package = "./longConn";
+
+// HandShake
+message HandShakeRequest {
+  int64 Uid = 1;
+  string UserAgent = 2;
+  string Addr = 3;
+}
+
+message HandShakeResponse {
+  string token = 1;
+}
+// HandShake
+
+service longConn {
+  rpc HandShake(HandShakeRequest) returns(HandShakeResponse);
+}

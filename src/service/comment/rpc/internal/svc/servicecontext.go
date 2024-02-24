@@ -36,6 +36,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	}
 	kqRebuildSubjectCommentIndexPusher := kq.NewPusher(c.KqRebuildCacheSubjectCommentIndexPusherConf.Brokers, c.KqRebuildCacheSubjectCommentIndexPusherConf.Topic)
 	kqRebuildCacheInnerFloorCommentIndexPusher := kq.NewPusher(c.KqRebuildCacheInnerFloorCommentIndexPusherConf.Brokers, c.KqRebuildCacheInnerFloorCommentIndexPusherConf.Topic)
+
 	return &ServiceContext{
 		Config:                                   c,
 		CommentInterface:                         commentInterface,

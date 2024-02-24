@@ -1,0 +1,23 @@
+syntax = "v1"
+
+// HandShake
+type HandShakeRequest {
+	UserAgent     string `header:"User-Agent"`
+	RemoteAddress string `header:"Remote-Address"`
+}
+
+type HandShakeResponse {
+	Token string `json:"token"`
+}
+
+// HandShake
+@server (
+	jwt:        Auth
+	prefix:     /api/longconn
+	middleware: RemoteAddressMiddleware
+)
+service LongConn {
+	@handler handshake
+	post /handshake (HandShakeRequest) returns (HandShakeResponse)
+}
+

@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package pushclient;
+
+option go_package = "./push";
+
+// PushToUser
+message PushToUserRequest {
+  int64 Uid = 1;
+  bytes Data = 2;
+}
+
+message PushToUserResponse {
+
+}
+// PushToUser
+
+service Push {
+  rpc PushToUser(PushToUserRequest) returns (PushToUserResponse);
+}

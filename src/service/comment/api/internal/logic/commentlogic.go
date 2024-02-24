@@ -5,7 +5,11 @@ import (
 	"encoding/json"
 	"github.com/zeromicro/x/errors"
 	"net/http"
+	"nichebox/common/biz"
+	"nichebox/service/comment/model/dto"
 	"nichebox/service/comment/rpc/pb/comment"
+	"nichebox/service/post/rpc/pb/post"
+	"nichebox/service/push/rpc/pb/push"
 
 	"nichebox/service/comment/api/internal/svc"
 	"nichebox/service/comment/api/internal/types"
@@ -44,7 +48,8 @@ func (l *CommentLogic) Comment(req *types.CommentRequest) (resp *types.CommentRe
 	}
 	out, err := l.svcCtx.CommentRpc.Comment(l.ctx, &in)
 	if err != nil {
-
+		l.Logger.Errorf("[RPC] Add comment error", err)
+		return nil, errors.New(http.StatusInternalServerError, "发生未知错误")
 	}
 	resp = &types.CommentResponse{Comment: types.CommentInfo{
 		CommentID:       out.Comment.CommentID,
@@ -61,7 +66,46 @@ func (l *CommentLogic) Comment(req *types.CommentRequest) (resp *types.CommentRe
 		Content:         out.Comment.Content,
 	}}
 
-	// todo: notification
+	// notification
+	// notify post/video author
+	var authorID int64
+	var getMessageDetailSuccess = true
+	var info string
+	if in.MessageType == biz.MessageTypePost {
+		inPost := post.GetPostDetailRequest{PostID: in.MessageID}
+		out, err := l.svcCtx.PostRpc.GetPostDetail(l.ctx, &inPost)
+		if err != nil {
+			l.Logger.Errorf("[Rpc] Get post detail failed, err:", err)
+			getMessageDetailSuccess = false
+		} else {
+			authorID = out.AuthorID
+			info = NewCommentNotificationToPostAuthorInfo
+		}
+
+	} else if in.MessageType == biz.MessageTypeVideo {
+
+	}
+	if getMessageDetailSuccess {
+		msg := dto.CommentNotificationMessage{
+			NewCommentOwner: uid,
+			Info:            info,
+		}
+		bytes, err := json.Marshal(&msg)
+		if err != nil {
+			l.Logger.Errorf("[Json] Marshal failed, err:", err)
+		} else {
+			inPush := push.PushToUserRequest{
+				Uid:  authorID,
+				Data: bytes,
+			}
+			_, err := l.svcCtx.PushRpc.PushToUser(l.ctx, &inPush)
+			if err != nil {
+				l.Logger.Errorf("[RPC] Notification push to user failed, err:", err)
+			}
+		}
+	}
+
+	// todo: notify root cmt owner and parent cmt owner
 
 	resp.Comment.InnerFloorComments = make([]*types.CommentInfo, 0, len(out.Comment.InnerFloorComments))
 	for _, cmt := range out.Comment.InnerFloorComments {
