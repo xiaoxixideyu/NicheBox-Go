@@ -15,3 +15,8 @@ type UpdateCommentLikeCountMessage struct {
 	CommentID int64 `json:"comment_id"`
 	Delta     int   `json:"delta"`
 }
+
+type CommentNotificationMessage struct {
+	NewCommentOwner int64  `json:"new_comment_owner"`
+	Info            string `json:"info"`
+}

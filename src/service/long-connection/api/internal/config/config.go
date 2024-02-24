@@ -11,7 +11,5 @@ type Config struct {
 		AccessSecret string
 		AccessExpire int64
 	}
-	CommentRpc zrpc.RpcClientConf
-	PostRpc    zrpc.RpcClientConf
-	PushRpc    zrpc.RpcClientConf
+	LongConnRpc zrpc.RpcClientConf
 }

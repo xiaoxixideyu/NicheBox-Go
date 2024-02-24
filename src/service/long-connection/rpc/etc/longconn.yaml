@@ -1,0 +1,30 @@
+Name: longconn.rpc
+ListenOn: 0.0.0.0:10030
+Etcd:
+  Hosts:
+  - etcd:2379
+  Key: longconn.rpc
+
+ServerConf:
+  TCPPort: 10031
+  PingInterval: 240
+
+KqPushToUserConsumerConf:
+  Name: kqPushToUserConsumer1
+  Brokers:
+    - kafka:9092
+  Group: kqPushToUserConsumerGroup
+  Topic: push-to-user
+  Offset: first
+  Consumers: 8
+  Processors: 8
+
+KqPushToDeviceConsumerConf:
+  Name: kqPushToDeviceConsumer1
+  Brokers:
+    - kafka:9092
+  Group: kqPushToDeviceConsumerGroup
+  Topic: push-to-device
+  Offset: first
+  Consumers: 8
+  Processors: 8

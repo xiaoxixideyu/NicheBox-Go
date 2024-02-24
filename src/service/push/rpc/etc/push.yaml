@@ -1,0 +1,11 @@
+Name: push.rpc
+ListenOn: 0.0.0.0:10040
+Etcd:
+  Hosts:
+  - etcd:2379
+  Key: push.rpc
+
+KqPushToUserPusherConf:
+  Brokers:
+    - kafka:9092
+  Topic: push-to-user
