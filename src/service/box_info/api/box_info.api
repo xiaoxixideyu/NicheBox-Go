@@ -7,6 +7,24 @@ type CreateBoxResponse {
 	BoxId string `json:"box_id"`
 }
 
+// UpdateBoxInfo
+type UpdateBoxInfoRequest {
+	BoxId        string `json:"box_id"`
+	Name         string `json:"name"`
+	Introduction string `json:"introduction"`
+}
+type UpdateBoxInfoResponse {
+}
+
+// GetBoxInfo
+type GetBoxInfoRequest {
+	BoxId string `json:"box_id"`
+}
+type GetBoxInfoResponse {
+	Name         string `json:"name"`
+	Introduction string `json:"introduction"`
+}
+
 @server (
 	jwt:    Auth
 	prefix: /api/box/info
@@ -14,4 +32,15 @@ type CreateBoxResponse {
 service BoxInfo {
 	@handler CreateBox
 	post /createbox (CreateBoxRequest) returns (CreateBoxResponse)
+
+	@handler UpdateBoxInfo
+	post /updateboxinfo (UpdateBoxInfoRequest) returns (UpdateBoxInfoResponse)
+}
+
+@server(
+	prefix: /api/box/info
+)
+service BoxInfo {
+	@handler GetBoxInfo
+	post /getboxinfo (GetBoxInfoRequest) returns (GetBoxInfoResponse)
 }

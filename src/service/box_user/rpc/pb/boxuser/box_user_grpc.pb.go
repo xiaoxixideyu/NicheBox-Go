@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion7
 const (
 	BoxUser_AddOwner_FullMethodName       = "/boxuserclient.BoxUser/AddOwner"
 	BoxUser_AddOwnerRevert_FullMethodName = "/boxuserclient.BoxUser/AddOwnerRevert"
+	BoxUser_IsOwner_FullMethodName        = "/boxuserclient.BoxUser/IsOwner"
 )
 
 // BoxUserClient is the client API for BoxUser service.
@@ -29,6 +30,7 @@ const (
 type BoxUserClient interface {
 	AddOwner(ctx context.Context, in *AddOwnerRequest, opts ...grpc.CallOption) (*AddOwnerRequest, error)
 	AddOwnerRevert(ctx context.Context, in *AddOwnerRequest, opts ...grpc.CallOption) (*AddOwnerRequest, error)
+	IsOwner(ctx context.Context, in *IsOwnerRequest, opts ...grpc.CallOption) (*IsOwnerResponse, error)
 }
 
 type boxUserClient struct {
@@ -57,12 +59,22 @@ func (c *boxUserClient) AddOwnerRevert(ctx context.Context, in *AddOwnerRequest,
 	return out, nil
 }
 
+func (c *boxUserClient) IsOwner(ctx context.Context, in *IsOwnerRequest, opts ...grpc.CallOption) (*IsOwnerResponse, error) {
+	out := new(IsOwnerResponse)
+	err := c.cc.Invoke(ctx, BoxUser_IsOwner_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // BoxUserServer is the server API for BoxUser service.
 // All implementations must embed UnimplementedBoxUserServer
 // for forward compatibility
 type BoxUserServer interface {
 	AddOwner(context.Context, *AddOwnerRequest) (*AddOwnerRequest, error)
 	AddOwnerRevert(context.Context, *AddOwnerRequest) (*AddOwnerRequest, error)
+	IsOwner(context.Context, *IsOwnerRequest) (*IsOwnerResponse, error)
 	mustEmbedUnimplementedBoxUserServer()
 }
 
@@ -75,6 +87,9 @@ func (UnimplementedBoxUserServer) AddOwner(context.Context, *AddOwnerRequest) (*
 }
 func (UnimplementedBoxUserServer) AddOwnerRevert(context.Context, *AddOwnerRequest) (*AddOwnerRequest, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddOwnerRevert not implemented")
+}
+func (UnimplementedBoxUserServer) IsOwner(context.Context, *IsOwnerRequest) (*IsOwnerResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method IsOwner not implemented")
 }
 func (UnimplementedBoxUserServer) mustEmbedUnimplementedBoxUserServer() {}
 
@@ -125,6 +140,24 @@ func _BoxUser_AddOwnerRevert_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _BoxUser_IsOwner_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IsOwnerRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BoxUserServer).IsOwner(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BoxUser_IsOwner_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BoxUserServer).IsOwner(ctx, req.(*IsOwnerRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // BoxUser_ServiceDesc is the grpc.ServiceDesc for BoxUser service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -139,6 +172,10 @@ var BoxUser_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AddOwnerRevert",
 			Handler:    _BoxUser_AddOwnerRevert_Handler,
+		},
+		{
+			MethodName: "IsOwner",
+			Handler:    _BoxUser_IsOwner_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

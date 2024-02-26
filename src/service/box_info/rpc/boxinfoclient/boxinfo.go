@@ -13,15 +13,21 @@ import (
 )
 
 type (
-	CreateBidRequest  = boxinfo.CreateBidRequest
-	CreateBidResponse = boxinfo.CreateBidResponse
-	CreateBoxRequest  = boxinfo.CreateBoxRequest
-	CreateBoxResponse = boxinfo.CreateBoxResponse
+	CreateBidRequest      = boxinfo.CreateBidRequest
+	CreateBidResponse     = boxinfo.CreateBidResponse
+	CreateBoxRequest      = boxinfo.CreateBoxRequest
+	CreateBoxResponse     = boxinfo.CreateBoxResponse
+	GetBoxInfoRequest     = boxinfo.GetBoxInfoRequest
+	GetBoxInfoResponse    = boxinfo.GetBoxInfoResponse
+	UpdateBoxInfoRequest  = boxinfo.UpdateBoxInfoRequest
+	UpdateBoxInfoResponse = boxinfo.UpdateBoxInfoResponse
 
 	BoxInfo interface {
 		CreateBid(ctx context.Context, in *CreateBidRequest, opts ...grpc.CallOption) (*CreateBidResponse, error)
 		CreateBox(ctx context.Context, in *CreateBoxRequest, opts ...grpc.CallOption) (*CreateBoxResponse, error)
 		CreateBoxRevert(ctx context.Context, in *CreateBoxRequest, opts ...grpc.CallOption) (*CreateBoxResponse, error)
+		UpdateBoxInfo(ctx context.Context, in *UpdateBoxInfoRequest, opts ...grpc.CallOption) (*UpdateBoxInfoResponse, error)
+		GetBoxInfo(ctx context.Context, in *GetBoxInfoRequest, opts ...grpc.CallOption) (*GetBoxInfoResponse, error)
 	}
 
 	defaultBoxInfo struct {
@@ -48,4 +54,14 @@ func (m *defaultBoxInfo) CreateBox(ctx context.Context, in *CreateBoxRequest, op
 func (m *defaultBoxInfo) CreateBoxRevert(ctx context.Context, in *CreateBoxRequest, opts ...grpc.CallOption) (*CreateBoxResponse, error) {
 	client := boxinfo.NewBoxInfoClient(m.cli.Conn())
 	return client.CreateBoxRevert(ctx, in, opts...)
+}
+
+func (m *defaultBoxInfo) UpdateBoxInfo(ctx context.Context, in *UpdateBoxInfoRequest, opts ...grpc.CallOption) (*UpdateBoxInfoResponse, error) {
+	client := boxinfo.NewBoxInfoClient(m.cli.Conn())
+	return client.UpdateBoxInfo(ctx, in, opts...)
+}
+
+func (m *defaultBoxInfo) GetBoxInfo(ctx context.Context, in *GetBoxInfoRequest, opts ...grpc.CallOption) (*GetBoxInfoResponse, error) {
+	client := boxinfo.NewBoxInfoClient(m.cli.Conn())
+	return client.GetBoxInfo(ctx, in, opts...)
 }

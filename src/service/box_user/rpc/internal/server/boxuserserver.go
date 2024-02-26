@@ -31,3 +31,8 @@ func (s *BoxUserServer) AddOwnerRevert(ctx context.Context, in *boxuser.AddOwner
 	l := logic.NewAddOwnerRevertLogic(ctx, s.svcCtx)
 	return l.AddOwnerRevert(in)
 }
+
+func (s *BoxUserServer) IsOwner(ctx context.Context, in *boxuser.IsOwnerRequest) (*boxuser.IsOwnerResponse, error) {
+	l := logic.NewIsOwnerLogic(ctx, s.svcCtx)
+	return l.IsOwner(in)
+}

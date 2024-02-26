@@ -48,6 +48,10 @@ func (m *MysqlInterface) autoMigrate() {
 	m.db.AutoMigrate(&model.Box{})
 }
 
+func (m *MysqlInterface) GetTx() *gorm.DB {
+	return m.db.Begin()
+}
+
 func (m *MysqlInterface) IsBoxExistsByTx(box *model.Box, tx *gorm.DB) (bool, error) {
 	result := tx.Where("bid = ?", box.Bid).First(&model.Box{})
 	if result.Error != nil {
@@ -75,6 +79,11 @@ func (m *MysqlInterface) RemoveBoxByTx(box *model.Box, tx *gorm.DB) error {
 	return nil
 }
 
-func (m *MysqlInterface) GetTx() *gorm.DB {
-	return m.db.Begin()
+func (m *MysqlInterface) UpdateBoxByTx(box *model.Box, tx *gorm.DB) error {
+	result := tx.Model(&model.Box{}).Where("bid = ?", box.Bid).Updates(box)
+	return result.Error
+}
+
+func (m *MysqlInterface) GetBoxInfo(box *model.Box) error {
+	return m.db.Where("bid = ?", box.Bid).First(box).Error
 }

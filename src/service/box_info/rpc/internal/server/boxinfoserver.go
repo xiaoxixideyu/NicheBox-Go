@@ -36,3 +36,13 @@ func (s *BoxInfoServer) CreateBoxRevert(ctx context.Context, in *boxinfo.CreateB
 	l := logic.NewCreateBoxRevertLogic(ctx, s.svcCtx)
 	return l.CreateBoxRevert(in)
 }
+
+func (s *BoxInfoServer) UpdateBoxInfo(ctx context.Context, in *boxinfo.UpdateBoxInfoRequest) (*boxinfo.UpdateBoxInfoResponse, error) {
+	l := logic.NewUpdateBoxInfoLogic(ctx, s.svcCtx)
+	return l.UpdateBoxInfo(in)
+}
+
+func (s *BoxInfoServer) GetBoxInfo(ctx context.Context, in *boxinfo.GetBoxInfoRequest) (*boxinfo.GetBoxInfoResponse, error) {
+	l := logic.NewGetBoxInfoLogic(ctx, s.svcCtx)
+	return l.GetBoxInfo(in)
+}

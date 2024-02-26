@@ -10,20 +10,20 @@ import (
 	"github.com/zeromicro/x/errors"
 )
 
-func CheckUid(ctx context.Context, userRpc userclient.User) error {
+func GetAndCheckUid(ctx context.Context, userRpc userclient.User) (int64, error) {
 	uid, err := ctx.Value("uid").(json.Number).Int64()
 	if err != nil {
-		return errors.New(http.StatusUnauthorized, "uid无效")
+		return -1, errors.New(http.StatusUnauthorized, "uid无效")
 	}
 
 	userCheck, err := userRpc.CheckUid(ctx, &user.CheckUidRequest{
 		Uid: uid,
 	})
 	if err != nil {
-		return errors.New(http.StatusInternalServerError, "userCheck 服务出错: 1")
+		return -1, errors.New(http.StatusInternalServerError, "userCheck 服务出错: 1")
 	}
 	if !userCheck.Exists {
-		return errors.New(http.StatusUnauthorized, "无效身份")
+		return -1, errors.New(http.StatusUnauthorized, "无效身份")
 	}
-	return nil
+	return uid, nil
 }

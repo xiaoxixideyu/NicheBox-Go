@@ -9,3 +9,21 @@ type CreateBoxRequest struct {
 type CreateBoxResponse struct {
 	BoxId string `json:"box_id"`
 }
+
+type UpdateBoxInfoRequest struct {
+	BoxId        string `json:"box_id"`
+	Name         string `json:"name"`
+	Introduction string `json:"introduction"`
+}
+
+type UpdateBoxInfoResponse struct {
+}
+
+type GetBoxInfoRequest struct {
+	BoxId string `json:"box_id"`
+}
+
+type GetBoxInfoResponse struct {
+	Name         string `json:"name"`
+	Introduction string `json:"introduction"`
+}

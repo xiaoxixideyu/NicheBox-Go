@@ -18,7 +18,17 @@ message AddOwnerRequest {
 message AddOwnerResponse {
 }
 
+// IsOwner
+message IsOwnerRequest {
+    int64 Uid = 1;
+    int64 Bid = 2;
+}
+message IsOwnerResponse {
+    bool Exists = 1;
+}
+
 service BoxUser {
     rpc AddOwner(AddOwnerRequest) returns (AddOwnerRequest);
     rpc AddOwnerRevert(AddOwnerRequest) returns (AddOwnerRequest);
+    rpc IsOwner(IsOwnerRequest) returns (IsOwnerResponse);
 }

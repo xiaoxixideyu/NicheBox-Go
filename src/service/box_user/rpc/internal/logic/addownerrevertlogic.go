@@ -44,7 +44,7 @@ func (l *AddOwnerRevertLogic) AddOwnerRevert(in *boxuser.AddOwnerRequest) (*boxu
 	tx := l.svcCtx.BoxUserInterface.GetTx()
 	sourceTx := tx.Statement.ConnPool.(*sql.Tx)
 	err = barrier.Call(sourceTx, func(tx1 *sql.Tx) error {
-		exists, err := l.svcCtx.BoxUserInterface.IsOwnerExistsByTx(boxUser, tx)
+		exists, err := l.svcCtx.BoxUserInterface.IsBoxExistsByTx(boxUser, tx)
 		if err != nil {
 			return err
 		}

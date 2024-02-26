@@ -2,20 +2,18 @@ package logic
 
 import (
 	"context"
-	"encoding/json"
 	"net/http"
 	"strconv"
 
+	"nichebox/service/box_info/api/internal/common"
 	"nichebox/service/box_info/api/internal/svc"
 	"nichebox/service/box_info/api/internal/types"
 	"nichebox/service/box_info/rpc/pb/boxinfo"
 	"nichebox/service/box_user/rpc/pb/boxuser"
-	"nichebox/service/user/rpc/pb/user"
 
 	"github.com/dtm-labs/dtmgrpc"
 	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/x/errors"
-	"google.golang.org/grpc/status"
 )
 
 type CreateBoxLogic struct {
@@ -33,39 +31,28 @@ func NewCreateBoxLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CreateB
 }
 
 func (l *CreateBoxLogic) CreateBox(req *types.CreateBoxRequest) (resp *types.CreateBoxResponse, err error) {
-	// get uid
-	uid, err := l.ctx.Value("uid").(json.Number).Int64()
+	// Get uid
+	uid, err := common.GetAndCheckUid(l.ctx, l.svcCtx.UserRpc)
 	if err != nil {
-		return nil, errors.New(http.StatusUnauthorized, "鉴权无效")
+		return nil, err
 	}
 
-	// get bid
+	// Get bid
 	bidRes, err := l.svcCtx.BoxInfoRpc.CreateBid(l.ctx, &boxinfo.CreateBidRequest{})
 	if err != nil {
 		return nil, errors.New(http.StatusInternalServerError, "生成bid失败")
 	}
 
-	// Verify that the uid is available
-	userCheck, err := l.svcCtx.UserRpc.CheckUid(l.ctx, &user.CheckUidRequest{
-		Uid: uid,
-	})
-	if err != nil {
-		return nil, errors.New(http.StatusInternalServerError, "refreshtoken 服务出错: 1")
-	}
-	if !userCheck.Exists {
-		return nil, errors.New(http.StatusUnauthorized, "无效身份")
-	}
-
 	// Get BoxInfoRpc BuildTarget
 	boxInfoRpcBusiServer, err := l.svcCtx.Config.BoxInfoRpc.BuildTarget()
 	if err != nil {
-		return nil, status.Error(http.StatusContinue, "盒子创建异常")
+		return nil, errors.New(http.StatusContinue, "盒子创建异常")
 	}
 
 	// Get BoxUserRpc BuildTarget
 	boxUserRpcBusiServer, err := l.svcCtx.Config.BoxUserRpc.BuildTarget()
 	if err != nil {
-		return nil, status.Error(http.StatusContinue, "盒子创建异常")
+		return nil, errors.New(http.StatusContinue, "盒子创建异常")
 	}
 
 	// etcd registration address of dtm service
@@ -84,7 +71,7 @@ func (l *CreateBoxLogic) CreateBox(req *types.CreateBoxRequest) (resp *types.Cre
 
 	// commit transation
 	if err := saga.Submit(); err != nil {
-		return nil, status.Error(http.StatusInternalServerError, err.Error())
+		return nil, errors.New(http.StatusInternalServerError, err.Error())
 	}
 
 	return &types.CreateBoxResponse{

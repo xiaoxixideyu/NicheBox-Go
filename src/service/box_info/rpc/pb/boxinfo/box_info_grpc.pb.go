@@ -22,6 +22,8 @@ const (
 	BoxInfo_CreateBid_FullMethodName       = "/boxinfoclient.BoxInfo/CreateBid"
 	BoxInfo_CreateBox_FullMethodName       = "/boxinfoclient.BoxInfo/CreateBox"
 	BoxInfo_CreateBoxRevert_FullMethodName = "/boxinfoclient.BoxInfo/CreateBoxRevert"
+	BoxInfo_UpdateBoxInfo_FullMethodName   = "/boxinfoclient.BoxInfo/UpdateBoxInfo"
+	BoxInfo_GetBoxInfo_FullMethodName      = "/boxinfoclient.BoxInfo/GetBoxInfo"
 )
 
 // BoxInfoClient is the client API for BoxInfo service.
@@ -31,6 +33,8 @@ type BoxInfoClient interface {
 	CreateBid(ctx context.Context, in *CreateBidRequest, opts ...grpc.CallOption) (*CreateBidResponse, error)
 	CreateBox(ctx context.Context, in *CreateBoxRequest, opts ...grpc.CallOption) (*CreateBoxResponse, error)
 	CreateBoxRevert(ctx context.Context, in *CreateBoxRequest, opts ...grpc.CallOption) (*CreateBoxResponse, error)
+	UpdateBoxInfo(ctx context.Context, in *UpdateBoxInfoRequest, opts ...grpc.CallOption) (*UpdateBoxInfoResponse, error)
+	GetBoxInfo(ctx context.Context, in *GetBoxInfoRequest, opts ...grpc.CallOption) (*GetBoxInfoResponse, error)
 }
 
 type boxInfoClient struct {
@@ -68,6 +72,24 @@ func (c *boxInfoClient) CreateBoxRevert(ctx context.Context, in *CreateBoxReques
 	return out, nil
 }
 
+func (c *boxInfoClient) UpdateBoxInfo(ctx context.Context, in *UpdateBoxInfoRequest, opts ...grpc.CallOption) (*UpdateBoxInfoResponse, error) {
+	out := new(UpdateBoxInfoResponse)
+	err := c.cc.Invoke(ctx, BoxInfo_UpdateBoxInfo_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *boxInfoClient) GetBoxInfo(ctx context.Context, in *GetBoxInfoRequest, opts ...grpc.CallOption) (*GetBoxInfoResponse, error) {
+	out := new(GetBoxInfoResponse)
+	err := c.cc.Invoke(ctx, BoxInfo_GetBoxInfo_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // BoxInfoServer is the server API for BoxInfo service.
 // All implementations must embed UnimplementedBoxInfoServer
 // for forward compatibility
@@ -75,6 +97,8 @@ type BoxInfoServer interface {
 	CreateBid(context.Context, *CreateBidRequest) (*CreateBidResponse, error)
 	CreateBox(context.Context, *CreateBoxRequest) (*CreateBoxResponse, error)
 	CreateBoxRevert(context.Context, *CreateBoxRequest) (*CreateBoxResponse, error)
+	UpdateBoxInfo(context.Context, *UpdateBoxInfoRequest) (*UpdateBoxInfoResponse, error)
+	GetBoxInfo(context.Context, *GetBoxInfoRequest) (*GetBoxInfoResponse, error)
 	mustEmbedUnimplementedBoxInfoServer()
 }
 
@@ -90,6 +114,12 @@ func (UnimplementedBoxInfoServer) CreateBox(context.Context, *CreateBoxRequest) 
 }
 func (UnimplementedBoxInfoServer) CreateBoxRevert(context.Context, *CreateBoxRequest) (*CreateBoxResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateBoxRevert not implemented")
+}
+func (UnimplementedBoxInfoServer) UpdateBoxInfo(context.Context, *UpdateBoxInfoRequest) (*UpdateBoxInfoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateBoxInfo not implemented")
+}
+func (UnimplementedBoxInfoServer) GetBoxInfo(context.Context, *GetBoxInfoRequest) (*GetBoxInfoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetBoxInfo not implemented")
 }
 func (UnimplementedBoxInfoServer) mustEmbedUnimplementedBoxInfoServer() {}
 
@@ -158,6 +188,42 @@ func _BoxInfo_CreateBoxRevert_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _BoxInfo_UpdateBoxInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateBoxInfoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BoxInfoServer).UpdateBoxInfo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BoxInfo_UpdateBoxInfo_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BoxInfoServer).UpdateBoxInfo(ctx, req.(*UpdateBoxInfoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BoxInfo_GetBoxInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetBoxInfoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BoxInfoServer).GetBoxInfo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BoxInfo_GetBoxInfo_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BoxInfoServer).GetBoxInfo(ctx, req.(*GetBoxInfoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // BoxInfo_ServiceDesc is the grpc.ServiceDesc for BoxInfo service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -176,6 +242,14 @@ var BoxInfo_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateBoxRevert",
 			Handler:    _BoxInfo_CreateBoxRevert_Handler,
+		},
+		{
+			MethodName: "UpdateBoxInfo",
+			Handler:    _BoxInfo_UpdateBoxInfo_Handler,
+		},
+		{
+			MethodName: "GetBoxInfo",
+			Handler:    _BoxInfo_GetBoxInfo_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

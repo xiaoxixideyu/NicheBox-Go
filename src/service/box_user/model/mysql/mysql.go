@@ -52,8 +52,19 @@ func (m *MysqlInterface) GetTx() *gorm.DB {
 	return m.db.Begin()
 }
 
-func (m *MysqlInterface) IsOwnerExistsByTx(boxUser *model.BoxUser, tx *gorm.DB) (bool, error) {
+func (m *MysqlInterface) IsBoxExistsByTx(boxUser *model.BoxUser, tx *gorm.DB) (bool, error) {
 	result := tx.Where("bid = ?", boxUser.Bid).First(&model.BoxUser{})
+	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			return false, nil
+		}
+		return false, result.Error
+	}
+	return true, nil
+}
+
+func (m *MysqlInterface) IsOwnerExists(boxUser *model.BoxUser) (bool, error) {
+	result := m.db.Where("bid = ? and uid = ? and role = ?", boxUser.Bid, boxUser.Uid, boxUser.Role).First(&model.BoxUser{})
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 			return false, nil

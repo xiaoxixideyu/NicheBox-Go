@@ -15,10 +15,13 @@ import (
 type (
 	AddOwnerRequest  = boxuser.AddOwnerRequest
 	AddOwnerResponse = boxuser.AddOwnerResponse
+	IsOwnerRequest   = boxuser.IsOwnerRequest
+	IsOwnerResponse  = boxuser.IsOwnerResponse
 
 	BoxUser interface {
 		AddOwner(ctx context.Context, in *AddOwnerRequest, opts ...grpc.CallOption) (*AddOwnerRequest, error)
 		AddOwnerRevert(ctx context.Context, in *AddOwnerRequest, opts ...grpc.CallOption) (*AddOwnerRequest, error)
+		IsOwner(ctx context.Context, in *IsOwnerRequest, opts ...grpc.CallOption) (*IsOwnerResponse, error)
 	}
 
 	defaultBoxUser struct {
@@ -40,4 +43,9 @@ func (m *defaultBoxUser) AddOwner(ctx context.Context, in *AddOwnerRequest, opts
 func (m *defaultBoxUser) AddOwnerRevert(ctx context.Context, in *AddOwnerRequest, opts ...grpc.CallOption) (*AddOwnerRequest, error) {
 	client := boxuser.NewBoxUserClient(m.cli.Conn())
 	return client.AddOwnerRevert(ctx, in, opts...)
+}
+
+func (m *defaultBoxUser) IsOwner(ctx context.Context, in *IsOwnerRequest, opts ...grpc.CallOption) (*IsOwnerResponse, error) {
+	client := boxuser.NewBoxUserClient(m.cli.Conn())
+	return client.IsOwner(ctx, in, opts...)
 }
