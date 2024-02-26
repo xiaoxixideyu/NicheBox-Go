@@ -1,0 +1,17 @@
+// CreateBox
+type CreateBoxRequest {
+	Name         string `json:"name"`
+	Introduction string `json:"introduction"`
+}
+type CreateBoxResponse {
+	BoxId string `json:"box_id"`
+}
+
+@server (
+	jwt:    Auth
+	prefix: /api/box/info
+)
+service BoxInfo {
+	@handler CreateBox
+	post /createbox (CreateBoxRequest) returns (CreateBoxResponse)
+}
