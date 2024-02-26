@@ -2,7 +2,6 @@ package leaf
 
 import (
 	"errors"
-	"log"
 	"nichebox/common/leaf/model"
 	"nichebox/common/leaf/model/mysql"
 	"sync"
@@ -57,24 +56,22 @@ func (leaves *Leaves) Next(bizTag string, step int, factor float64) (int64, erro
 	}
 
 	var leaf *Leaf
-	{
+	getLeaf := func() error {
 		leaves.mutex.Lock()
 		defer leaves.mutex.Unlock()
-
 		leaf = leaves.leafMap[bizTag]
-
 		if leaf == nil {
 			start, end, err := leaves.leafInterface.NextTX(bizTag, step)
 			if err != nil {
 				if !errors.Is(err, gorm.ErrRecordNotFound) {
-					return 0, err
+					return err
 				}
 				if err = leaves.createLeaf(bizTag); err != nil {
-					return 0, err
+					return err
 				}
 				start, end, err = leaves.leafInterface.NextTX(bizTag, step)
 				if err != nil {
-					return 0, err
+					return err
 				}
 			}
 			leaf = &Leaf{
@@ -88,13 +85,20 @@ func (leaves *Leaves) Next(bizTag string, step int, factor float64) (int64, erro
 			}
 			leaves.leafMap[bizTag] = leaf
 		}
+		return nil
+	}
+
+	if err := getLeaf(); err != nil {
+		return 0, err
 	}
 
 	leaf.mutex.Lock()
 
 	for !leaf.isAvailable {
 		leaf.mutex.Unlock()
+		leaves.mutex.Lock()
 		leaf = leaves.leafMap[bizTag]
+		leaves.mutex.Unlock()
 		leaf.mutex.Lock()
 	}
 	if leaf.cur > leaf.maxId {
@@ -105,19 +109,23 @@ func (leaves *Leaves) Next(bizTag string, step int, factor float64) (int64, erro
 		if cache == nil {
 			if !leaf.isLoading {
 				leaf.isLoading = true
-				go leaves.nextCahce(bizTag, step)
+				go leaves.nextCahce(leaf, bizTag, step)
 			}
 			if err := <-leaf.waitChan; err != nil {
 				leaf.mutex.Unlock()
 				return 0, err
 			}
+			leaves.mutex.Lock()
 			cache = leaves.cacheMap[bizTag]
+			leaves.mutex.Unlock()
 		}
 
 		leaf.isAvailable = false
 
 		leaves.mutex.Lock()
+		leaf.mutex.Unlock()
 		leaf = cache
+		leaf.mutex.Lock()
 		leaves.leafMap[bizTag] = leaf
 		leaves.cacheMap[bizTag] = nil
 		leaves.mutex.Unlock()
@@ -125,7 +133,7 @@ func (leaves *Leaves) Next(bizTag string, step int, factor float64) (int64, erro
 		leaves.mutex.Lock()
 		if leaves.cacheMap[bizTag] == nil {
 			leaf.isLoading = true
-			go leaves.nextCahce(bizTag, step)
+			go leaves.nextCahce(leaf, bizTag, step)
 		}
 		leaves.mutex.Unlock()
 	}
@@ -134,14 +142,10 @@ func (leaves *Leaves) Next(bizTag string, step int, factor float64) (int64, erro
 	leaf.cur++
 	leaf.mutex.Unlock()
 
-	log.Printf("id is %v ====================================\n", id)
 	return id, nil
 }
 
-func (leaves *Leaves) nextCahce(bizTag string, step int) {
-	leaves.mutex.Lock()
-	curLeaf := leaves.leafMap[bizTag]
-	leaves.mutex.Unlock()
+func (leaves *Leaves) nextCahce(curLeaf *Leaf, bizTag string, step int) {
 	defer func() {
 		curLeaf.mutex.Lock()
 		defer curLeaf.mutex.Unlock()
