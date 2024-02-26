@@ -1,0 +1,65 @@
+package logic
+
+import (
+	"context"
+	"database/sql"
+
+	"nichebox/service/box_user/model"
+	"nichebox/service/box_user/rpc/internal/svc"
+	"nichebox/service/box_user/rpc/pb/boxuser"
+
+	"github.com/dtm-labs/dtmgrpc"
+	"github.com/zeromicro/go-zero/core/logx"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+)
+
+type AddOwnerRevertLogic struct {
+	ctx    context.Context
+	svcCtx *svc.ServiceContext
+	logx.Logger
+}
+
+func NewAddOwnerRevertLogic(ctx context.Context, svcCtx *svc.ServiceContext) *AddOwnerRevertLogic {
+	return &AddOwnerRevertLogic{
+		ctx:    ctx,
+		svcCtx: svcCtx,
+		Logger: logx.WithContext(ctx),
+	}
+}
+
+func (l *AddOwnerRevertLogic) AddOwnerRevert(in *boxuser.AddOwnerRequest) (*boxuser.AddOwnerRequest, error) {
+	boxUser := &model.BoxUser{
+		Bid: in.Bid,
+		Uid: in.Uid,
+	}
+
+	// get subtransaction barrier object
+	barrier, err := dtmgrpc.BarrierFromGrpc(l.ctx)
+	if err != nil {
+		return nil, status.Error(500, err.Error())
+	}
+
+	// enable subtransaction barrier
+	tx := l.svcCtx.BoxUserInterface.GetTx()
+	sourceTx := tx.Statement.ConnPool.(*sql.Tx)
+	err = barrier.Call(sourceTx, func(tx1 *sql.Tx) error {
+		exists, err := l.svcCtx.BoxUserInterface.IsOwnerExistsByTx(boxUser, tx)
+		if err != nil {
+			return err
+		}
+		if !exists {
+			return nil
+		}
+		err = l.svcCtx.BoxUserInterface.RemoveBoxUserByTx(boxUser, tx)
+		if err != nil {
+			return err
+		}
+		return nil
+	})
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &boxuser.AddOwnerRequest{}, nil
+}
