@@ -9,7 +9,8 @@ type User struct {
 	Password       string `gorm:"index:idx_user_email_pwd,priority:2"`
 	Username       string
 	Introduction   string
-	Avatar         string
+	AvatarOriginId int64
+	AvatarWebpId   int64
 	Telephone      string
 	ShowCollection bool
 	ShowFollower   bool

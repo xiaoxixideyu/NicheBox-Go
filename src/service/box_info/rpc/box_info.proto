@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package boxinfoclient;
+
+option go_package="./boxinfo";
+
+// CreateBid
+message CreateBidRequest {
+}
+message CreateBidResponse {
+    int64 Bid = 1;
+}
+
+// CreateBox
+message CreateBoxRequest {
+    int64 Bid = 1;
+    string Name = 2;
+    string Introduction = 3;
+}
+message CreateBoxResponse {
+}
+
+// UpdateBoxInfo
+message UpdateBoxInfoRequest {
+    int64 Bid = 1;
+    string Name = 2;
+    string Introduction = 3;
+}
+message UpdateBoxInfoResponse {
+}
+
+// GetBoxInfo
+message GetBoxInfoRequest {
+    int64 Bid = 1;
+}
+message GetBoxInfoResponse {
+    string Name = 1;
+    string Introduction = 2;
+}
+
+service BoxInfo {
+    rpc CreateBid(CreateBidRequest) returns (CreateBidResponse);
+    rpc CreateBox(CreateBoxRequest) returns (CreateBoxResponse);
+    rpc CreateBoxRevert(CreateBoxRequest) returns (CreateBoxResponse);
+    rpc UpdateBoxInfo(UpdateBoxInfoRequest) returns (UpdateBoxInfoResponse);
+    rpc GetBoxInfo(GetBoxInfoRequest) returns (GetBoxInfoResponse);
+}
