@@ -1,0 +1,16 @@
+Name: boxinfo.rpc
+ListenOn: 0.0.0.0:8101
+Etcd:
+  Hosts:
+  - etcd:2379
+  Key: boxinfo.rpc
+
+Mysql:
+  Database: nichebox
+  Username: root
+  Password: "123456"
+  Host: mysql
+  Port: "3306"
+  MaxIdleConns: 10
+  maxOpenConns: 100
+  connMaxLifeTime: 3600

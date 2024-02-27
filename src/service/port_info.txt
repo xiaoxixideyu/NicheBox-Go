@@ -1,0 +1,12 @@
+UserApi: 8888
+UserRpc: 8080
+TaskRpc: 9901
+PostApi: 8898
+PostRpc: 8090
+LikeApi: 9001
+LikeRpc: 8070
+FileRpc: 8082
+MailRpc: 8081
+BoxInfoApi: 8100
+BoxInfoRpc: 8101
+BoxUserRpc: 8111

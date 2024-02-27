@@ -27,6 +27,15 @@ type ForgetPasswordRequest struct {
 type ForgetPasswordResponse struct {
 }
 
+type GetAvatarRequest struct {
+	Uid string `json:"uid"`
+}
+
+type GetAvatarResponse struct {
+	OriginUrl string `json:"origin_url"`
+	WebpUrl   string `json:"webp_url"`
+}
+
 type GetCriticalUserInfoRequest struct {
 }
 
@@ -109,4 +118,7 @@ type SetUserBaseInfoRequest struct {
 }
 
 type SetUserBaseInfoResponse struct {
+}
+
+type UploadAvatarResponse struct {
 }

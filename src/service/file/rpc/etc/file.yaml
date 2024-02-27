@@ -1,0 +1,28 @@
+Name: file.rpc
+ListenOn: 0.0.0.0:8082
+Etcd:
+  Hosts:
+  - etcd:2379
+  Key: file.rpc
+
+Mysql:
+  Database: nichebox
+  Username: root
+  Password: "123456"
+  Host: mysql
+  Port: "3306"
+  MaxIdleConns: 10
+  maxOpenConns: 100
+  connMaxLifeTime: 3600
+
+AliyunOSS:
+  BucketName: nichebox
+  Endpoint: oss-cn-shanghai.aliyuncs.com
+  AccessKey: LTAI5tNRp9UyWAjhGohUFU2e
+  AccessKeySecret: Jmhwyh8QioW3UYAfLRrPRRuM9cBsq5
+
+SnowFlake:
+  MachineID: 1  # 取值范围 [1, 1024]
+
+Image:
+  Quality: 0.8

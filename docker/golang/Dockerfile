@@ -1,4 +1,4 @@
-FROM golang:1.20
+FROM --platform=linux/amd64 golang:1.20
 
 LABEL maintainer="yu chenyu.public@proton.com"
 
@@ -21,21 +21,22 @@ RUN touch /etc/apt/sources.list && \
 
 # 安装 goctl
 USER root
-RUN go install github.com/zeromicro/go-zero/tools/goctl@latest
+RUN go install github.com/zeromicro/go-zero/tools/goctl@latest && \
+    goctl env check --install --verbose --force
 
-# 安装 protoc
-USER root
-RUN curl -L -o /tmp/protoc.zip https://github.com/protocolbuffers/protobuf/releases/download/v3.19.1/protoc-3.19.1-linux-x86_64.zip && \
-    unzip -d /tmp/protoc /tmp/protoc.zip && \
-    mv /tmp/protoc/bin/protoc $GOPATH/bin
+# # 安装 protoc
+# USER root
+# RUN curl -L -o /tmp/protoc.zip https://github.com/protocolbuffers/protobuf/releases/download/v3.19.1/protoc-3.19.1-linux-x86_64.zip && \
+#     unzip -d /tmp/protoc /tmp/protoc.zip && \
+#     mv /tmp/protoc/bin/protoc $GOPATH/bin
 
-# 安装 protoc-gen-go
-USER root
-RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+# # 安装 protoc-gen-go
+# USER root
+# RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 
-# 安装 protoc-gen-go-grpc
-USER root
-RUN go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+# # 安装 protoc-gen-go-grpc
+# USER root
+# RUN go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 
 # $GOPATH/bin添加到环境变量中
 ENV PATH $GOPATH/bin:$PATH

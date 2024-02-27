@@ -23,6 +23,8 @@ type (
 	GetCriticalUserInfoResponse    = user.GetCriticalUserInfoResponse
 	GetUidByEmailAndPwdRequest     = user.GetUidByEmailAndPwdRequest
 	GetUidByEmailAndPwdResponse    = user.GetUidByEmailAndPwdResponse
+	GetUserAvatarFileIdRequest     = user.GetUserAvatarFileIdRequest
+	GetUserAvatarFileIdResponse    = user.GetUserAvatarFileIdResponse
 	GetUserBaseInfoRequest         = user.GetUserBaseInfoRequest
 	GetUserBaseInfoResponse        = user.GetUserBaseInfoResponse
 	GetVerificationCodeRequest     = user.GetVerificationCodeRequest
@@ -33,6 +35,8 @@ type (
 	RemoveVerificationCodeResponse = user.RemoveVerificationCodeResponse
 	SetCriticalUserInfoRequest     = user.SetCriticalUserInfoRequest
 	SetCriticalUserInfoResponse    = user.SetCriticalUserInfoResponse
+	SetUserAvatarFileIdRequest     = user.SetUserAvatarFileIdRequest
+	SetUserAvatarFileIdResponse    = user.SetUserAvatarFileIdResponse
 	SetUserBaseInfoRequest         = user.SetUserBaseInfoRequest
 	SetUserBaseInfoResponse        = user.SetUserBaseInfoResponse
 	SetVerificationCodeRequest     = user.SetVerificationCodeRequest
@@ -51,6 +55,8 @@ type (
 		ForgetPassword(ctx context.Context, in *ForgetPasswordRequest, opts ...grpc.CallOption) (*ForgetPasswordResponse, error)
 		SetCriticalUserInfo(ctx context.Context, in *SetCriticalUserInfoRequest, opts ...grpc.CallOption) (*SetCriticalUserInfoResponse, error)
 		GetCriticalUserInfo(ctx context.Context, in *GetCriticalUserInfoRequest, opts ...grpc.CallOption) (*GetCriticalUserInfoResponse, error)
+		SetUserAvatarFileId(ctx context.Context, in *SetUserAvatarFileIdRequest, opts ...grpc.CallOption) (*SetUserAvatarFileIdResponse, error)
+		GetUserAvatarFileId(ctx context.Context, in *GetUserAvatarFileIdRequest, opts ...grpc.CallOption) (*GetUserAvatarFileIdResponse, error)
 	}
 
 	defaultUser struct {
@@ -122,4 +128,14 @@ func (m *defaultUser) SetCriticalUserInfo(ctx context.Context, in *SetCriticalUs
 func (m *defaultUser) GetCriticalUserInfo(ctx context.Context, in *GetCriticalUserInfoRequest, opts ...grpc.CallOption) (*GetCriticalUserInfoResponse, error) {
 	client := user.NewUserClient(m.cli.Conn())
 	return client.GetCriticalUserInfo(ctx, in, opts...)
+}
+
+func (m *defaultUser) SetUserAvatarFileId(ctx context.Context, in *SetUserAvatarFileIdRequest, opts ...grpc.CallOption) (*SetUserAvatarFileIdResponse, error) {
+	client := user.NewUserClient(m.cli.Conn())
+	return client.SetUserAvatarFileId(ctx, in, opts...)
+}
+
+func (m *defaultUser) GetUserAvatarFileId(ctx context.Context, in *GetUserAvatarFileIdRequest, opts ...grpc.CallOption) (*GetUserAvatarFileIdResponse, error) {
+	client := user.NewUserClient(m.cli.Conn())
+	return client.GetUserAvatarFileId(ctx, in, opts...)
 }
