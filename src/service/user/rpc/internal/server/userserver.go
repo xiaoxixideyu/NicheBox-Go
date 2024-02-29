@@ -81,3 +81,13 @@ func (s *UserServer) GetCriticalUserInfo(ctx context.Context, in *user.GetCritic
 	l := logic.NewGetCriticalUserInfoLogic(ctx, s.svcCtx)
 	return l.GetCriticalUserInfo(in)
 }
+
+func (s *UserServer) SetUserAvatarFileId(ctx context.Context, in *user.SetUserAvatarFileIdRequest) (*user.SetUserAvatarFileIdResponse, error) {
+	l := logic.NewSetUserAvatarFileIdLogic(ctx, s.svcCtx)
+	return l.SetUserAvatarFileId(in)
+}
+
+func (s *UserServer) GetUserAvatarFileId(ctx context.Context, in *user.GetUserAvatarFileIdRequest) (*user.GetUserAvatarFileIdResponse, error) {
+	l := logic.NewGetUserAvatarFileIdLogic(ctx, s.svcCtx)
+	return l.GetUserAvatarFileId(in)
+}

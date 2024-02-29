@@ -18,3 +18,12 @@ EmailRpc:
     Hosts:
       - etcd:2379
     Key: email.rpc
+
+FileRpc:
+  Etcd:
+    Hosts:
+    - etcd:2379
+    Key: file.rpc
+
+File:
+  MaxMemory: 10
