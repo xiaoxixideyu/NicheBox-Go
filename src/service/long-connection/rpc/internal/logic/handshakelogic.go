@@ -30,6 +30,10 @@ func (l *HandShakeLogic) HandShake(in *longConn.HandShakeRequest) (*longConn.Han
 	routes.GetRouter().RegisterAddr(in.Addr, in.Uid, in.UserAgent)
 	// todo: token
 	token := "token"
+	// todo: server addr
+	serverAddr := "127.0.0.1:10031"
+	// todo: secret
+	secret := "secret"
 
-	return &longConn.HandShakeResponse{Token: token}, nil
+	return &longConn.HandShakeResponse{Token: token, ServerAddr: serverAddr, Secret: secret}, nil
 }

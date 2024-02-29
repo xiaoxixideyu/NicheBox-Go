@@ -2,10 +2,13 @@
 package types
 
 type HandShakeRequest struct {
+	Protocol      string `json:"protocol"`
 	UserAgent     string `header:"User-Agent"`
 	RemoteAddress string `header:"Remote-Address"`
 }
 
 type HandShakeResponse struct {
-	Token string `json:"token"`
+	Token  string `json:"token"`
+	Secret string `json:"secret"`
+	Addr   string `json:"addr"`
 }

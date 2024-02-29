@@ -132,7 +132,6 @@ func forward(packet *protocol.Packet, conn connection.LongConn, logger logx.Logg
 			logger.Errorf("[Session] Write pong packet failed, err:", err)
 			panic(err)
 		}
-		fmt.Println("send!!!!!")
 
 	} else {
 
