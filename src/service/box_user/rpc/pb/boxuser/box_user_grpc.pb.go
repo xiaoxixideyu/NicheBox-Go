@@ -21,7 +21,10 @@ const _ = grpc.SupportPackageIsVersion7
 const (
 	BoxUser_AddOwner_FullMethodName       = "/boxuserclient.BoxUser/AddOwner"
 	BoxUser_AddOwnerRevert_FullMethodName = "/boxuserclient.BoxUser/AddOwnerRevert"
-	BoxUser_IsOwner_FullMethodName        = "/boxuserclient.BoxUser/IsOwner"
+	BoxUser_AddBoxUser_FullMethodName     = "/boxuserclient.BoxUser/AddBoxUser"
+	BoxUser_RemoveBoxUser_FullMethodName  = "/boxuserclient.BoxUser/RemoveBoxUser"
+	BoxUser_SetRole_FullMethodName        = "/boxuserclient.BoxUser/SetRole"
+	BoxUser_GetRole_FullMethodName        = "/boxuserclient.BoxUser/GetRole"
 )
 
 // BoxUserClient is the client API for BoxUser service.
@@ -30,7 +33,10 @@ const (
 type BoxUserClient interface {
 	AddOwner(ctx context.Context, in *AddOwnerRequest, opts ...grpc.CallOption) (*AddOwnerRequest, error)
 	AddOwnerRevert(ctx context.Context, in *AddOwnerRequest, opts ...grpc.CallOption) (*AddOwnerRequest, error)
-	IsOwner(ctx context.Context, in *IsOwnerRequest, opts ...grpc.CallOption) (*IsOwnerResponse, error)
+	AddBoxUser(ctx context.Context, in *AddBoxUserRequest, opts ...grpc.CallOption) (*AddBoxUserResponse, error)
+	RemoveBoxUser(ctx context.Context, in *RemoveBoxUserRequest, opts ...grpc.CallOption) (*RemoveBoxUserResponse, error)
+	SetRole(ctx context.Context, in *SetRoleRequest, opts ...grpc.CallOption) (*SetRoleResponse, error)
+	GetRole(ctx context.Context, in *GetRoleRequest, opts ...grpc.CallOption) (*GetRoleResponse, error)
 }
 
 type boxUserClient struct {
@@ -59,9 +65,36 @@ func (c *boxUserClient) AddOwnerRevert(ctx context.Context, in *AddOwnerRequest,
 	return out, nil
 }
 
-func (c *boxUserClient) IsOwner(ctx context.Context, in *IsOwnerRequest, opts ...grpc.CallOption) (*IsOwnerResponse, error) {
-	out := new(IsOwnerResponse)
-	err := c.cc.Invoke(ctx, BoxUser_IsOwner_FullMethodName, in, out, opts...)
+func (c *boxUserClient) AddBoxUser(ctx context.Context, in *AddBoxUserRequest, opts ...grpc.CallOption) (*AddBoxUserResponse, error) {
+	out := new(AddBoxUserResponse)
+	err := c.cc.Invoke(ctx, BoxUser_AddBoxUser_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *boxUserClient) RemoveBoxUser(ctx context.Context, in *RemoveBoxUserRequest, opts ...grpc.CallOption) (*RemoveBoxUserResponse, error) {
+	out := new(RemoveBoxUserResponse)
+	err := c.cc.Invoke(ctx, BoxUser_RemoveBoxUser_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *boxUserClient) SetRole(ctx context.Context, in *SetRoleRequest, opts ...grpc.CallOption) (*SetRoleResponse, error) {
+	out := new(SetRoleResponse)
+	err := c.cc.Invoke(ctx, BoxUser_SetRole_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *boxUserClient) GetRole(ctx context.Context, in *GetRoleRequest, opts ...grpc.CallOption) (*GetRoleResponse, error) {
+	out := new(GetRoleResponse)
+	err := c.cc.Invoke(ctx, BoxUser_GetRole_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -74,7 +107,10 @@ func (c *boxUserClient) IsOwner(ctx context.Context, in *IsOwnerRequest, opts ..
 type BoxUserServer interface {
 	AddOwner(context.Context, *AddOwnerRequest) (*AddOwnerRequest, error)
 	AddOwnerRevert(context.Context, *AddOwnerRequest) (*AddOwnerRequest, error)
-	IsOwner(context.Context, *IsOwnerRequest) (*IsOwnerResponse, error)
+	AddBoxUser(context.Context, *AddBoxUserRequest) (*AddBoxUserResponse, error)
+	RemoveBoxUser(context.Context, *RemoveBoxUserRequest) (*RemoveBoxUserResponse, error)
+	SetRole(context.Context, *SetRoleRequest) (*SetRoleResponse, error)
+	GetRole(context.Context, *GetRoleRequest) (*GetRoleResponse, error)
 	mustEmbedUnimplementedBoxUserServer()
 }
 
@@ -88,8 +124,17 @@ func (UnimplementedBoxUserServer) AddOwner(context.Context, *AddOwnerRequest) (*
 func (UnimplementedBoxUserServer) AddOwnerRevert(context.Context, *AddOwnerRequest) (*AddOwnerRequest, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddOwnerRevert not implemented")
 }
-func (UnimplementedBoxUserServer) IsOwner(context.Context, *IsOwnerRequest) (*IsOwnerResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method IsOwner not implemented")
+func (UnimplementedBoxUserServer) AddBoxUser(context.Context, *AddBoxUserRequest) (*AddBoxUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddBoxUser not implemented")
+}
+func (UnimplementedBoxUserServer) RemoveBoxUser(context.Context, *RemoveBoxUserRequest) (*RemoveBoxUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveBoxUser not implemented")
+}
+func (UnimplementedBoxUserServer) SetRole(context.Context, *SetRoleRequest) (*SetRoleResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetRole not implemented")
+}
+func (UnimplementedBoxUserServer) GetRole(context.Context, *GetRoleRequest) (*GetRoleResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetRole not implemented")
 }
 func (UnimplementedBoxUserServer) mustEmbedUnimplementedBoxUserServer() {}
 
@@ -140,20 +185,74 @@ func _BoxUser_AddOwnerRevert_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
-func _BoxUser_IsOwner_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(IsOwnerRequest)
+func _BoxUser_AddBoxUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddBoxUserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BoxUserServer).IsOwner(ctx, in)
+		return srv.(BoxUserServer).AddBoxUser(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: BoxUser_IsOwner_FullMethodName,
+		FullMethod: BoxUser_AddBoxUser_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BoxUserServer).IsOwner(ctx, req.(*IsOwnerRequest))
+		return srv.(BoxUserServer).AddBoxUser(ctx, req.(*AddBoxUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BoxUser_RemoveBoxUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveBoxUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BoxUserServer).RemoveBoxUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BoxUser_RemoveBoxUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BoxUserServer).RemoveBoxUser(ctx, req.(*RemoveBoxUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BoxUser_SetRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetRoleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BoxUserServer).SetRole(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BoxUser_SetRole_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BoxUserServer).SetRole(ctx, req.(*SetRoleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BoxUser_GetRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetRoleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BoxUserServer).GetRole(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BoxUser_GetRole_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BoxUserServer).GetRole(ctx, req.(*GetRoleRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -174,8 +273,20 @@ var BoxUser_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _BoxUser_AddOwnerRevert_Handler,
 		},
 		{
-			MethodName: "IsOwner",
-			Handler:    _BoxUser_IsOwner_Handler,
+			MethodName: "AddBoxUser",
+			Handler:    _BoxUser_AddBoxUser_Handler,
+		},
+		{
+			MethodName: "RemoveBoxUser",
+			Handler:    _BoxUser_RemoveBoxUser_Handler,
+		},
+		{
+			MethodName: "SetRole",
+			Handler:    _BoxUser_SetRole_Handler,
+		},
+		{
+			MethodName: "GetRole",
+			Handler:    _BoxUser_GetRole_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -14,3 +14,31 @@ Mysql:
   MaxIdleConns: 10
   maxOpenConns: 100
   connMaxLifeTime: 3600
+
+CacheRedis:
+  Host:
+    - redis:6379
+  Type: node
+  Pass: ""
+  Tls: false
+  NonBlock: false
+  PingTimeout: 1
+
+CacheExpire: # second
+  BoxUserExist: 604800
+
+KqRemoveCacheBoxUserPusherConf:
+  Brokers:
+    - kafka:9092
+  Topic: remove-cache-box-user
+
+KqRemoveCacheBoxUserConsumerConf:
+  Name: kqRemoveCacheBoxUserConsumer1
+  Brokers:
+    - kafka:9092
+  Group: kqRemoveCacheBoxUserConsumerGroup
+  Topic: remove-cache-box-user
+  Offset: first
+  Consumers: 8
+  Processors: 8
+  ForceCommit: false

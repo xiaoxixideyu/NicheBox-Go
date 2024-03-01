@@ -32,7 +32,22 @@ func (s *BoxUserServer) AddOwnerRevert(ctx context.Context, in *boxuser.AddOwner
 	return l.AddOwnerRevert(in)
 }
 
-func (s *BoxUserServer) IsOwner(ctx context.Context, in *boxuser.IsOwnerRequest) (*boxuser.IsOwnerResponse, error) {
-	l := logic.NewIsOwnerLogic(ctx, s.svcCtx)
-	return l.IsOwner(in)
+func (s *BoxUserServer) AddBoxUser(ctx context.Context, in *boxuser.AddBoxUserRequest) (*boxuser.AddBoxUserResponse, error) {
+	l := logic.NewAddBoxUserLogic(ctx, s.svcCtx)
+	return l.AddBoxUser(in)
+}
+
+func (s *BoxUserServer) RemoveBoxUser(ctx context.Context, in *boxuser.RemoveBoxUserRequest) (*boxuser.RemoveBoxUserResponse, error) {
+	l := logic.NewRemoveBoxUserLogic(ctx, s.svcCtx)
+	return l.RemoveBoxUser(in)
+}
+
+func (s *BoxUserServer) SetRole(ctx context.Context, in *boxuser.SetRoleRequest) (*boxuser.SetRoleResponse, error) {
+	l := logic.NewSetRoleLogic(ctx, s.svcCtx)
+	return l.SetRole(in)
+}
+
+func (s *BoxUserServer) GetRole(ctx context.Context, in *boxuser.GetRoleRequest) (*boxuser.GetRoleResponse, error) {
+	l := logic.NewGetRoleLogic(ctx, s.svcCtx)
+	return l.GetRole(in)
 }

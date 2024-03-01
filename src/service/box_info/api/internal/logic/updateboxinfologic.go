@@ -43,14 +43,14 @@ func (l *UpdateBoxInfoLogic) UpdateBoxInfo(req *types.UpdateBoxInfoRequest) (res
 	}
 
 	// Check the role of user
-	checkRole, err := l.svcCtx.BoxUserRpc.IsOwner(l.ctx, &boxuser.IsOwnerRequest{
-		Uid: uid,
+	role, err := l.svcCtx.BoxUserRpc.GetRole(l.ctx, &boxuser.GetRoleRequest{
 		Bid: bid,
+		Uid: uid,
 	})
 	if err != nil {
 		return nil, errors.New(http.StatusInternalServerError, "update box info 服务出错: 1")
 	}
-	if !checkRole.Exists {
+	if !role.Exist || role.Role != boxuser.UserRole_Owner {
 		return nil, errors.New(http.StatusForbidden, "你不是拥有者")
 	}
 

@@ -68,5 +68,12 @@ func (l *AddOwnerLogic) AddOwner(in *boxuser.AddOwnerRequest) (*boxuser.AddOwner
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
+	l.svcCtx.BoxUserCaCheInterface.SetBoxUser(&model.BoxUserCache{
+		Bid:   in.Bid,
+		Uid:   in.Uid,
+		Exist: true,
+		Role:  int(boxuser.UserRole_Owner),
+	}, l.svcCtx.Config.CacheExpire.BoxUserExist)
+
 	return &boxuser.AddOwnerRequest{}, nil
 }

@@ -83,3 +83,75 @@ func (m *MysqlInterface) RemoveBoxUserByTx(boxUser *model.BoxUser, tx *gorm.DB) 
 	result := tx.Where("bid = ? and uid = ?", boxUser.Bid, boxUser.Uid).Delete(&model.BoxUser{})
 	return result.Error
 }
+
+func (m *MysqlInterface) GetBoxUser(bid, uid int64) (*model.BoxUser, error) {
+	boxUser := &model.BoxUser{}
+	result := m.db.Where("bid = ? and uid = ?", bid, uid).First(&boxUser)
+	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
+		return nil, result.Error
+	}
+	return boxUser, nil
+}
+
+func (m *MysqlInterface) AddBoxUser(boxUser *model.BoxUser) error {
+	tx := m.db.Begin()
+	result := tx.Where("bid = ? and uid = ?", boxUser.Bid, boxUser.Uid).First(&model.BoxUser{})
+	if result.Error == nil || result.RowsAffected > 0 {
+		tx.Rollback()
+		return model.ErrBoxUserExisted
+	}
+	if result.Error != nil && !errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		tx.Rollback()
+		return result.Error
+	}
+	result = tx.Create(boxUser)
+	if result.Error != nil {
+		tx.Rollback()
+		return result.Error
+	}
+	tx.Commit()
+	return nil
+}
+
+func (m *MysqlInterface) RemoveBoxUser(boxUser *model.BoxUser) error {
+	tx := m.db.Begin()
+	result := tx.Where("bid = ? and uid = ?", boxUser.Bid, boxUser.Uid).First(&model.BoxUser{})
+	if result.Error != nil && errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		tx.Rollback()
+		return nil
+	}
+	if result.Error != nil {
+		tx.Rollback()
+		return result.Error
+	}
+	result = tx.Where("bid = ? and uid = ?", boxUser.Bid, boxUser.Uid).Delete(&model.BoxUser{})
+	if result.Error != nil {
+		tx.Rollback()
+		return result.Error
+	}
+	tx.Commit()
+	return nil
+}
+
+func (m *MysqlInterface) UpdateRole(boxUser *model.BoxUser) error {
+	tx := m.db.Begin()
+	result := tx.Where("bid = ? and uid = ?", boxUser.Bid, boxUser.Uid).First(&model.BoxUser{})
+	if result.Error != nil && errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		tx.Rollback()
+		return nil
+	}
+	if result.Error != nil {
+		tx.Rollback()
+		return result.Error
+	}
+	result = tx.Model(&model.BoxUser{}).Where("bid = ? and uid = ?", boxUser.Bid, boxUser.Uid).Update("role", boxUser.Role)
+	if result.Error != nil {
+		tx.Rollback()
+		return result.Error
+	}
+	tx.Commit()
+	return nil
+}

@@ -6,29 +6,56 @@ option go_package="./boxuser";
 
 enum UserRole {
     Owner = 0;
-    Administrator = 1;
+    Admin = 1;
     Member = 2;
 }
 
-// AddUser
+// AddOwner
 message AddOwnerRequest {
-    int64 Uid = 1;
-    int64 Bid = 2;
+    int64 Bid = 1;
+    int64 Uid = 2;
 }
 message AddOwnerResponse {
 }
 
-// IsOwner
-message IsOwnerRequest {
-    int64 Uid = 1;
-    int64 Bid = 2;
+// AddBoxUser
+message AddBoxUserRequest {
+    int64 Bid = 1;
+    int64 Uid = 2;
 }
-message IsOwnerResponse {
-    bool Exists = 1;
+message AddBoxUserResponse {}
+
+// RemoveBoxUser
+message RemoveBoxUserRequest {
+    int64 Bid = 1;
+    int64 Uid = 2;
+}
+message RemoveBoxUserResponse {}
+
+// SetRole
+message SetRoleRequest {
+    int64 Bid = 1;
+    int64 Uid = 2;
+    UserRole Role = 3;
+}
+message SetRoleResponse {
+}
+
+// GetRole
+message GetRoleRequest {
+    int64 Bid = 1;
+    int64 Uid = 2;
+}
+message GetRoleResponse {
+    bool Exist = 1;
+    UserRole Role = 2;
 }
 
 service BoxUser {
     rpc AddOwner(AddOwnerRequest) returns (AddOwnerRequest);
     rpc AddOwnerRevert(AddOwnerRequest) returns (AddOwnerRequest);
-    rpc IsOwner(IsOwnerRequest) returns (IsOwnerResponse);
+    rpc AddBoxUser(AddBoxUserRequest) returns (AddBoxUserResponse);
+    rpc RemoveBoxUser(RemoveBoxUserRequest) returns (RemoveBoxUserResponse);
+    rpc SetRole(SetRoleRequest) returns (SetRoleResponse);
+    rpc GetRole(GetRoleRequest) returns (GetRoleResponse);
 }

@@ -1,6 +1,9 @@
 package config
 
-import "github.com/zeromicro/go-zero/zrpc"
+import (
+	"github.com/zeromicro/go-queue/kq"
+	"github.com/zeromicro/go-zero/zrpc"
+)
 
 type Config struct {
 	zrpc.RpcServerConf
@@ -15,4 +18,24 @@ type Config struct {
 		MaxOpenConns    int
 		ConnMaxLifeTime int
 	}
+
+	CacheRedis struct {
+		Host        []string
+		Type        string
+		Pass        string
+		Tls         bool
+		NonBlock    bool
+		PingTimeout int
+	}
+
+	CacheExpire struct {
+		BoxUserExist int
+	}
+
+	KqRemoveCacheBoxUserPusherConf struct {
+		Brokers []string
+		Topic   string
+	}
+
+	KqRemoveCacheBoxUserConsumerConf kq.KqConf
 }

@@ -13,15 +13,24 @@ import (
 )
 
 type (
-	AddOwnerRequest  = boxuser.AddOwnerRequest
-	AddOwnerResponse = boxuser.AddOwnerResponse
-	IsOwnerRequest   = boxuser.IsOwnerRequest
-	IsOwnerResponse  = boxuser.IsOwnerResponse
+	AddBoxUserRequest     = boxuser.AddBoxUserRequest
+	AddBoxUserResponse    = boxuser.AddBoxUserResponse
+	AddOwnerRequest       = boxuser.AddOwnerRequest
+	AddOwnerResponse      = boxuser.AddOwnerResponse
+	GetRoleRequest        = boxuser.GetRoleRequest
+	GetRoleResponse       = boxuser.GetRoleResponse
+	RemoveBoxUserRequest  = boxuser.RemoveBoxUserRequest
+	RemoveBoxUserResponse = boxuser.RemoveBoxUserResponse
+	SetRoleRequest        = boxuser.SetRoleRequest
+	SetRoleResponse       = boxuser.SetRoleResponse
 
 	BoxUser interface {
 		AddOwner(ctx context.Context, in *AddOwnerRequest, opts ...grpc.CallOption) (*AddOwnerRequest, error)
 		AddOwnerRevert(ctx context.Context, in *AddOwnerRequest, opts ...grpc.CallOption) (*AddOwnerRequest, error)
-		IsOwner(ctx context.Context, in *IsOwnerRequest, opts ...grpc.CallOption) (*IsOwnerResponse, error)
+		AddBoxUser(ctx context.Context, in *AddBoxUserRequest, opts ...grpc.CallOption) (*AddBoxUserResponse, error)
+		RemoveBoxUser(ctx context.Context, in *RemoveBoxUserRequest, opts ...grpc.CallOption) (*RemoveBoxUserResponse, error)
+		SetRole(ctx context.Context, in *SetRoleRequest, opts ...grpc.CallOption) (*SetRoleResponse, error)
+		GetRole(ctx context.Context, in *GetRoleRequest, opts ...grpc.CallOption) (*GetRoleResponse, error)
 	}
 
 	defaultBoxUser struct {
@@ -45,7 +54,22 @@ func (m *defaultBoxUser) AddOwnerRevert(ctx context.Context, in *AddOwnerRequest
 	return client.AddOwnerRevert(ctx, in, opts...)
 }
 
-func (m *defaultBoxUser) IsOwner(ctx context.Context, in *IsOwnerRequest, opts ...grpc.CallOption) (*IsOwnerResponse, error) {
+func (m *defaultBoxUser) AddBoxUser(ctx context.Context, in *AddBoxUserRequest, opts ...grpc.CallOption) (*AddBoxUserResponse, error) {
 	client := boxuser.NewBoxUserClient(m.cli.Conn())
-	return client.IsOwner(ctx, in, opts...)
+	return client.AddBoxUser(ctx, in, opts...)
+}
+
+func (m *defaultBoxUser) RemoveBoxUser(ctx context.Context, in *RemoveBoxUserRequest, opts ...grpc.CallOption) (*RemoveBoxUserResponse, error) {
+	client := boxuser.NewBoxUserClient(m.cli.Conn())
+	return client.RemoveBoxUser(ctx, in, opts...)
+}
+
+func (m *defaultBoxUser) SetRole(ctx context.Context, in *SetRoleRequest, opts ...grpc.CallOption) (*SetRoleResponse, error) {
+	client := boxuser.NewBoxUserClient(m.cli.Conn())
+	return client.SetRole(ctx, in, opts...)
+}
+
+func (m *defaultBoxUser) GetRole(ctx context.Context, in *GetRoleRequest, opts ...grpc.CallOption) (*GetRoleResponse, error) {
+	client := boxuser.NewBoxUserClient(m.cli.Conn())
+	return client.GetRole(ctx, in, opts...)
 }
