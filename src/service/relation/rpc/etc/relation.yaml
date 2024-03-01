@@ -1,0 +1,40 @@
+Name: relation.rpc
+ListenOn: 0.0.0.0:8065
+Etcd:
+  Hosts:
+  - etcd:2379
+  Key: relation.rpc
+
+Mysql:
+  Database: nichebox
+  Username: root
+  Password: "123456"
+  Host: mysql
+  Port: "3306"
+  MaxIdleConns: 10
+  maxOpenConns: 100
+  connMaxLifeTime: 3600
+
+CacheRedis:
+  Host:
+    - redis:6379
+  Type: node
+  Pass: ""
+  Tls: false
+  NonBlock: false
+  PingTimeout: 1
+
+KqRebuildRelationCachePusherConf:
+  Brokers:
+    - kafka:9092
+  Topic: rebuild-relation-cache
+
+KqRebuildRelationCacheConsumerConf:
+  Name: kqRebuildRelationCacheConsumer1
+  Brokers:
+    - kafka:9092
+  Group: kqRebuildRelationCacheConsumerGroup
+  Topic: rebuild-relation-cache
+  Offset: first
+  Consumers: 8
+  Processors: 8

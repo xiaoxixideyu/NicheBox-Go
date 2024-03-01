@@ -17,3 +17,11 @@ func CheckIfBoxContentOrderValid(order string) bool {
 	}
 	return true
 }
+
+func CheckIfRelationOrderValid(order string) bool {
+	order = strings.ToLower(order)
+	if order != OrderByCreateTimeAsc && order != OrderByCreateTimeDesc {
+		return false
+	}
+	return true
+}

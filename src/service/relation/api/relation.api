@@ -1,0 +1,104 @@
+syntax = "v1"
+
+// Follow
+type FollowRequest {
+	Fid int64 `json:"fid, string"`
+}
+
+type FollowResponse {}
+
+// Follow
+// Unfollow
+type UnfollowRequest {
+	Fid int64 `json:"fid, string"`
+}
+
+type UnfollowResponse {}
+
+// Unfollow
+// Followers
+type Follower {
+	Fid          int64  `json:"fid, string"`
+	Relationship string `json:"relationship"`
+	UpdateTime   string `json:"update_time"`
+}
+
+// Followers
+// Followings
+type Following {
+	Fid          int64  `json:"fid, string"`
+	Relationship string `json:"relationship"`
+	UpdateTime   string `json:"update_time"`
+}
+
+// Followings
+// GetFollowers
+type GetFollowersRequest {
+	Uid   int64  `json:"uid,string"`
+	Page  int    `json:"page"`
+	Size  int    `json:"size"`
+	Order string `json:"order"`
+}
+
+type GetFollowersResponse {
+	Followers []*Follower `json:"followers"`
+}
+
+// GetFollowers
+// GetFollowings
+type GetFollowingsRequest {
+	Uid   int64  `json:"uid,string"`
+	Page  int    `json:"page"`
+	Size  int    `json:"size"`
+	Order string `json:"order"`
+}
+
+type GetFollowingsResponse {
+	Followings []*Following `json:"followings"`
+}
+
+// GetFollowings
+// GetFollowerCount
+type GetFollowerCountRequest {
+	Uid int64 `json:"uid,string"`
+}
+
+type GetFollowerCountResponse {
+	Count int `json:"count"`
+}
+
+// GetFollowerCount
+// GetFollowingCount
+type GetFollowingCountRequest {
+	Uid int64 `json:"uid,string"`
+}
+
+type GetFollowingCountResponse {
+	Count int `json:"count"`
+}
+
+// GetFollowingCount
+@server (
+	jwt:    Auth
+	prefix: /api/relation
+)
+service Relation {
+	@handler Follow
+	post /follow (FollowRequest) returns (FollowResponse)
+
+	@handler Unfollow
+	post /unfollow (UnfollowRequest) returns (UnfollowResponse)
+
+	@handler GetFollowers
+	post /getfollowers (GetFollowersRequest) returns (GetFollowersResponse)
+
+	@handler GetFollowings
+	post /getfollowings (GetFollowingsRequest) returns (GetFollowingsResponse)
+
+	@handler GetFollowerCount
+	post /getfollowercount (GetFollowerCountRequest) returns (GetFollowerCountResponse)
+
+	@handler GetFollowingCount
+	post /getfollowingcount (GetFollowingCountRequest) returns (GetFollowingCountResponse)
+}
+
