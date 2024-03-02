@@ -22,7 +22,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		log.Printf("failed to create relation interface, err: %v\n", err)
 		return nil
 	}
-	relationRedisInterface, err := redis.NewRedisInterface(c.CacheRedis.Host, c.CacheRedis.Type, c.CacheRedis.Pass, c.CacheRedis.Tls, c.CacheRedis.NonBlock, c.CacheRedis.PingTimeout)
+	relationRedisInterface, err := redis.NewRedisInterface(c.CacheRedis.Host, c.CacheRedis.Type, c.CacheRedis.Pass, c.CacheRedis.Tls, c.CacheRedis.NonBlock, c.CacheRedis.PingTimeout, c.CacheRedis.BloomFilterBits)
 	if err != nil {
 		log.Printf("failed to create relation redis interface, err:%v\n", err)
 		return nil

@@ -78,6 +78,16 @@ type GetFollowingCountResponse {
 }
 
 // GetFollowingCount
+// GetRelationship
+type GetRelationshipRequest {
+	Fid int64 `json:"fid,string"`
+}
+
+type GetRelationshipResponse {
+	Relationship string `json:"relationship"`
+}
+
+// GetRelationship
 @server (
 	jwt:    Auth
 	prefix: /api/relation
@@ -100,5 +110,8 @@ service Relation {
 
 	@handler GetFollowingCount
 	post /getfollowingcount (GetFollowingCountRequest) returns (GetFollowingCountResponse)
+
+	@handler GetRelationship
+	post /getrelationship (GetRelationshipRequest) returns (GetRelationshipResponse)
 }
 

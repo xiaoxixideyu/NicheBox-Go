@@ -25,6 +25,7 @@ const (
 	Relation_GetFollowings_FullMethodName     = "/relationclient.Relation/GetFollowings"
 	Relation_GetFollowerCount_FullMethodName  = "/relationclient.Relation/GetFollowerCount"
 	Relation_GetFollowingCount_FullMethodName = "/relationclient.Relation/GetFollowingCount"
+	Relation_GetRelationship_FullMethodName   = "/relationclient.Relation/GetRelationship"
 )
 
 // RelationClient is the client API for Relation service.
@@ -37,6 +38,7 @@ type RelationClient interface {
 	GetFollowings(ctx context.Context, in *GetFollowingsRequest, opts ...grpc.CallOption) (*GetFollowingsResponse, error)
 	GetFollowerCount(ctx context.Context, in *GetFollowerCountRequest, opts ...grpc.CallOption) (*GetFollowerCountResponse, error)
 	GetFollowingCount(ctx context.Context, in *GetFollowingCountRequest, opts ...grpc.CallOption) (*GetFollowingCountResponse, error)
+	GetRelationship(ctx context.Context, in *GetRelationshipRequest, opts ...grpc.CallOption) (*GetRelationshipResponse, error)
 }
 
 type relationClient struct {
@@ -101,6 +103,15 @@ func (c *relationClient) GetFollowingCount(ctx context.Context, in *GetFollowing
 	return out, nil
 }
 
+func (c *relationClient) GetRelationship(ctx context.Context, in *GetRelationshipRequest, opts ...grpc.CallOption) (*GetRelationshipResponse, error) {
+	out := new(GetRelationshipResponse)
+	err := c.cc.Invoke(ctx, Relation_GetRelationship_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // RelationServer is the server API for Relation service.
 // All implementations must embed UnimplementedRelationServer
 // for forward compatibility
@@ -111,6 +122,7 @@ type RelationServer interface {
 	GetFollowings(context.Context, *GetFollowingsRequest) (*GetFollowingsResponse, error)
 	GetFollowerCount(context.Context, *GetFollowerCountRequest) (*GetFollowerCountResponse, error)
 	GetFollowingCount(context.Context, *GetFollowingCountRequest) (*GetFollowingCountResponse, error)
+	GetRelationship(context.Context, *GetRelationshipRequest) (*GetRelationshipResponse, error)
 	mustEmbedUnimplementedRelationServer()
 }
 
@@ -135,6 +147,9 @@ func (UnimplementedRelationServer) GetFollowerCount(context.Context, *GetFollowe
 }
 func (UnimplementedRelationServer) GetFollowingCount(context.Context, *GetFollowingCountRequest) (*GetFollowingCountResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetFollowingCount not implemented")
+}
+func (UnimplementedRelationServer) GetRelationship(context.Context, *GetRelationshipRequest) (*GetRelationshipResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetRelationship not implemented")
 }
 func (UnimplementedRelationServer) mustEmbedUnimplementedRelationServer() {}
 
@@ -257,6 +272,24 @@ func _Relation_GetFollowingCount_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Relation_GetRelationship_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetRelationshipRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RelationServer).GetRelationship(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Relation_GetRelationship_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RelationServer).GetRelationship(ctx, req.(*GetRelationshipRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Relation_ServiceDesc is the grpc.ServiceDesc for Relation service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -287,6 +320,10 @@ var Relation_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetFollowingCount",
 			Handler:    _Relation_GetFollowingCount_Handler,
+		},
+		{
+			MethodName: "GetRelationship",
+			Handler:    _Relation_GetRelationship_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

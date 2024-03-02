@@ -58,6 +58,14 @@ type GetFollowingsResponse struct {
 	Followings []*Following `json:"followings"`
 }
 
+type GetRelationshipRequest struct {
+	Fid int64 `json:"fid,string"`
+}
+
+type GetRelationshipResponse struct {
+	Relationship string `json:"relationship"`
+}
+
 type UnfollowRequest struct {
 	Fid int64 `json:"fid, string"`
 }

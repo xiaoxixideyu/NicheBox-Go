@@ -23,6 +23,8 @@ type (
 	GetFollowingCountResponse = relation.GetFollowingCountResponse
 	GetFollowingsRequest      = relation.GetFollowingsRequest
 	GetFollowingsResponse     = relation.GetFollowingsResponse
+	GetRelationshipRequest    = relation.GetRelationshipRequest
+	GetRelationshipResponse   = relation.GetRelationshipResponse
 	RelationMessage           = relation.RelationMessage
 	UnfollowRequest           = relation.UnfollowRequest
 	UnfollowResponse          = relation.UnfollowResponse
@@ -34,6 +36,7 @@ type (
 		GetFollowings(ctx context.Context, in *GetFollowingsRequest, opts ...grpc.CallOption) (*GetFollowingsResponse, error)
 		GetFollowerCount(ctx context.Context, in *GetFollowerCountRequest, opts ...grpc.CallOption) (*GetFollowerCountResponse, error)
 		GetFollowingCount(ctx context.Context, in *GetFollowingCountRequest, opts ...grpc.CallOption) (*GetFollowingCountResponse, error)
+		GetRelationship(ctx context.Context, in *GetRelationshipRequest, opts ...grpc.CallOption) (*GetRelationshipResponse, error)
 	}
 
 	defaultRelation struct {
@@ -75,4 +78,9 @@ func (m *defaultRelation) GetFollowerCount(ctx context.Context, in *GetFollowerC
 func (m *defaultRelation) GetFollowingCount(ctx context.Context, in *GetFollowingCountRequest, opts ...grpc.CallOption) (*GetFollowingCountResponse, error) {
 	client := relation.NewRelationClient(m.cli.Conn())
 	return client.GetFollowingCount(ctx, in, opts...)
+}
+
+func (m *defaultRelation) GetRelationship(ctx context.Context, in *GetRelationshipRequest, opts ...grpc.CallOption) (*GetRelationshipResponse, error) {
+	client := relation.NewRelationClient(m.cli.Conn())
+	return client.GetRelationship(ctx, in, opts...)
 }

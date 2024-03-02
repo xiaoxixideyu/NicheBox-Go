@@ -51,3 +51,8 @@ func (s *RelationServer) GetFollowingCount(ctx context.Context, in *relation.Get
 	l := logic.NewGetFollowingCountLogic(ctx, s.svcCtx)
 	return l.GetFollowingCount(in)
 }
+
+func (s *RelationServer) GetRelationship(ctx context.Context, in *relation.GetRelationshipRequest) (*relation.GetRelationshipResponse, error) {
+	l := logic.NewGetRelationshipLogic(ctx, s.svcCtx)
+	return l.GetRelationship(in)
+}

@@ -37,7 +37,9 @@ func (l *UnfollowLogic) Unfollow(in *relation.UnfollowRequest) (*relation.Unfoll
 		return nil, err
 	}
 	l.svcCtx.RelationCacheInterface.DeleteRelationCountCtx(context.Background(), in.Uid)
+	l.svcCtx.RelationCacheInterface.DeleteRelationCountCtx(context.Background(), in.Fid)
 	l.svcCtx.RelationCacheInterface.RemoveRelationshipsCtx(context.Background(), in.Uid)
+	l.svcCtx.RelationCacheInterface.RemoveRelationshipsCtx(context.Background(), in.Fid)
 
 	return &relation.UnfollowResponse{}, nil
 }

@@ -9,6 +9,7 @@ type RelationInterface interface {
 	GetFollowings(uid int64, page, size int, order string) ([]*Relation, error)
 	GetFollowerCount(uid int64) (int, error)
 	GetFollowingCount(uid int64) (int, error)
+	GetRelationship(uid int64, fid int64) (*Relation, error)
 }
 
 type RelationCacheInterface interface {
@@ -19,4 +20,5 @@ type RelationCacheInterface interface {
 	GetRelationCountCtx(ctx context.Context, uid int64) (followers, followings int, err error)
 	DeleteRelationCountCtx(ctx context.Context, uid int64) error
 	SetRelationCountCtx(ctx context.Context, uid int64, followers, followings int) error
+	BloomAddRelationCtx(ctx context.Context, uid int64, fid int64) error
 }

@@ -31,6 +31,7 @@ func (l *FollowLogic) Follow(in *relation.FollowRequest) (*relation.FollowRespon
 	}
 	l.svcCtx.RelationCacheInterface.DeleteRelationCountCtx(context.Background(), in.Uid)
 	l.svcCtx.RelationCacheInterface.RemoveRelationshipsCtx(context.Background(), in.Uid)
+	l.svcCtx.RelationCacheInterface.BloomAddRelationCtx(context.Background(), in.Uid, in.Fid)
 
 	return &relation.FollowResponse{}, nil
 }

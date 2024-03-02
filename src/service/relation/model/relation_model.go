@@ -9,9 +9,10 @@ import (
 )
 
 const (
-	RelationFollow = 1
-	RelationFriend = 2
-	RelationNone   = 3
+	RelationFollow   = 1
+	RelationFriend   = 2
+	RelationNone     = 3
+	RelationFollower = 4
 )
 
 func ConvertRelationNumberToString(r int8) string {
@@ -22,6 +23,8 @@ func ConvertRelationNumberToString(r int8) string {
 		return "friend"
 	case RelationNone:
 		return "None"
+	case RelationFollower:
+		return "follower"
 	default:
 		return "Unknown"
 	}

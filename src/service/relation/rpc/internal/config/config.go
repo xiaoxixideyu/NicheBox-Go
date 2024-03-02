@@ -18,12 +18,13 @@ type Config struct {
 		ConnMaxLifeTime int
 	}
 	CacheRedis struct {
-		Host        []string
-		Type        string
-		Pass        string
-		Tls         bool
-		NonBlock    bool
-		PingTimeout int
+		Host            []string
+		Type            string
+		Pass            string
+		Tls             bool
+		NonBlock        bool
+		PingTimeout     int
+		BloomFilterBits uint
 	}
 	KqRebuildRelationCacheConsumerConf kq.KqConf
 	KqRebuildRelationCachePusherConf   struct {

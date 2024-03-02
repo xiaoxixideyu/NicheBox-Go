@@ -78,6 +78,17 @@ message GetFollowingCountResponse {
 }
 // GetFollowingCount
 
+// GetRelationship
+message GetRelationshipRequest {
+  int64 Uid = 1;
+  int64 Fid = 2;
+}
+
+message GetRelationshipResponse {
+  string Relationship = 1;
+}
+// GetRelationship
+
 service Relation {
   rpc Follow(FollowRequest) returns (FollowResponse);
   rpc Unfollow(UnfollowRequest) returns (UnfollowResponse);
@@ -85,4 +96,5 @@ service Relation {
   rpc GetFollowings(GetFollowingsRequest) returns (GetFollowingsResponse);
   rpc GetFollowerCount(GetFollowerCountRequest) returns (GetFollowerCountResponse);
   rpc GetFollowingCount(GetFollowingCountRequest) returns (GetFollowingCountResponse);
+  rpc GetRelationship(GetRelationshipRequest) returns (GetRelationshipResponse);
 }

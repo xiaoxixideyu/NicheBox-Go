@@ -3,6 +3,7 @@ package redis
 import (
 	"context"
 	"encoding/json"
+	"github.com/zeromicro/go-zero/core/bloom"
 	"github.com/zeromicro/go-zero/core/stores/redis"
 	"nichebox/service/relation/model"
 	"strconv"
@@ -10,7 +11,24 @@ import (
 )
 
 type RedisInterface struct {
-	rds *redis.Redis
+	rds  *redis.Redis
+	bits uint
+}
+
+func (r RedisInterface) BloomAddRelationCtx(ctx context.Context, uid int64, fid int64) error {
+	// both 2 users update their own bloom filer
+	bloomKey := KeyPrefixRelation + KeyPrefixBloomFilter + strconv.FormatInt(uid, 10)
+	f := bloom.New(r.rds, bloomKey, r.bits)
+	err := f.AddCtx(ctx, []byte(strconv.FormatInt(fid, 10)))
+	if err != nil {
+		return err
+	}
+
+	bloomKey = KeyPrefixRelation + KeyPrefixBloomFilter + strconv.FormatInt(fid, 10)
+	f = bloom.New(r.rds, bloomKey, r.bits)
+	err = f.AddCtx(ctx, []byte(strconv.FormatInt(uid, 10)))
+
+	return err
 }
 
 func (r RedisInterface) GetAllRelationshipsCtx(ctx context.Context, uid int64) ([]*model.CacheRelationshipAttribute, error) {
@@ -61,6 +79,30 @@ func (r RedisInterface) SetRelationCountCtx(ctx context.Context, uid int64, foll
 }
 
 func (r RedisInterface) GetRelationshipCtx(ctx context.Context, uid int64, fid int64) (*model.CacheRelationshipAttribute, error) {
+	bloomKey := KeyPrefixRelation + KeyPrefixBloomFilter + strconv.FormatInt(uid, 10)
+	f := bloom.New(r.rds, bloomKey, r.bits)
+	exists, _ := f.ExistsCtx(ctx, []byte(strconv.FormatInt(fid, 10)))
+	if !exists {
+		// no relationship
+		return &model.CacheRelationshipAttribute{
+			Fid:          fid,
+			Relationship: model.ConvertRelationNumberToString(model.RelationNone),
+			UpdateTime:   time.Time{},
+		}, nil
+	}
+
+	attr, err := r.getRelationshipCtx(ctx, uid, fid)
+	if err != nil {
+		return nil, err
+	}
+	if attr.Relationship == model.ConvertRelationNumberToString(model.RelationNone) {
+		// hash cache stores followings and friends only, so we need to check fid's hash cache to know if it is the follower relation
+		return r.getRelationshipCtx(ctx, fid, uid)
+	}
+	return attr, nil
+}
+
+func (r RedisInterface) getRelationshipCtx(ctx context.Context, uid, fid int64) (*model.CacheRelationshipAttribute, error) {
 	key := KeyPrefixRelation + KeyRelationships + strconv.FormatInt(uid, 10)
 	hKey := strconv.FormatInt(fid, 10)
 	val, err := r.rds.HgetCtx(ctx, key, hKey)
@@ -68,7 +110,22 @@ func (r RedisInterface) GetRelationshipCtx(ctx context.Context, uid int64, fid i
 		return nil, err
 	}
 	if val == "" {
-		return nil, redis.Nil
+		// check whether no relationship or hash expired
+		exists, err := r.rds.ExistsCtx(ctx, key)
+		if err != nil {
+			return nil, err
+		}
+		if !exists {
+			// hash expired
+			return nil, redis.Nil
+		} else {
+			// no relationship
+			return &model.CacheRelationshipAttribute{
+				Fid:          fid,
+				Relationship: model.ConvertRelationNumberToString(model.RelationNone),
+				UpdateTime:   time.Time{},
+			}, nil
+		}
 	}
 	attr := model.CacheRelationshipAttribute{}
 	err = json.Unmarshal([]byte(val), &attr)
@@ -102,7 +159,7 @@ func (r RedisInterface) BatchAddRelationshipsCtx(ctx context.Context, uid int64,
 	return err
 }
 
-func NewRedisInterface(hosts []string, deployType, pass string, tls, nonBlock bool, pingTimeout int) (model.RelationCacheInterface, error) {
+func NewRedisInterface(hosts []string, deployType, pass string, tls, nonBlock bool, pingTimeout int, bloomFilterBits uint) (model.RelationCacheInterface, error) {
 	conf := redis.RedisConf{
 		// todo: judge node or cluster
 		Host:        hosts[0],
@@ -112,8 +169,10 @@ func NewRedisInterface(hosts []string, deployType, pass string, tls, nonBlock bo
 		NonBlock:    nonBlock,
 		PingTimeout: time.Duration(pingTimeout) * time.Second,
 	}
+	rds := redis.MustNewRedis(conf)
 	r := &RedisInterface{
-		rds: redis.MustNewRedis(conf),
+		rds:  rds,
+		bits: bloomFilterBits,
 	}
 	return r, nil
 }

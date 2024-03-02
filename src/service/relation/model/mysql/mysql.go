@@ -13,6 +13,15 @@ type MysqlInterface struct {
 	db *gorm.DB
 }
 
+func (m *MysqlInterface) GetRelationship(uid int64, fid int64) (*model.Relation, error) {
+	r := model.Relation{}
+	rs := m.db.Model(&model.Relation{}).Where("uid = ? AND fid = ?", uid, fid).First(&r)
+	if rs.Error != nil {
+		return nil, rs.Error
+	}
+	return &r, nil
+}
+
 func (m *MysqlInterface) AddFollow(uid int64, fid int64) error {
 	tx := m.db.Begin()
 	rUid := model.Relation{}
@@ -73,7 +82,7 @@ func (m *MysqlInterface) AddFollow(uid int64, fid int64) error {
 		}
 		// update fid
 		if newRelation == model.RelationFriend {
-			rs = updateRelation(tx, fid, newRelation)
+			rs = updateRelation(tx, fid, uid, newRelation)
 			if rs.Error != nil {
 				tx.Rollback()
 				return rs.Error
@@ -83,7 +92,7 @@ func (m *MysqlInterface) AddFollow(uid int64, fid int64) error {
 	} else if uidRelation && !fidRelation {
 		newRelation = model.RelationFollow
 		// update uid
-		rs = updateRelation(tx, uid, newRelation)
+		rs = updateRelation(tx, uid, fid, newRelation)
 		if rs.Error != nil {
 			tx.Rollback()
 			return rs.Error
@@ -97,13 +106,13 @@ func (m *MysqlInterface) AddFollow(uid int64, fid int64) error {
 		}
 
 		// update uid
-		rs = updateRelation(tx, uid, newRelation)
+		rs = updateRelation(tx, uid, fid, newRelation)
 		if rs.Error != nil {
 			tx.Rollback()
 			return rs.Error
 		}
 		// update fid
-		rs = updateRelation(tx, fid, newRelation)
+		rs = updateRelation(tx, fid, uid, newRelation)
 		if rs.Error != nil {
 			tx.Rollback()
 			return rs.Error
@@ -151,11 +160,11 @@ func (m *MysqlInterface) RemoveFollow(uid int64, fid int64) error {
 	fidRelation := rs.RowsAffected != 0
 
 	// update uid
-	rs = updateRelation(tx, uid, model.RelationNone)
+	rs = updateRelation(tx, uid, fid, model.RelationNone)
 
 	// update fid
 	if fidRelation && rFid.Relationship == model.RelationFriend {
-		rs = updateRelation(tx, fid, model.RelationFollow)
+		rs = updateRelation(tx, fid, uid, model.RelationFollow)
 		if rs.Error != nil {
 			tx.Rollback()
 			return rs.Error
@@ -297,8 +306,8 @@ func createRelation(db *gorm.DB, m model.Relation) *gorm.DB {
 	return db.Model(&model.Relation{}).Create(&m)
 }
 
-func updateRelation(db *gorm.DB, uid int64, newRelation int8) *gorm.DB {
-	return db.Model(&model.Relation{}).Where("uid = ?", uid).Update("relationship", newRelation)
+func updateRelation(db *gorm.DB, uid, fid int64, newRelation int8) *gorm.DB {
+	return db.Model(&model.Relation{}).Where("uid = ? AND fid = ?", uid, fid).Update("relationship", newRelation)
 }
 
 func firstOrCreateRelationCount(db *gorm.DB, m *model.RelationCount) *gorm.DB {
