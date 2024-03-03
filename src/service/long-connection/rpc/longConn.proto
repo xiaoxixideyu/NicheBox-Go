@@ -9,10 +9,13 @@ message HandShakeRequest {
   int64 Uid = 1;
   string UserAgent = 2;
   string Addr = 3;
+  string Protocol = 4;
 }
 
 message HandShakeResponse {
-  string token = 1;
+  string Token = 1;
+  string Secret = 2;
+  string ServerAddr = 3;
 }
 // HandShake
 

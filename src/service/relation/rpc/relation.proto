@@ -1,0 +1,100 @@
+syntax = "proto3";
+
+package relationclient;
+
+option go_package = "./relation";
+
+// Follow
+message FollowRequest {
+  int64 Uid = 1;
+  int64 Fid = 2;
+}
+
+message FollowResponse {
+}
+// Follow
+
+// Unfollow
+message UnfollowRequest {
+  int64 Uid = 1;
+  int64 Fid = 2;
+}
+
+message UnfollowResponse {
+}
+// Unfollow
+
+// Relation
+message RelationMessage {
+  int64 Fid = 1;
+  string Relationship = 2;
+  string UpdateTime = 3;
+}
+// Relation
+
+// GetFollowers
+message GetFollowersRequest {
+  int64 Uid = 1;
+  int32 Page = 2;
+  int32 Size = 3;
+  string Order = 4;
+}
+
+message GetFollowersResponse {
+  repeated RelationMessage Followers = 1;
+}
+// GetFollowers
+
+// GetFollowings
+message GetFollowingsRequest {
+  int64 Uid = 1;
+  int32 Page = 2;
+  int32 Size = 3;
+  string Order = 4;
+}
+
+message GetFollowingsResponse {
+  repeated RelationMessage Followings = 1;
+}
+// GetFollowings
+
+// GetFollowerCount
+message GetFollowerCountRequest {
+  int64 Uid = 1;
+}
+
+message GetFollowerCountResponse {
+  int32 Count = 1;
+}
+// GetFollowerCount
+
+// GetFollowingCount
+message GetFollowingCountRequest {
+  int64 Uid = 1;
+}
+
+message GetFollowingCountResponse {
+  int32 Count = 1;
+}
+// GetFollowingCount
+
+// GetRelationship
+message GetRelationshipRequest {
+  int64 Uid = 1;
+  int64 Fid = 2;
+}
+
+message GetRelationshipResponse {
+  string Relationship = 1;
+}
+// GetRelationship
+
+service Relation {
+  rpc Follow(FollowRequest) returns (FollowResponse);
+  rpc Unfollow(UnfollowRequest) returns (UnfollowResponse);
+  rpc GetFollowers(GetFollowersRequest) returns (GetFollowersResponse);
+  rpc GetFollowings(GetFollowingsRequest) returns (GetFollowingsResponse);
+  rpc GetFollowerCount(GetFollowerCountRequest) returns (GetFollowerCountResponse);
+  rpc GetFollowingCount(GetFollowingCountRequest) returns (GetFollowingCountResponse);
+  rpc GetRelationship(GetRelationshipRequest) returns (GetRelationshipResponse);
+}

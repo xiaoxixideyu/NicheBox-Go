@@ -1,6 +1,9 @@
 package biz
 
+import "strings"
+
 func CheckIfCommentOrderValid(order string) bool {
+	order = strings.ToLower(order)
 	if order != OrderByCreateTimeAsc && order != OrderByCreateTimeDesc && order != OrderByLikeCount {
 		return false
 	}
@@ -8,6 +11,15 @@ func CheckIfCommentOrderValid(order string) bool {
 }
 
 func CheckIfBoxContentOrderValid(order string) bool {
+	order = strings.ToLower(order)
+	if order != OrderByCreateTimeAsc && order != OrderByCreateTimeDesc {
+		return false
+	}
+	return true
+}
+
+func CheckIfRelationOrderValid(order string) bool {
+	order = strings.ToLower(order)
 	if order != OrderByCreateTimeAsc && order != OrderByCreateTimeDesc {
 		return false
 	}

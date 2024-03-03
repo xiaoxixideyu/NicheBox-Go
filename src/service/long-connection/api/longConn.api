@@ -2,12 +2,15 @@ syntax = "v1"
 
 // HandShake
 type HandShakeRequest {
+	Protocol      string `json:"protocol"`
 	UserAgent     string `header:"User-Agent"`
 	RemoteAddress string `header:"Remote-Address"`
 }
 
 type HandShakeResponse {
-	Token string `json:"token"`
+	Token  string `json:"token"`
+	Secret string `json:"secret"`
+	Addr   string `json:"addr"`
 }
 
 // HandShake
