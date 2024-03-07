@@ -46,14 +46,7 @@ func (m *MysqlInterface) DeleteLikeAndUpdateLikeCountTX(likeModel *model.Like) e
 		return result.Error
 	}
 
-	likeCountModel := model.LikeCount{}
-	result = tx.Where("message_id = ? AND type_id = ?", likeModel.MessageID, likeModel.TypeID).First(&likeCountModel)
-	if result.Error != nil {
-		tx.Rollback()
-		return result.Error
-	}
-	likeCountModel.Count -= 1
-	result = tx.Model(&likeCountModel).Where("message_id = ? AND type_id = ?", likeCountModel.MessageID, likeCountModel.TypeID).Update("count", likeCountModel.Count)
+	result = tx.Model(&model.LikeCount{}).Where("message_id = ? AND type_id = ?", likeModel.MessageID, likeModel.TypeID).UpdateColumn("count", gorm.Expr("count + ?", -1))
 	if result.Error != nil {
 		tx.Rollback()
 		return result.Error
