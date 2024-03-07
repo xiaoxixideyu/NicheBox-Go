@@ -16,16 +16,18 @@ type MysqlInterface struct {
 func (m *MysqlInterface) GetModifiedPosts(from time.Time, to time.Time) ([]*dto.NewPostInfo, []*dto.DeletedPostInfo, error) {
 	// new info
 	newInfos := make([]*dto.NewPostInfo, 0, 0)
-	subQuery := m.db.Model(&model.Post{}).Select("box_id, count(*) as count").Where("created_at < ? AND created_at >= ?", to, from).Group("box_id")
-	result := m.db.Table("(?) as p, (?) as c", m.db.Model(&model.Post{}), subQuery).Select("p.post_id, p.created_at, c.box_id, c.count").Where("p.box_id = c.box_id").Where("created_at < ? AND created_at >= ?", to, from).Order("box_id").Find(&newInfos)
+	subQuery1 := m.db.Model(&model.Post{}).Select("post_id, created_at, box_id").Where("created_at < ? AND created_at >= ?", to, from)
+	subQuery2 := m.db.Model(&model.Post{}).Select("box_id, count(*) as count").Where("created_at < ? AND created_at >= ?", to, from).Group("box_id")
+	result := m.db.Debug().Table("(?) as p, (?) as c", subQuery1, subQuery2).Select("p.post_id, p.created_at, c.box_id, c.count").Where("p.box_id = c.box_id").Order("box_id").Find(&newInfos)
 	if result.Error != nil {
 		return nil, nil, result.Error
 	}
 
 	// deleted info
 	deletedInfos := make([]*dto.DeletedPostInfo, 0, 0)
-	subQuery = m.db.Unscoped().Model(&model.Post{}).Select("box_id, count(*) as count").Where("deleted_at < ? AND deleted_at >= ?", to, from).Group("box_id")
-	result = m.db.Debug().Unscoped().Table("(?) as p, (?) as c", m.db.Unscoped().Model(&model.Post{}), subQuery).Select("p.post_id, p.deleted_at, c.box_id, c.count").Where("p.box_id = c.box_id").Where("deleted_at < ? AND deleted_at >= ?", to, from).Order("box_id").Find(&deletedInfos)
+	subQuery3 := m.db.Unscoped().Model(&model.Post{}).Select("post_id, deleted_at, box_id").Where("deleted_at < ? AND deleted_at >= ?", to, from)
+	subQuery4 := m.db.Unscoped().Model(&model.Post{}).Select("box_id, count(*) as count").Where("deleted_at < ? AND deleted_at >= ?", to, from).Group("box_id")
+	result = m.db.Debug().Unscoped().Table("(?) as p, (?) as c", subQuery3, subQuery4).Select("p.post_id, p.deleted_at, c.box_id, c.count").Where("p.box_id = c.box_id").Order("box_id").Find(&deletedInfos)
 	if result.Error != nil {
 		return nil, nil, result.Error
 	}
