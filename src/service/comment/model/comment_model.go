@@ -11,8 +11,8 @@ type Comment struct {
 	UpdatedAt       time.Time
 	DeletedAt       gorm.DeletedAt `gorm:"index;index:idx_root_id_comment_id_deleted_at_created_at,priority:3"`
 	CommentID       int64          `gorm:"index:idx_comment_id;index:idx_root_id_comment_id_deleted_at_created_at,priority:2"`
-	SubjectID       int64
-	RootID          int64 `gorm:"index:idx_root_id_comment_id_deleted_at_created_at,priority:1"`
+	SubjectID       int64          `gorm:"index"`
+	RootID          int64          `gorm:"index:idx_root_id_comment_id_deleted_at_created_at,priority:1"`
 	ParentID        int64
 	DialogID        int64
 	OwnerID         int64

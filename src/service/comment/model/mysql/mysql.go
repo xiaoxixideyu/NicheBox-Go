@@ -29,7 +29,7 @@ func (m *MysqlInterface) BatchGetAllInnerFloorCommentIDsCreateTimesAndInnerFloor
 	}
 
 	subComments := make([]*model.Comment, 0, len(rootIDs))
-	result = tx.Debug().Model(&model.Comment{}).Select("comment_id, created_at").Where("root_id in ?", rootIDs).Order("root_id asc").Find(&subComments)
+	result = tx.Model(&model.Comment{}).Select("comment_id, created_at").Where("root_id in ?", rootIDs).Order("root_id asc").Find(&subComments)
 	if result.Error != nil {
 		tx.Rollback()
 		return nil, nil, result.Error
@@ -101,7 +101,7 @@ func (m *MysqlInterface) GetRootCommentsBySubjectID(subjectID int64, page, size 
 		result = m.db.Model(&model.Comment{}).Where("subject_id = ? AND root_id = 0", subjectID).Order(orderExpr).Find(&comments)
 	} else {
 		offset := (page - 1) * size
-		result = m.db.Model(&model.Comment{}).Where("subject_id = ? AND root_id = 0", subjectID).Order(orderExpr).Offset(offset).Limit(size).Find(&comments)
+		result = m.db.Debug().Model(&model.Comment{}).Where("subject_id = ? AND root_id = 0", subjectID).Order(orderExpr).Offset(offset).Limit(size).Find(&comments)
 	}
 	return comments, result.Error
 }
