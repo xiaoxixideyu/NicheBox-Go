@@ -32,7 +32,8 @@ func (l *RebuildCacheInnerFloorCommentIndex) Consume(key, value string) error {
 		return err
 	}
 
-	subComments, innerFloorCounts, err := l.svcCtx.CommentInterface.BatchGetAllInnerFloorCommentsAndInnerFloorCounts(msg.RootIDs)
+	//subComments, innerFloorCounts, err := l.svcCtx.CommentInterface.BatchGetAllInnerFloorCommentsAndInnerFloorCounts(msg.RootIDs)
+	subComments, innerFloorCounts, err := l.svcCtx.CommentInterface.BatchGetAllInnerFloorCommentIDsCreateTimesAndInnerFloorCounts(msg.RootIDs)
 
 	offset := 0
 	for i := 0; i < len(msg.RootIDs); i++ {

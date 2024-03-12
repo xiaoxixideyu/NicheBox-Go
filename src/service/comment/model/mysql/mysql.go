@@ -15,6 +15,31 @@ type MysqlInterface struct {
 	db *gorm.DB
 }
 
+func (m *MysqlInterface) BatchGetAllInnerFloorCommentIDsCreateTimesAndInnerFloorCounts(rootIDs []int64) ([]*model.Comment, []int, error) {
+	tx := m.db.Begin()
+
+	counts := make([]int, 0, len(rootIDs))
+	result := tx.Model(&model.Comment{}).Select("inner_floor_count").Where("comment_id in ?", rootIDs).Clauses(clause.OrderBy{
+		Expression: clause.Expr{SQL: "FIELD(comment_id,?)", Vars: []interface{}{rootIDs}, WithoutParentheses: true},
+	}).Find(&counts)
+
+	if result.Error != nil {
+		tx.Rollback()
+		return nil, nil, result.Error
+	}
+
+	subComments := make([]*model.Comment, 0, len(rootIDs))
+	result = tx.Debug().Model(&model.Comment{}).Select("comment_id, created_at").Where("root_id in ?", rootIDs).Order("root_id asc").Find(&subComments)
+	if result.Error != nil {
+		tx.Rollback()
+		return nil, nil, result.Error
+	}
+
+	result.Commit()
+
+	return subComments, counts, nil
+}
+
 func (m *MysqlInterface) UpdateCommentLikeCount(commentID int64, delta int) (*model.Comment, error) {
 	comment := model.Comment{}
 	result := m.db.Model(&comment).Clauses(clause.Returning{}).Where("comment_id = ?", commentID).UpdateColumn("like_count", gorm.Expr("like_count + ?", delta))
@@ -48,7 +73,7 @@ func (m *MysqlInterface) BatchGetAllInnerFloorCommentsAndInnerFloorCounts(rootID
 
 	subComments := make([]*model.Comment, 0, len(rootIDs))
 	subQuery := tx.Model(&model.Comment{}).Select("*").Where("c.root_id = root_id").Order("like_count asc")
-	result = tx.Table("(?) as c", m.db.Model(&model.Comment{})).Where("root_id in ? AND comment_id in ( select sub.comment_id from (?) as sub)", rootIDs, subQuery).Order("root_id asc").Find(&subComments)
+	result = tx.Debug().Table("(?) as c", m.db.Model(&model.Comment{})).Where("root_id in ? AND comment_id in ( select sub.comment_id from (?) as sub)", rootIDs, subQuery).Order("root_id asc").Find(&subComments)
 	if result.Error != nil {
 		tx.Rollback()
 		return nil, nil, result.Error

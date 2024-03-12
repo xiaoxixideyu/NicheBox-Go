@@ -16,6 +16,7 @@ type CommentInterface interface {
 	BatchGetComments(ids []int64) ([]*Comment, error)
 	BatchGetInnerFloorComments(rootIDs []int64, page, size int) ([]*Comment, error)
 	BatchGetAllInnerFloorCommentsAndInnerFloorCounts(rootIDs []int64) ([]*Comment, []int, error)
+	BatchGetAllInnerFloorCommentIDsCreateTimesAndInnerFloorCounts(rootIDs []int64) ([]*Comment, []int, error)
 	BatchGetCommentsContents(ids []int64) ([]*CommentContent, error)
 	GetInnerFloorCommentsAndContentsByRootID(rootID int64, page, size int) ([]*Comment, []*CommentContent, error)
 	DeleteCommentAndUpdateSubjectTX(commentID int64) (*Comment, error)
