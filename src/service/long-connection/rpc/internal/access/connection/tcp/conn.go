@@ -12,6 +12,7 @@ import (
 	"nichebox/service/long-connection/rpc/internal/access/protocol"
 	"nichebox/service/long-connection/rpc/internal/routes"
 	"os"
+	"sync"
 	"time"
 )
 
@@ -20,6 +21,8 @@ const readTimeout = 10
 type TCPLongConn struct {
 	conn *net.TCPConn
 	rw   *bufio.ReadWriter
+
+	sync.Mutex
 
 	uid int64
 	ua  string
@@ -112,6 +115,9 @@ func (lc *TCPLongConn) WritePacket(packet *protocol.Packet) error {
 	if err != nil {
 		return err
 	}
+
+	lc.Mutex.Lock()
+	defer lc.Mutex.Unlock()
 
 	n, err := lc.rw.Write(b)
 	fmt.Println("n=", n)

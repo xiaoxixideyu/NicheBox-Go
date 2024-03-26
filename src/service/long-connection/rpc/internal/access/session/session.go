@@ -74,6 +74,7 @@ func (m *Manager) process(ch <-chan connection.LongConn) {
 		uid, ua, ok := r.GetUidAndUAByAddr(ip)
 		if !ok {
 			m.logger.Errorf("[SessionManager] Addr did not register, addr:", ip)
+			conn.Close()
 			continue
 		}
 

@@ -101,7 +101,7 @@ func (m *MysqlInterface) GetRootCommentsBySubjectID(subjectID int64, page, size 
 		result = m.db.Model(&model.Comment{}).Where("subject_id = ? AND root_id = 0", subjectID).Order(orderExpr).Find(&comments)
 	} else {
 		offset := (page - 1) * size
-		result = m.db.Debug().Model(&model.Comment{}).Where("subject_id = ? AND root_id = 0", subjectID).Order(orderExpr).Offset(offset).Limit(size).Find(&comments)
+		result = m.db.Model(&model.Comment{}).Where("subject_id = ? AND root_id = 0", subjectID).Order(orderExpr).Offset(offset).Limit(size).Find(&comments)
 	}
 	return comments, result.Error
 }
