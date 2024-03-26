@@ -1,0 +1,42 @@
+// GetFeeds
+type GetFeedsRequest {
+	Page int `json:"page"`
+	Size int `json:"size"`
+}
+
+type GetFeedsResponse {
+	Feeds []*FeedMessage `json:"feeds"`
+}
+
+// GetFeeds
+// AddFeed
+type AddFeedRequest {
+	MessageID   int64  `json:"message_id, string"`
+	MessageType int    `json:"message_type"`
+	PublishTime string `json:"publish_time"`
+}
+
+type AddFeedResponse {}
+
+// AddFeed
+// Feed
+type FeedMessage {
+	MessageID   int64  `json:"message_id, string"`
+	MessageType int    `json:"message_type"`
+	AuthorID    int64  `json:"author_id, string"`
+	PublishTime string `json:"publish_time"`
+}
+
+// Feed
+@server (
+	jwt:    Auth
+	prefix: /api/feed
+)
+service Feed {
+	@handler GetFeeds
+	post /getfeeds (GetFeedsRequest) returns (GetFeedsResponse)
+
+	@handler AddFeed
+	post /addfeed (AddFeedRequest) returns (AddFeedResponse)
+}
+

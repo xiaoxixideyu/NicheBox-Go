@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package feedclient;
+
+option go_package = "./feed";
+
+// Push
+message PushRequest {
+  int64 MessageID = 1;
+  int32 MessageType = 2;
+  int64 Author = 3;
+  string CreateTime = 4;
+}
+
+message PushResponse {
+
+}
+// Push
+
+// Pull
+message PullRequest {
+  int64 Uid = 1;
+  int32 Page = 2;
+  int32 Size = 3;
+}
+
+message FeedMessage {
+  int64 MessageID = 1;
+  int32 MessageType = 2;
+  int64 Author = 3;
+  string CreateTime = 4;
+}
+
+message PullResponse {
+  repeated FeedMessage FeedMessages = 1;
+}
+// Pull
+
+service Feed {
+  rpc Push(PushRequest) returns (PushResponse);
+  rpc Pull(PullRequest) returns (PullResponse);
+}
