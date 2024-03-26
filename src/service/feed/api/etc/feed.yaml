@@ -1,0 +1,15 @@
+Name: Feed
+Host: 0.0.0.0
+Port: 10041
+
+Auth:
+  AccessSecret: uOvKLmVfztaXGpNYd4Z0I1SiT7MweJhl
+  AccessExpire: 86400
+  RefreshExpire: 604800
+
+FeedRpc:
+  Etcd:
+    Hosts:
+      - etcd:2379
+    Key: feed.rpc
+
